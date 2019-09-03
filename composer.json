@@ -1,0 +1,13 @@
+{
+    "name": "royalcms/framework",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "王正东",
+            "email": "wangzhengdong@ecmoban.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
