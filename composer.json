@@ -20,7 +20,10 @@
     "autoload": {
         "psr-4": {
             "Royalcms\\Component\\Framework\\": "Royalcms/Component/Framework"
-        }
+        },
+        "classmap": [
+            "royalcms.php"
+        ]
     },
     "extra": {
         "branch-alias": {
