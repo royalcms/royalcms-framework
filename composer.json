@@ -19,7 +19,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Royalcms\\Component\\Framework\\": "Royalcms/Component/Framework"
+            "Royalcms\\Component\\": "Royalcms/Component"
         }
     },
     "extra": {
