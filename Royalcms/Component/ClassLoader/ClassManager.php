@@ -2,6 +2,8 @@
 
 namespace Royalcms\Component\ClassLoader;
 
+use Royalcms\Component\Support\Str;
+
 class ClassManager
 {
     
@@ -51,7 +53,11 @@ class ClassManager
      */
     public static function addNamespace($namespace, $directorie)
     {
-        self::$loader->registerNamespace($namespace, $directorie);
+        if (! Str::endsWith('\\', $namespace)) {
+            $namespace = $namespace . '\\';
+        }
+
+        self::$loader->addPsr4($namespace, $directorie);
     }
     
     /**
@@ -62,7 +68,9 @@ class ClassManager
      */
     public static function addNamespaces(array $namespaces)
     {
-        self::$loader->registerNamespaces($namespaces);
+        foreach ($namespaces as $namespace => $directorie) {
+            self::addNamespace($namespace, $directorie);
+        }
     }
     
     /**
@@ -72,7 +80,7 @@ class ClassManager
      */
     public static function getNamespaces()
     {
-        return self::$loader->getNamespaces();
+        return self::$loader->getPrefixesPsr4();
     }
 }
 
