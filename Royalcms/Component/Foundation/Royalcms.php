@@ -1478,39 +1478,204 @@ class Royalcms extends Application
     public function registerCoreContainerAliases()
     {
         $aliases = [
-            'royalcms'             => ['Royalcms\Component\Foundation\Royalcms', 'Royalcms\Component\Contracts\Container\Container', 'Royalcms\Component\Contracts\Foundation\Royalcms'],
-            'auth'                 => 'Royalcms\Component\Auth\AuthManager',
-            'auth.driver'          => ['Royalcms\Component\Auth\Guard', 'Royalcms\Component\Contracts\Auth\Guard'],
+            'royalcms'             => [
+                'Royalcms\Component\Foundation\Royalcms',
+                'Royalcms\Component\Contracts\Container\Container',
+                'Royalcms\Component\Contracts\Foundation\Royalcms',
+                \Illuminate\Contracts\Foundation\Application::class,
+                \Psr\Container\ContainerInterface::class
+            ],
+            'auth'                 => [
+                'Royalcms\Component\Auth\AuthManager',
+                \Illuminate\Auth\AuthManager::class,
+                \Illuminate\Contracts\Auth\Factory::class
+            ],
+            'auth.driver'          => [
+                'Royalcms\Component\Auth\Guard',
+                'Royalcms\Component\Contracts\Auth\Guard',
+                \Illuminate\Contracts\Auth\Guard::class
+            ],
             'auth.password.tokens' => 'Royalcms\Component\Auth\Passwords\TokenRepositoryInterface',
-            'blade.compiler'       => 'Royalcms\Component\View\Compilers\BladeCompiler',
-            'cache'                => ['Royalcms\Component\Cache\CacheManager', 'Royalcms\Component\Contracts\Cache\Factory'],
-            'cache.store'          => ['Royalcms\Component\Cache\Repository', 'Royalcms\Component\Contracts\Cache\Repository'],
-            'config'               => ['Royalcms\Component\Config\Repository', 'Royalcms\Component\Contracts\Config\Repository'],
-            'cookie'               => ['Royalcms\Component\Cookie\CookieJar', 'Royalcms\Component\Contracts\Cookie\Factory', 'Royalcms\Component\Contracts\Cookie\QueueingFactory'],
-            'encrypter'            => ['Royalcms\Component\Encryption\Encrypter', 'Royalcms\Component\Contracts\Encryption\Encrypter'],
-            'db'                   => 'Royalcms\Component\Database\DatabaseManager',
-            'db.connection'        => ['Royalcms\Component\Database\Connection', 'Royalcms\Component\Database\ConnectionInterface'],
-            'events'               => ['Royalcms\Component\Events\Dispatcher', 'Royalcms\Component\Contracts\Events\Dispatcher'],
-            'files'                => 'Royalcms\Component\Filesystem\Filesystem',
-            'filesystem'           => ['Royalcms\Component\Filesystem\FilesystemManager', 'Royalcms\Component\Contracts\Filesystem\Factory'],
-            'filesystem.disk'      => 'Royalcms\Component\Contracts\Filesystem\Filesystem',
-            'filesystem.cloud'     => 'Royalcms\Component\Contracts\Filesystem\Cloud',
-            'hash'                 => 'Royalcms\Component\Contracts\Hashing\Hasher',
-            'translator'           => ['Royalcms\Component\Translation\Translator', 'Symfony\Component\Translation\TranslatorInterface'],
-            'log'                  => ['Royalcms\Component\Log\Writer', 'Royalcms\Component\Contracts\Logging\Log', 'Psr\Log\LoggerInterface'],
-            'mailer'               => ['Royalcms\Component\Mail\Mailer', 'Royalcms\Component\Contracts\Mail\Mailer', 'Royalcms\Component\Contracts\Mail\MailQueue'],
-            'auth.password'        => ['Royalcms\Component\Auth\Passwords\PasswordBroker', 'Royalcms\Component\Contracts\Auth\PasswordBroker'],
-            'queue'                => ['Royalcms\Component\Queue\QueueManager', 'Royalcms\Component\Contracts\Queue\Factory', 'Royalcms\Component\Contracts\Queue\Monitor'],
-            'queue.connection'     => 'Royalcms\Component\Contracts\Queue\Queue',
-            'redirect'             => 'Royalcms\Component\Routing\Redirector',
-            'redis'                => ['Royalcms\Component\Redis\Database', 'Royalcms\Component\Contracts\Redis\Database'],
-            'request'              => 'Royalcms\Component\Http\Request',
-            'router'               => ['Royalcms\Component\Routing\Router', 'Royalcms\Component\Contracts\Routing\Registrar'],
-            'session'              => 'Royalcms\Component\Session\SessionManager',
-            'session.store'        => ['Royalcms\Component\Session\Store', 'Symfony\Component\HttpFoundation\Session\SessionInterface'],
-            'url'                  => ['Royalcms\Component\Routing\UrlGenerator', 'Royalcms\Component\Contracts\Routing\UrlGenerator'],
-            'validator'            => ['Royalcms\Component\Validation\Factory', 'Royalcms\Component\Contracts\Validation\Factory'],
-            'view'                 => ['Royalcms\Component\View\Factory', 'Royalcms\Component\Contracts\View\Factory'],
+            'blade.compiler'       => [
+                'Royalcms\Component\View\Compilers\BladeCompiler',
+                \Illuminate\View\Compilers\BladeCompiler::class
+            ],
+            'cache'                => [
+                'Royalcms\Component\Cache\CacheManager',
+                'Royalcms\Component\Contracts\Cache\Factory',
+                \Illuminate\Cache\CacheManager::class,
+                \Illuminate\Contracts\Cache\Factory::class
+            ],
+            'cache.store'          => [
+                'Royalcms\Component\Cache\Repository',
+                'Royalcms\Component\Contracts\Cache\Repository',
+                \Illuminate\Cache\Repository::class,
+                \Illuminate\Contracts\Cache\Repository::class,
+                \Psr\SimpleCache\CacheInterface::class
+            ],
+            'cache.psr6'           => [
+                \Symfony\Component\Cache\Adapter\Psr16Adapter::class,
+                \Symfony\Component\Cache\Adapter\AdapterInterface::class,
+                \Psr\Cache\CacheItemPoolInterface::class
+            ],
+            'config'               => [
+                'Royalcms\Component\Config\Repository',
+                'Royalcms\Component\Contracts\Config\Repository',
+                \Illuminate\Config\Repository::class,
+                \Illuminate\Contracts\Config\Repository::class
+            ],
+            'cookie'               => [
+                'Royalcms\Component\Cookie\CookieJar',
+                'Royalcms\Component\Contracts\Cookie\Factory',
+                'Royalcms\Component\Contracts\Cookie\QueueingFactory',
+                \Illuminate\Cookie\CookieJar::class,
+                \Illuminate\Contracts\Cookie\Factory::class,
+                \Illuminate\Contracts\Cookie\QueueingFactory::class
+            ],
+            'encrypter'            => [
+                'Royalcms\Component\Encryption\Encrypter',
+                'Royalcms\Component\Contracts\Encryption\Encrypter',
+                \Illuminate\Encryption\Encrypter::class,
+                \Illuminate\Contracts\Encryption\Encrypter::class
+            ],
+            'db'                   => [
+                'Royalcms\Component\Database\DatabaseManager',
+                \Illuminate\Database\DatabaseManager::class,
+                \Illuminate\Database\ConnectionResolverInterface::class
+            ],
+            'db.connection'        => [
+                'Royalcms\Component\Database\Connection',
+                'Royalcms\Component\Database\ConnectionInterface',
+                \Illuminate\Database\Connection::class,
+                \Illuminate\Database\ConnectionInterface::class
+            ],
+            'events'               => [
+                'Royalcms\Component\Events\Dispatcher',
+                'Royalcms\Component\Contracts\Events\Dispatcher',
+                \Illuminate\Events\Dispatcher::class,
+                \Illuminate\Contracts\Events\Dispatcher::class
+            ],
+            'files'                => [
+                'Royalcms\Component\Filesystem\Filesystem',
+                \Illuminate\Filesystem\Filesystem::class
+            ],
+            'filesystem'           => [
+                'Royalcms\Component\Filesystem\FilesystemManager',
+                'Royalcms\Component\Contracts\Filesystem\Factory',
+                \Illuminate\Filesystem\FilesystemManager::class,
+                \Illuminate\Contracts\Filesystem\Factory::class
+            ],
+            'filesystem.disk'      => [
+                'Royalcms\Component\Contracts\Filesystem\Filesystem',
+                \Illuminate\Contracts\Filesystem\Filesystem::class
+            ],
+            'filesystem.cloud'     => [
+                'Royalcms\Component\Contracts\Filesystem\Cloud',
+                \Illuminate\Contracts\Filesystem\Cloud::class
+            ],
+            'hash'                 => [
+                'Royalcms\Component\Contracts\Hashing\Hasher',
+                \Illuminate\Hashing\HashManager::class
+            ],
+            'hash.driver'          => [
+                \Illuminate\Contracts\Hashing\Hasher::class
+            ],
+            'translator'           => [
+                'Royalcms\Component\Translation\Translator',
+                'Symfony\Component\Translation\TranslatorInterface',
+                \Illuminate\Translation\Translator::class,
+                \Illuminate\Contracts\Translation\Translator::class
+            ],
+            'log'                  => [
+                'Royalcms\Component\Log\Writer',
+                'Royalcms\Component\Contracts\Logging\Log',
+                'Psr\Log\LoggerInterface',
+                \Illuminate\Log\LogManager::class,
+                \Psr\Log\LoggerInterface::class
+            ],
+            'mailer'               => [
+                'Royalcms\Component\Mail\Mailer',
+                'Royalcms\Component\Contracts\Mail\Mailer',
+                'Royalcms\Component\Contracts\Mail\MailQueue',
+                \Illuminate\Mail\Mailer::class,
+                \Illuminate\Contracts\Mail\Mailer::class,
+                \Illuminate\Contracts\Mail\MailQueue::class
+            ],
+            'auth.password'        => [
+                'Royalcms\Component\Auth\Passwords\PasswordBroker',
+                'Royalcms\Component\Contracts\Auth\PasswordBroker',
+                \Illuminate\Auth\Passwords\PasswordBrokerManager::class,
+                \Illuminate\Contracts\Auth\PasswordBrokerFactory::class
+            ],
+            'auth.password.broker' => [
+                \Illuminate\Auth\Passwords\PasswordBroker::class,
+                \Illuminate\Contracts\Auth\PasswordBroker::class
+            ],
+            'queue'                => [
+                'Royalcms\Component\Queue\QueueManager',
+                'Royalcms\Component\Contracts\Queue\Factory',
+                'Royalcms\Component\Contracts\Queue\Monitor',
+                \Illuminate\Queue\QueueManager::class,
+                \Illuminate\Contracts\Queue\Factory::class,
+                \Illuminate\Contracts\Queue\Monitor::class
+            ],
+            'queue.connection'     => [
+                'Royalcms\Component\Contracts\Queue\Queue',
+                \Illuminate\Contracts\Queue\Queue::class
+            ],
+            'queue.failer'         => [
+                \Illuminate\Queue\Failed\FailedJobProviderInterface::class
+            ],
+            'redirect'             => [
+                'Royalcms\Component\Routing\Redirector',
+                \Illuminate\Routing\Redirector::class
+            ],
+            'redis'                => [
+                'Royalcms\Component\Redis\Database',
+                'Royalcms\Component\Contracts\Redis\Database',
+                \Illuminate\Redis\RedisManager::class,
+                \Illuminate\Contracts\Redis\Factory::class
+            ],
+            'request'              => [
+                'Royalcms\Component\Http\Request',
+                \Illuminate\Http\Request::class,
+                \Symfony\Component\HttpFoundation\Request::class
+            ],
+            'router'               => [
+                'Royalcms\Component\Routing\Router',
+                'Royalcms\Component\Contracts\Routing\Registrar',
+                \Illuminate\Routing\Router::class,
+                \Illuminate\Contracts\Routing\Registrar::class,
+                \Illuminate\Contracts\Routing\BindingRegistrar::class
+            ],
+            'session'              => [
+                'Royalcms\Component\Session\SessionManager',
+                \Illuminate\Session\SessionManager::class
+            ],
+            'session.store'        => [
+                'Royalcms\Component\Session\Store',
+                'Symfony\Component\HttpFoundation\Session\SessionInterface',
+                \Illuminate\Session\Store::class,
+                \Illuminate\Contracts\Session\Session::class
+            ],
+            'url'                  => [
+                'Royalcms\Component\Routing\UrlGenerator',
+                'Royalcms\Component\Contracts\Routing\UrlGenerator',
+                \Illuminate\Routing\UrlGenerator::class,
+                \Illuminate\Contracts\Routing\UrlGenerator::class
+            ],
+            'validator'            => [
+                'Royalcms\Component\Validation\Factory',
+                'Royalcms\Component\Contracts\Validation\Factory',
+                \Illuminate\Validation\Factory::class,
+                \Illuminate\Contracts\Validation\Factory::class
+            ],
+            'view'                 => [
+                'Royalcms\Component\View\Factory',
+                'Royalcms\Component\Contracts\View\Factory',
+                \Illuminate\View\Factory::class,
+                \Illuminate\Contracts\View\Factory::class
+            ],
         ];
 
         foreach ($aliases as $key => $aliases) {
