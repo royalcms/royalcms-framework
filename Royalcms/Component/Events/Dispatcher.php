@@ -8,11 +8,12 @@ use ReflectionClass;
 //use Royalcms\Component\Container\Container;
 //use Royalcms\Component\Contracts\Broadcasting\ShouldBroadcast;
 //use Royalcms\Component\Contracts\Broadcasting\ShouldBroadcastNow;
-//use Royalcms\Component\Contracts\Events\Dispatcher as DispatcherContract;
+use Royalcms\Component\Contracts\Events\Dispatcher as DispatcherContract;
 //use Royalcms\Component\Contracts\Container\Container as ContainerContract;
 use Illuminate\Events\Dispatcher as LaravelDispatcher;
+//use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 
-class Dispatcher extends LaravelDispatcher
+class Dispatcher extends LaravelDispatcher implements DispatcherContract
 {
 //    /**
 //     * The IoC container instance.
