@@ -5,7 +5,7 @@ namespace Royalcms\Component\Support;
 use BadMethodCallException;
 use ReflectionClass;
 
-abstract class ServiceProvider
+abstract class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     /**
      * The application instance.
@@ -21,19 +21,19 @@ abstract class ServiceProvider
      */
     protected $defer = false;
 
-    /**
-     * The paths that should be published.
-     *
-     * @var array
-     */
-    protected static $publishes = [];
+//    /**
+//     * The paths that should be published.
+//     *
+//     * @var array
+//     */
+//    protected static $publishes = [];
 
-    /**
-     * The paths that should be published by group.
-     *
-     * @var array
-     */
-    protected static $publishGroups = [];
+//    /**
+//     * The paths that should be published by group.
+//     *
+//     * @var array
+//     */
+//    protected static $publishGroups = [];
 
     /**
      * Create a new service provider instance.
@@ -47,11 +47,14 @@ abstract class ServiceProvider
     }
 
     /**
-     * Register the service provider.
+     * Register any application services.
      *
      * @return void
      */
-    abstract public function register();
+    public function register()
+    {
+
+    }
 
     /**
      * Merge the given configuration with the existing configuration.
