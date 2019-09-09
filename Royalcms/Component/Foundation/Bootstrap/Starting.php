@@ -39,12 +39,12 @@ class Starting
         |
         */
 
-        if ( ! extension_loaded('mcrypt') && version_compare(PHP_VERSION, '7.2', '<'))
-        {
-            echo 'Mcrypt PHP extension required.'.PHP_EOL;
-
-            exit(1);
-        }
+//        if ( ! extension_loaded('mcrypt') && version_compare(PHP_VERSION, '7.2', '<'))
+//        {
+//            echo 'Mcrypt PHP extension required.'.PHP_EOL;
+//
+//            exit(1);
+//        }
 
         /*
          * php >= 7.0
@@ -55,13 +55,6 @@ class Starting
         if ( ! class_exists('Error')) {
             class_alias('\Royalcms\Component\Foundation\Compatible\Error', 'Error');
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | autoload cloass manager
-        |--------------------------------------------------------------------------
-        */
-        \Royalcms\Component\ClassLoader\ClassManager::auto_loader_class();
 
         /*
         |--------------------------------------------------------------------------
