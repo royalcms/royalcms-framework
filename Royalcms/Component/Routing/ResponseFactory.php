@@ -8,12 +8,12 @@ use Royalcms\Component\Http\Response;
 use Royalcms\Component\Http\JsonResponse;
 use Royalcms\Component\Support\Traits\Macroable;
 use Royalcms\Component\Contracts\Support\Arrayable;
-use Royalcms\Component\Contracts\View\Factory as ViewFactory;
+use Illuminate\Contracts\View\Factory as ViewFactory;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Royalcms\Component\Contracts\Routing\ResponseFactory as FactoryContract;
 
-class ResponseFactory implements FactoryContract
+class ResponseFactory extends \Illuminate\Routing\ResponseFactory implements FactoryContract
 {
     use Macroable {
         Macroable::__callStatic as private __callStaticResponse;

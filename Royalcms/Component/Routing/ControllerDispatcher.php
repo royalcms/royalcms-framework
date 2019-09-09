@@ -7,6 +7,7 @@ use Royalcms\Component\Support\Arr;
 use Royalcms\Component\Http\Request;
 use Royalcms\Component\Pipeline\Pipeline;
 use Royalcms\Component\Container\Container;
+use Illuminate\Routing\Route;
 
 class ControllerDispatcher
 {

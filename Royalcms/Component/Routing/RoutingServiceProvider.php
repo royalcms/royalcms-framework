@@ -2,6 +2,7 @@
 
 namespace Royalcms\Component\Routing;
 
+use Illuminate\Contracts\View\Factory as ViewFactoryContract;
 use Royalcms\Component\Support\ServiceProvider;
 use Zend\Diactoros\Response as PsrResponse;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
@@ -37,7 +38,7 @@ class RoutingServiceProvider extends ServiceProvider
      */
     protected function registerRouter()
     {
-        $this->royalcms['router'] = $this->royalcms->share(function ($royalcms) {
+        $this->royalcms->singleton('router', function ($royalcms) {
             return new Router($royalcms['events'], $royalcms);
         });
     }
@@ -49,7 +50,7 @@ class RoutingServiceProvider extends ServiceProvider
      */
     protected function registerUrlGenerator()
     {
-        $this->royalcms['url'] = $this->royalcms->share(function ($royalcms) {
+        $this->royalcms->singleton('url', function ($royalcms) {
             $routes = $royalcms['router']->getRoutes();
 
             // The URL generator needs the route collection that exists on the router.
@@ -97,7 +98,7 @@ class RoutingServiceProvider extends ServiceProvider
      */
     protected function registerRedirector()
     {
-        $this->royalcms['redirect'] = $this->royalcms->share(function ($royalcms) {
+        $this->royalcms->singleton('redirect', function ($royalcms) {
             $redirector = new Redirector($royalcms['url']);
 
             // If the session is set on the application instance, we'll inject it into
@@ -144,7 +145,7 @@ class RoutingServiceProvider extends ServiceProvider
     protected function registerResponseFactory()
     {
         $this->royalcms->singleton('Royalcms\Component\Contracts\Routing\ResponseFactory', function ($royalcms) {
-            return new ResponseFactory($royalcms['Royalcms\Component\Contracts\View\Factory'], $royalcms['redirect']);
+            return new ResponseFactory($royalcms['Illuminate\Contracts\View\Factory'], $royalcms['redirect']);
         });
 
         //$this->royalcms->alias('response', 'Royalcms\Component\Contracts\Routing\ResponseFactory');
@@ -158,8 +159,7 @@ class RoutingServiceProvider extends ServiceProvider
      */
     protected function registerResponse()
     {
-        $this->royalcms['response'] = $this->royalcms->share(function($royalcms)
-        {
+        $this->royalcms->singleton('response', function($royalcms) {
             return new \Royalcms\Component\Http\Response();
         });
     }
