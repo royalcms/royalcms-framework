@@ -50,7 +50,7 @@ interface Royalcms extends Container
      * @param  bool   $force
      * @return \Royalcms\Component\Support\ServiceProvider
      */
-    public function register($provider, $options = [], $force = false);
+    public function register($provider, $force = false);
 
     /**
      * Register a deferred provider and service.
