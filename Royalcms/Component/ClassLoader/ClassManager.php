@@ -4,10 +4,48 @@ namespace Royalcms\Component\ClassLoader;
 
 use Royalcms\Component\Support\Str;
 
+/**
+ * Class ClassManager
+ * PSR-4
+ * @package Royalcms\Component\ClassLoader
+ */
 class ClassManager
 {
-    
-    protected static $loader;
+    /**
+     * @var \Composer\Autoload\ClassLoader
+     */
+    private static $loader;
+
+    /**
+     * 自动注册类加载
+     */
+    public static function register()
+    {
+        self::autoLoaderClass();
+    }
+
+    /**
+     * 实现类的自动加载
+     *
+     * @return \Composer\Autoload\ClassLoader
+     */
+    public static function autoLoaderClass()
+    {
+        if (is_null(self::$loader)) {
+            self::$loader = new \Composer\Autoload\ClassLoader();
+            self::$loader->register(true);
+        }
+
+        return self::$loader;
+    }
+
+    /**
+     * @return \Composer\Autoload\ClassLoader
+     */
+    public static function getLoader()
+    {
+        return self::$loader;
+    }
     
     /**
      * 手动类和文件加载
@@ -16,33 +54,9 @@ class ClassManager
      */
     public static function import($class)
     {
-        $loader = self::auto_loader_class();
-        if (! $loader->loadClass($class)) {
+        if (! self::$loader->loadClass($class)) {
             rc_throw_exception($class . __('加载失败'));
         }
-    }
-
-    /**
-     * 实现类的自动加载
-     *
-     * @return \Composer\Autoload\ClassLoader
-     */
-    public static function auto_loader_class()
-    {
-//        if (! isset(self::$loader)) {
-//            $dirname = dirname(ROYALCMS_PATH) . DS . 'class-loader' . DS;
-//            require_once $dirname . 'Royalcms/Component/ClassLoader/ClassLoader.php';
-//            $dir = rtrim(ROYALCMS_PATH, DIRECTORY_SEPARATOR);
-//            self::$loader = new ClassLoader();
-//            self::$loader->registerPrefix('Component', $dir . '/Royalcms');
-//            self::$loader->register();
-//        }
-
-        if (is_null(self::$loader)) {
-            self::$loader = new \Composer\Autoload\ClassLoader();
-        }
-
-        return self::$loader;
     }
     
     /**
@@ -53,8 +67,8 @@ class ClassManager
      */
     public static function addNamespace($namespace, $directorie)
     {
-        if (! Str::endsWith('\\', $namespace)) {
-            $namespace = $namespace . '\\';
+        if (! Str::endsWith($namespace, "\\")) {
+            $namespace = $namespace . "\\";
         }
 
         self::$loader->addPsr4($namespace, $directorie);
