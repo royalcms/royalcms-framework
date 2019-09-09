@@ -1,5 +1,6 @@
 <?php
-defined('IN_ROYALCMS') or exit('No permission resources.');
+
+namespace Royalcms\Component\Event;
 
 /**
  * API事件基类
@@ -7,7 +8,7 @@ defined('IN_ROYALCMS') or exit('No permission resources.');
  * @subpackage core
  */
 
-abstract class Component_Event_Api extends Component_Event_Event
+abstract class Api extends Event
 {
 
     /**
@@ -32,7 +33,7 @@ abstract class Component_Event_Api extends Component_Event_Event
      *
      * @param unknown $param            
      */
-    public function run(&$param)
+    public function run(& $param)
     {
         return $this->call($param);
     }
@@ -42,7 +43,8 @@ abstract class Component_Event_Api extends Component_Event_Event
      *
      * @param array $param            
      */
-    public abstract function call(&$param);
+    public abstract function call(& $param);
+    
 }
 
 // end
