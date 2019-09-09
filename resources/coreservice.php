@@ -181,7 +181,7 @@ return array(
         'Royalcms\Component\App\AppServiceProvider',
         'Royalcms\Component\Variable\VariableServiceProvider',
         'Royalcms\Component\Rewrite\RewriteServiceProvider',
-        'Royalcms\Component\Storage\StorageServiceProvider',
+//        'Royalcms\Component\Storage\StorageServiceProvider',
         'Royalcms\Component\Timer\TimerServiceProvider',
         'Royalcms\Component\Script\ScriptServiceProvider',
         'Royalcms\Component\Error\ErrorServiceProvider',
