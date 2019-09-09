@@ -1,26 +1,25 @@
 <?php
 
 
-namespace Royalcms\Component\Database\Query;
+namespace Royalcms\Component\Database\Eloquent;
 
-use Illuminate\Database\ConnectionInterface;
-use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Database\Query\Grammars\Grammar;
-use Illuminate\Database\Query\Processors\Processor;
-use Illuminate\Support\Arr;
+
+use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 
 class Builder extends QueryBuilder
 {
 
     /**
-     * Execute the query as a "select" statement.
+     * Get the hydrated models without eager loading.
      *
-     * @param  array|string  $columns
-     * @return array
+     * @param  array  $columns
+     * @return \Illuminate\Database\Eloquent\Model[]|\Illuminate\Database\Eloquent\Builder[]
      */
-    public function get($columns = ['*'])
+    public function getModels($columns = ['*'])
     {
-        return parent::get($columns)->all();
+        return $this->model->hydrate(
+            $this->query->get($columns)
+        )->all();
     }
 
 }

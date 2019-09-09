@@ -4,22 +4,20 @@
 namespace Royalcms\Component\Database\Eloquent;
 
 
-use Illuminate\Database\Eloquent\Builder as QueryBuilder;
+use Illuminate\Database\Eloquent\Model as LaravelModel;
 
-class Builder extends QueryBuilder
+class Model extends LaravelModel
 {
 
     /**
-     * Get the hydrated models without eager loading.
+     * Create a new Eloquent query builder for the model.
      *
-     * @param  array  $columns
-     * @return \Illuminate\Database\Eloquent\Model[]|\Illuminate\Database\Eloquent\Builder[]
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder|static
      */
-    public function getModels($columns = ['*'])
+    public function newEloquentBuilder($query)
     {
-        return $this->model->hydrate(
-            $this->query->get($columns)
-        )->all();
+        return new \Royalcms\Component\Database\Eloquent\Builder($query);
     }
 
 }

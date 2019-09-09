@@ -3,11 +3,21 @@
 
 namespace Royalcms\Component\Database;
 
-use Illuminate\Database\Connection as LaravelConnection;
+use Illuminate\Database\MySqlConnection as LaravelMySqlConnection;
+use PDO;
 use Royalcms\Component\Database\Query\Builder as QueryBuilder;
 
-class Connection extends LaravelConnection
+class MySqlConnection extends LaravelMySqlConnection
 {
+
+    /**
+     * The default fetch mode of the connection.
+     *
+     * @var int
+     */
+    protected $fetchMode = PDO::FETCH_ASSOC;
+    
+
     /**
      * Get a new query builder instance.
      *
