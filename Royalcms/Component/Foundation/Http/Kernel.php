@@ -135,7 +135,7 @@ class Kernel implements KernelContract
     public function terminate($request, $response)
     {
         $middlewares = $this->royalcms->shouldSkipMiddleware() ? [] : array_merge(
-            $this->gatherRouteMiddlewares($request),
+            $this->gatherRouteMiddleware($request),
             $this->middleware
         );
 
@@ -158,10 +158,10 @@ class Kernel implements KernelContract
      * @param  \Royalcms\Component\Http\Request  $request
      * @return array
      */
-    protected function gatherRouteMiddlewares($request)
+    protected function gatherRouteMiddleware($request)
     {
         if ($route = $request->route()) {
-            return $this->router->gatherRouteMiddlewares($route);
+            return $this->router->gatherRouteMiddleware($route);
         }
 
         return [];

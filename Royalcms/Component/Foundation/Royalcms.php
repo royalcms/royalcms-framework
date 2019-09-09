@@ -1495,7 +1495,9 @@ class Royalcms extends Application implements RoyalcmsContract
                 'Royalcms\Component\Contracts\Auth\Guard',
                 \Illuminate\Contracts\Auth\Guard::class
             ],
-            'auth.password.tokens' => 'Royalcms\Component\Auth\Passwords\TokenRepositoryInterface',
+            'auth.password.tokens' => [
+                'Royalcms\Component\Auth\Passwords\TokenRepositoryInterface'
+            ],
             'blade.compiler'       => [
                 'Royalcms\Component\View\Compilers\BladeCompiler',
                 \Illuminate\View\Compilers\BladeCompiler::class
