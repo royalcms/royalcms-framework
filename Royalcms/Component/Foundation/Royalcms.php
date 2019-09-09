@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Royalcms\Component\Contracts\Foundation\Royalcms as RoyalcmsContract;
 use Royalcms\Component\Contracts\Debug\ExceptionHandler;
 
-class Royalcms extends Application
+class Royalcms extends Application implements RoyalcmsContract
 {
     /**
      * The Royalcms framework version.
