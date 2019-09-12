@@ -170,19 +170,8 @@ return array(
         'Royalcms\Component\Queue\QueueServiceProvider',
         'Royalcms\Component\Mail\MailServiceProvider',
         'Royalcms\Component\View\ViewServiceProvider',
+        'Royalcms\Component\Support\SupportServiceProvider',
 
-
-        'Royalcms\Component\Gettext\GettextServiceProvider',
-        'Royalcms\Component\Hook\HookServiceProvider',
-        'Royalcms\Component\Package\PackageServiceProvider',
-        'Royalcms\Component\App\AppServiceProvider',
-        'Royalcms\Component\Variable\VariableServiceProvider',
-        'Royalcms\Component\Rewrite\RewriteServiceProvider',
-//        'Royalcms\Component\Storage\StorageServiceProvider',
-        'Royalcms\Component\Timer\TimerServiceProvider',
-        'Royalcms\Component\Script\ScriptServiceProvider',
-        'Royalcms\Component\Error\ErrorServiceProvider',
-        'Royalcms\Component\DefaultRoute\DefaultRouteServiceProvider',
 
 
         // Foundation
@@ -194,7 +183,6 @@ return array(
         'Royalcms\Component\Foundation\Providers\ConsoleSupportServiceProvider',
 
 
-        //   'Royalcms\Component\Debugbar\DebugbarServiceProvider',
 
 
         //     'Royalcms\Component\Hashing\HashServiceProvider',
@@ -204,6 +192,5 @@ return array(
         //     'Royalcms\Component\Remote\RemoteServiceProvider',
         //     'Royalcms\Component\Workbench\WorkbenchServiceProvider',
 
-        'Royalcms\Component\Sentry\SentryServiceProvider',
     ),
 );
