@@ -171,6 +171,7 @@ return array(
         'Royalcms\Component\Mail\MailServiceProvider',
         'Royalcms\Component\View\ViewServiceProvider',
         'Royalcms\Component\Support\SupportServiceProvider',
+        'Royalcms\Component\Http\HttpServiceProvider',
 
 
 
