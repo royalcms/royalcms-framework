@@ -2,8 +2,6 @@
 
 namespace Royalcms\Component\Pagination;
 
-use Royalcms\Component\Support\ServiceProvider;
-
 class PaginationServiceProvider extends \Illuminate\Pagination\PaginationServiceProvider
 {
 
