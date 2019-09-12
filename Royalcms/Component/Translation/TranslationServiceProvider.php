@@ -45,6 +45,8 @@ class TranslationServiceProvider extends ServiceProvider
 
             return $trans;
         });
+
+        $this->loadAlias();
     }
 
     /**
@@ -68,4 +70,17 @@ class TranslationServiceProvider extends ServiceProvider
     {
         return ['translator', 'translation.loader'];
     }
+
+    /**
+     * Load the alias = One less install step for the user
+     */
+    protected function loadAlias()
+    {
+        $this->royalcms->booting(function () {
+            $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
+            $loader->alias('Royalcms\Component\Translation\FileLoader', 'Illuminate\Translation\FileLoader');
+            $loader->alias('Royalcms\Component\Translation\Translator', 'Illuminate\Translation\Translator');
+        });
+    }
+
 }
