@@ -1,8 +1,8 @@
 <?php
 
-namespace Royalcms\Component\Http;
+namespace Royalcms\Component\Validation;
 
-class ValidationServiceProvider extends \Illuminate\Support\ServiceProvider
+class ValidationServiceProvider extends \Illuminate\Validation\ValidationServiceProvider
 {
 
     /**
@@ -12,6 +12,7 @@ class ValidationServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function register()
     {
+        parent::register();
 
         $this->loadAlias();
     }
