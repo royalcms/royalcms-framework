@@ -103,7 +103,7 @@ class Memory
      * @param string $name Property to check if set.
      * @return bool Whether the property is set.
      */
-    public function __isset( $name )
+    public function __isset( $name ) 
     {
         return isset( $this->$name );
     }
@@ -116,7 +116,7 @@ class Memory
      *
      * @param string $name Property to unset.
      */
-    public function __unset( $name )
+    public function __unset( $name ) 
     {
         unset( $this->$name );
     }
@@ -136,7 +136,7 @@ class Memory
      * @param int $expire When to expire the cache contents
      * @return bool False if cache key and group already exist, true on success
      */
-    public function add( $key, $data, $group = 'default', $expire = 0 )
+    public function add( $key, $data, $group = 'default', $expire = 0 ) 
     {
         if ( rc_suspend_cache_addition() ) {
             return false;
@@ -165,7 +165,7 @@ class Memory
      *
      * @param array $groups List of groups that are global.
      */
-    public function add_global_groups( $groups )
+    public function add_global_groups( $groups ) 
     {
         $groups = (array) $groups;
     
@@ -183,7 +183,7 @@ class Memory
      * @param string $group The group the key is in.
      * @return false|int False on failure, the item's new value on success.
      */
-    public function decr( $key, $offset = 1, $group = 'default' )
+    public function decr( $key, $offset = 1, $group = 'default' ) 
     {
         if ( empty( $group ) ) {
             $group = 'default';
@@ -225,7 +225,7 @@ class Memory
      *
      * @return bool False if the contents weren't deleted and true on success
      */
-    public function delete( $key, $group = 'default', $deprecated = false )
+    public function delete( $key, $group = 'default', $deprecated = false ) 
     {
         if ( empty( $group ) ) {
             $group = 'default';
@@ -250,7 +250,7 @@ class Memory
      *
      * @return bool Always returns true
      */
-    public function flush()
+    public function flush() 
     {
         $this->cache = array ();
     
@@ -274,7 +274,7 @@ class Memory
      * @return bool|mixed False on failure to retrieve contents or the cache
      *		contents on success
      */
-    public function get( $key, $group = 'default', $force = false, &$found = null )
+    public function get( $key, $group = 'default', $force = false, &$found = null ) 
     {
         if ( empty( $group ) ) {
             $group = 'default';
@@ -309,7 +309,7 @@ class Memory
      * @param string $group The group the key is in.
      * @return false|int False on failure, the item's new value on success.
      */
-    public function incr( $key, $offset = 1, $group = 'default' )
+    public function incr( $key, $offset = 1, $group = 'default' ) 
     {
         if ( empty( $group ) ) {
             $group = 'default';
@@ -350,7 +350,7 @@ class Memory
      * @param int $expire When to expire the cache contents
      * @return bool False if not exists, true if contents were replaced
      */
-    public function replace( $key, $data, $group = 'default', $expire = 0 )
+    public function replace( $key, $data, $group = 'default', $expire = 0 ) 
     {
         if ( empty( $group ) ) {
             $group = 'default';
@@ -374,7 +374,7 @@ class Memory
      * @since 3.4.0
      * @deprecated 3.5.0
      */
-    public function reset()
+    public function reset() 
     {
         // Clear out non-global caches since the blog ID has changed.
         foreach ( array_keys( $this->cache ) as $group ) {
@@ -404,7 +404,7 @@ class Memory
      * @param int $expire Not Used
      * @return bool Always returns true
      */
-    public function set( $key, $data, $group = 'default', $expire = 0 )
+    public function set( $key, $data, $group = 'default', $expire = 0 ) 
     {
         if ( empty( $group ) ) {
             $group = 'default';
@@ -430,7 +430,7 @@ class Memory
      *
      * @since 3.4.0
      */
-    public function stats()
+    public function stats() 
     {
         echo "<p>";
         echo "<strong>Cache Hits:</strong> {$this->cache_hits}<br />";
@@ -452,7 +452,7 @@ class Memory
      *
      * @param int $site_name Site ID
      */
-    public function switch_to_site( $site_name )
+    public function switch_to_site( $site_name ) 
     {
         $site_name = (string) $site_name;
         $this->site_prefix = $this->multisite ? $site_name . ':' : '';
@@ -465,7 +465,7 @@ class Memory
      *
      * @access protected
      */
-    protected function _exists( $key, $group )
+    protected function _exists( $key, $group ) 
     {
         return isset( $this->cache[ $group ] ) && ( isset( $this->cache[ $group ][ $key ] ) || array_key_exists( $key, $this->cache[ $group ] ) );
     }
@@ -476,7 +476,7 @@ class Memory
      * @since 3.4.0
      * @return null|WP_Object_Cache If cache is disabled, returns null.
      */
-    public function __construct()
+    public function __construct() 
     {
         $this->multisite = defined('RC_SITE');
         $this->site_prefix =  $this->multisite ? RC_SITE . ':' : '';
@@ -499,11 +499,10 @@ class Memory
 	 *
 	 * @return bool True value. Won't be used by PHP
 	 */
-	public function __destruct()
+	public function __destruct() 
     {
 		return true;
 	}
-
 }
 
 // end
