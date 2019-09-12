@@ -4,8 +4,9 @@ namespace Royalcms\Component\Pagination;
 
 use Royalcms\Component\Support\ServiceProvider;
 
-class PaginationServiceProvider extends ServiceProvider
+class PaginationServiceProvider extends \Illuminate\Pagination\PaginationServiceProvider
 {
+
     /**
      * Register the service provider.
      *
@@ -13,18 +14,24 @@ class PaginationServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        Paginator::currentPathResolver(function () {
-            return $this->app['request']->url();
-        });
+        parent::register();
 
-        Paginator::currentPageResolver(function ($pageName = 'page') {
-            $page = $this->app['request']->input($pageName);
+        $this->loadAlias();
+    }
 
-            if (filter_var($page, FILTER_VALIDATE_INT) !== false && (int) $page >= 1) {
-                return $page;
-            }
-
-            return 1;
+    /**
+     * Load the alias = One less install step for the user
+     */
+    protected function loadAlias()
+    {
+        $this->royalcms->booting(function() {
+            $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
+            $loader->alias('Royalcms\Component\Pagination\AbstractPaginator', 'Illuminate\Pagination\AbstractPaginator');
+            $loader->alias('Royalcms\Component\Pagination\LengthAwarePaginator', 'Illuminate\Pagination\LengthAwarePaginator');
+            $loader->alias('Royalcms\Component\Pagination\Paginator', 'Illuminate\Pagination\Paginator');
+            $loader->alias('Royalcms\Component\Pagination\UrlWindow', 'Illuminate\Pagination\UrlWindow');
         });
     }
+
+
 }
