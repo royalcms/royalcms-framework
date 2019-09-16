@@ -152,8 +152,11 @@ return array(
 
     'providers' => array(
 
+//        'Royalcms\Component\Container\ContainerServiceProvider',
+//        'Royalcms\Component\Contracts\ContractsServiceProvider',
+//        'Royalcms\Component\Http\HttpServiceProvider',
+//        'Royalcms\Component\Filesystem\FilesystemServiceProvider',
         'Royalcms\Component\Bus\BusServiceProvider',
-        'Royalcms\Component\Filesystem\FilesystemServiceProvider',
         'Royalcms\Component\Database\DatabaseServiceProvider',
         'Royalcms\Component\Database\SeedServiceProvider',
         'Royalcms\Component\Database\MigrationServiceProvider',
@@ -171,7 +174,7 @@ return array(
         'Royalcms\Component\Mail\MailServiceProvider',
         'Royalcms\Component\View\ViewServiceProvider',
         'Royalcms\Component\Support\SupportServiceProvider',
-        'Royalcms\Component\Http\HttpServiceProvider',
+
 
 
 
