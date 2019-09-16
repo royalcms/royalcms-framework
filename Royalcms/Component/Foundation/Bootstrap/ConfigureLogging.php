@@ -38,11 +38,11 @@ class ConfigureLogging
      */
     protected function registerLogger(Royalcms $royalcms)
     {
-        $log = new Writer(new Monolog($royalcms->environment()), $royalcms['events']);
+//        $log = new Writer(new Monolog($royalcms->environment()), $royalcms['events']);
 
-        $royalcms->instance('log', $log);
+//        $royalcms->instance('log', $log);
 
-        return $log;
+        return $royalcms->make('log');
     }
 
     /**
