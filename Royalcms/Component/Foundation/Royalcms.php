@@ -9,6 +9,7 @@ use Royalcms\Component\Container\ContainerServiceProvider;
 use Royalcms\Component\Contracts\ContractsServiceProvider;
 use Royalcms\Component\Filesystem\FilesystemServiceProvider;
 use Royalcms\Component\Http\HttpServiceProvider;
+use Royalcms\Component\Support\SupportServiceProvider;
 use RuntimeException;
 use Royalcms\Component\Support\Arr;
 use Royalcms\Component\Support\Str;
@@ -119,6 +120,7 @@ class Royalcms extends Application implements RoyalcmsContract
         $this->register(new FilesystemServiceProvider($this));
         $this->register(new ContainerServiceProvider($this));
         $this->register(new ContractsServiceProvider($this));
+        $this->register(new SupportServiceProvider($this));
     }
 
     /**
