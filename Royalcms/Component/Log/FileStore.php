@@ -20,6 +20,8 @@ class FileStore
      * @var string
      */
     protected $directory;
+
+
     
     /**
      * Create a new file cache store instance.
@@ -48,16 +50,14 @@ class FileStore
     protected function createCacheDirectory($path)
     {
         $bool = $this->files->makeDirectory($path, 0755, true, true);
-        if ($bool === false)
-        {
+        if ($bool === false) {
             //目录没有读写权限
             $path = str_replace(SITE_ROOT, '/', storage_path());
             rc_die(sprintf(__("目录%s没有读写权限，请设置权限为777。"), $path));
         }
     }
 
-    private $loggers = array();
-    
+
     /**
      * 获取一个实例
      * @param string $type
@@ -66,12 +66,8 @@ class FileStore
     */
     public function getLogger($type = 'royalcms', $day = 30)
     {
-        if (empty($this->loggers[$type])) {
-            $this->loggers[$type] = new Writer(new MonologLogger($type));
-            $this->loggers[$type]->useDailyFiles($this->directory . $type . '.log', $day);
-        }
-    
-        $log = $this->loggers[$type];
-        return $log;
+        $customLogger = royalcms(CreateCustomLogger::class);
+
+        return $customLogger->getLogger($type = 'royalcms', $day = 30);
     }
 }
