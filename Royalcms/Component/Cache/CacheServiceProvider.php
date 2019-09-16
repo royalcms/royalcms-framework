@@ -4,6 +4,25 @@ namespace Royalcms\Component\Cache;
 
 class CacheServiceProvider extends \Illuminate\Cache\CacheServiceProvider
 {
+    /**
+     * The application instance.
+     *
+     * @var \Royalcms\Component\Contracts\Foundation\Royalcms
+     */
+    protected $royalcms;
+
+    /**
+     * Create a new service provider instance.
+     *
+     * @param  \Royalcms\Component\Contracts\Foundation\Royalcms  $royalcms
+     * @return void
+     */
+    public function __construct($royalcms)
+    {
+        parent::__construct($royalcms);
+
+        $this->royalcms = $royalcms;
+    }
 
     /**
      * Register the service provider.
