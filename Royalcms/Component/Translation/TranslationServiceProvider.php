@@ -2,6 +2,8 @@
 
 namespace Royalcms\Component\Translation;
 
+use Illuminate\Translation\FileLoader;
+use Illuminate\Translation\Translator;
 use Royalcms\Component\Support\ServiceProvider;
 
 class TranslationServiceProvider extends ServiceProvider
@@ -20,6 +22,8 @@ class TranslationServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->loadAlias();
+
         $this->registerLoader();
 
         $this->royalcms->singleton('translator', function ($royalcms) {
@@ -46,7 +50,6 @@ class TranslationServiceProvider extends ServiceProvider
             return $trans;
         });
 
-        $this->loadAlias();
     }
 
     /**
