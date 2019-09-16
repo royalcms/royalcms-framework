@@ -41,10 +41,8 @@ class SupportServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     protected function loadAlias()
     {
-        $this->royalcms->booting(function() {
-            $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
-            $loader->alias('Royalcms\Component\Support\Collection', 'Illuminate\Support\Collection');
-        });
+        $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
+        $loader->alias('Royalcms\Component\Support\Collection', 'Illuminate\Support\Collection');
     }
 
 
