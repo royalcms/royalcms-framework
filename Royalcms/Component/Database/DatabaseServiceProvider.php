@@ -15,6 +15,25 @@ use Royalcms\Component\Database\Connectors\ConnectionFactory;
 
 class DatabaseServiceProvider extends LaravelDatabaseServiceProvider
 {
+    /**
+     * The application instance.
+     *
+     * @var \Royalcms\Component\Contracts\Foundation\Royalcms
+     */
+    protected $royalcms;
+
+    /**
+     * Create a new service provider instance.
+     *
+     * @param  \Royalcms\Component\Contracts\Foundation\Royalcms  $royalcms
+     * @return void
+     */
+    public function __construct($royalcms)
+    {
+        parent::__construct($royalcms);
+
+        $this->royalcms = $royalcms;
+    }
 
     /**
      * Register the service provider.
@@ -23,8 +42,9 @@ class DatabaseServiceProvider extends LaravelDatabaseServiceProvider
      */
     public function register()
     {
-
         $this->loadAlias();
+
+        parent::register();
     }
 
     /**
@@ -37,19 +57,19 @@ class DatabaseServiceProvider extends LaravelDatabaseServiceProvider
         // The connection factory is used to create the actual connection instances on
         // the database. We will inject the factory into the manager so that it may
         // make the connections while they are actually needed and not of before.
-        $this->app->singleton('db.factory', function ($app) {
-            return new ConnectionFactory($app);
+        $this->royalcms->singleton('db.factory', function ($royalcms) {
+            return new ConnectionFactory($royalcms);
         });
 
         // The database manager is used to resolve various connections, since multiple
         // connections might be managed. It also implements the connection resolver
         // interface which may be used by other components requiring connections.
-        $this->app->singleton('db', function ($app) {
-            return new DatabaseManager($app, $app['db.factory']);
+        $this->royalcms->singleton('db', function ($royalcms) {
+            return new DatabaseManager($royalcms, $royalcms['db.factory']);
         });
 
-        $this->app->bind('db.connection', function ($app) {
-            return $app['db']->connection();
+        $this->royalcms->bind('db.connection', function ($royalcms) {
+            return $royalcms['db']->connection();
         });
         
     }
