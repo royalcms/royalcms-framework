@@ -89,6 +89,11 @@ return [
             'driver' => 'errorlog',
             'level' => 'debug',
         ],
+
+        'custom' => [
+            'driver' => 'custom',
+            'via' => Royalcms\Component\Log\CreateCustomLogger::class,
+        ],
     ],
 
 ];

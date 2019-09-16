@@ -152,17 +152,13 @@ return array(
 
     'providers' => array(
 
-//        'Royalcms\Component\Container\ContainerServiceProvider',
-//        'Royalcms\Component\Contracts\ContractsServiceProvider',
-//        'Royalcms\Component\Http\HttpServiceProvider',
-//        'Royalcms\Component\Filesystem\FilesystemServiceProvider',
         'Royalcms\Component\Bus\BusServiceProvider',
         'Royalcms\Component\Database\DatabaseServiceProvider',
         'Royalcms\Component\Database\SeedServiceProvider',
         'Royalcms\Component\Database\MigrationServiceProvider',
         'Royalcms\Component\Cache\CacheServiceProvider',
-        'Royalcms\Component\Encryption\EncryptionServiceProvider',
         'Royalcms\Component\Log\LogServiceProvider',
+        'Royalcms\Component\Encryption\EncryptionServiceProvider',
         'Royalcms\Component\Routing\ControllerServiceProvider',
         'Royalcms\Component\Cookie\CookieServiceProvider',
         'Royalcms\Component\Session\SessionServiceProvider',
@@ -173,8 +169,6 @@ return array(
         'Royalcms\Component\Queue\QueueServiceProvider',
         'Royalcms\Component\Mail\MailServiceProvider',
         'Royalcms\Component\View\ViewServiceProvider',
-        'Royalcms\Component\Support\SupportServiceProvider',
-
 
 
 
