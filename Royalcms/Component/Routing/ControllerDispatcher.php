@@ -96,7 +96,7 @@ class ControllerDispatcher extends \Illuminate\Routing\ControllerDispatcher
                                 $this->container->make('middleware.disable') === true;
 
         $middleware = $shouldSkipMiddleware ? [] : $this->getMiddleware($instance, $method);
-
+        
         // Here we will make a stack onion instance to execute this request in, which gives
         // us the ability to define middlewares on controllers. We will return the given
         // response back out so that "after" filters can be run after the middlewares.
@@ -108,6 +108,45 @@ class ControllerDispatcher extends \Illuminate\Routing\ControllerDispatcher
                             $request, $this->call($instance, $route, $method)
                         );
                     });
+    }
+
+    /**
+     * Get the middleware for the controller instance.
+     *
+     * @param  \Royalcms\Component\Routing\Controller  $instance
+     * @param  string  $method
+     * @return array
+     */
+    public function getMiddleware($instance, $method)
+    {
+        if (! method_exists($controller, 'getMiddleware')) {
+            return [];
+        }
+
+        $results = [];
+
+        foreach ($instance->getMiddleware() as $name => $data) {
+            if (! $this->methodExcludedByOptions($method, $data['options'])) {
+                $results[] = $this->resolveMiddlewareClassName($name);
+            }
+        }
+
+        return $results;
+    }
+
+    /**
+     * Resolve the middleware name to a class name preserving passed parameters.
+     *
+     * @param  string  $name
+     * @return string
+     */
+    public function resolveMiddlewareClassName($name)
+    {
+        $map = $this->router->getMiddleware();
+
+        list($name, $parameters) = array_pad(explode(':', $name, 2), 2, null);
+
+        return (isset($map[$name]) ? $map[$name] : $name).($parameters !== null ? ':'.$parameters : '');
     }
 
     /**
