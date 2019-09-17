@@ -8,14 +8,8 @@ use Royalcms\Component\Support\Str;
 use InvalidArgumentException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-abstract class Controller
+abstract class Controller extends \Illuminate\Routing\Controller
 {
-    /**
-     * The middleware registered on the controller.
-     *
-     * @var array
-     */
-    protected $middleware = [];
 
     /**
      * The "before" filters registered on the controller.
@@ -38,17 +32,6 @@ abstract class Controller
      */
     protected static $router;
 
-    /**
-     * Register middleware on the controller.
-     *
-     * @param  string  $middleware
-     * @param  array   $options
-     * @return void
-     */
-    public function middleware($middleware, array $options = [])
-    {
-        $this->middleware[$middleware] = $options;
-    }
 
     /**
      * Register a "before" filter on the controller.
@@ -190,16 +173,6 @@ abstract class Controller
     }
 
     /**
-     * Get the middleware assigned to the controller.
-     *
-     * @return array
-     */
-    public function getMiddleware()
-    {
-        return $this->middleware;
-    }
-
-    /**
      * Get the registered "before" filters.
      *
      * @return array
@@ -245,18 +218,6 @@ abstract class Controller
     }
 
     /**
-     * Execute an action on the controller.
-     *
-     * @param  string  $method
-     * @param  array   $parameters
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function callAction($method, $parameters)
-    {
-        return call_user_func_array([$this, $method], $parameters);
-    }
-
-    /**
      * Handle calls to missing methods on the controller.
      *
      * @param  array   $parameters
@@ -269,17 +230,4 @@ abstract class Controller
         throw new NotFoundHttpException('Controller method not found.');
     }
 
-    /**
-     * Handle calls to missing methods on the controller.
-     *
-     * @param  string  $method
-     * @param  array   $parameters
-     * @return mixed
-     *
-     * @throws \BadMethodCallException
-     */
-    public function __call($method, $parameters)
-    {
-        throw new BadMethodCallException("Method [$method] does not exist.");
-    }
 }

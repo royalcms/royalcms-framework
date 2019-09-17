@@ -9,7 +9,7 @@ use Royalcms\Component\Pipeline\Pipeline;
 use Royalcms\Component\Container\Container;
 use Illuminate\Routing\Route;
 
-class ControllerDispatcher
+class ControllerDispatcher extends \Illuminate\Routing\ControllerDispatcher
 {
     use RouteDependencyResolverTrait;
 
@@ -19,13 +19,6 @@ class ControllerDispatcher
      * @var \Royalcms\Component\Routing\Router
      */
     protected $router;
-
-    /**
-     * The IoC container instance.
-     *
-     * @var \Royalcms\Component\Container\Container
-     */
-    protected $container;
 
     /**
      * Create a new controller dispatcher instance.
@@ -50,8 +43,10 @@ class ControllerDispatcher
      * @param  string  $method
      * @return mixed
      */
-    public function dispatch(Route $route, Request $request, $controller, $method)
+    public function dispatch(Route $route, $controller, $method)
     {
+        $request = royalcms('request');
+
         // First we will make an instance of this controller via the IoC container instance
         // so that we can call the methods on it. We will also apply any "after" filters
         // to the route so that they will be run by the routers after this processing.
@@ -113,39 +108,6 @@ class ControllerDispatcher
                             $request, $this->call($instance, $route, $method)
                         );
                     });
-    }
-
-    /**
-     * Get the middleware for the controller instance.
-     *
-     * @param  \Royalcms\Component\Routing\Controller  $instance
-     * @param  string  $method
-     * @return array
-     */
-    protected function getMiddleware($instance, $method)
-    {
-        $results = [];
-
-        foreach ($instance->getMiddleware() as $name => $options) {
-            if (! $this->methodExcludedByOptions($method, $options)) {
-                $results[] = $this->router->resolveMiddlewareClassName($name);
-            }
-        }
-
-        return $results;
-    }
-
-    /**
-     * Determine if the given options exclude a particular method.
-     *
-     * @param  string  $method
-     * @param  array  $options
-     * @return bool
-     */
-    public function methodExcludedByOptions($method, array $options)
-    {
-        return (isset($options['only']) && ! in_array($method, (array) $options['only'])) ||
-            (! empty($options['except']) && in_array($method, (array) $options['except']));
     }
 
     /**

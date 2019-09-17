@@ -187,6 +187,7 @@ class RoutingServiceProvider extends ServiceProvider
         $loader->alias('Royalcms\Component\Routing\RouteDependencyResolverTrait', 'Illuminate\Routing\RouteDependencyResolverTrait');
         $loader->alias('Royalcms\Component\Routing\Router', 'Illuminate\Routing\Router');
         $loader->alias('Royalcms\Component\Routing\UrlGenerator', 'Illuminate\Routing\UrlGenerator');
+//        $loader->alias('Royalcms\Component\Routing\ControllerDispatcher', 'Illuminate\Routing\ControllerDispatcher');
     }
 
 }
