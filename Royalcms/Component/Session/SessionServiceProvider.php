@@ -73,7 +73,7 @@ class SessionServiceProvider extends ServiceProvider
     {
         $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
         $loader->alias('Royalcms\Component\Session\CacheBasedSessionHandler', 'Illuminate\Session\CacheBasedSessionHandler');
-        $loader->alias('Royalcms\Component\Session\CommandsServiceProvider', 'Illuminate\Session\CommandsServiceProvider');
+//        $loader->alias('Royalcms\Component\Session\CommandsServiceProvider', 'Illuminate\Session\CommandsServiceProvider');
         $loader->alias('Royalcms\Component\Session\Console\SessionTableCommand', 'Illuminate\Session\Console\SessionTableCommand');
         $loader->alias('Royalcms\Component\Session\CookieSessionHandler', 'Illuminate\Session\CookieSessionHandler');
         $loader->alias('Royalcms\Component\Session\DatabaseSessionHandler', 'Illuminate\Session\DatabaseSessionHandler');
@@ -81,7 +81,7 @@ class SessionServiceProvider extends ServiceProvider
         $loader->alias('Royalcms\Component\Session\ExistenceAwareInterface', 'Illuminate\Session\ExistenceAwareInterface');
         $loader->alias('Royalcms\Component\Session\FileSessionHandler', 'Illuminate\Session\FileSessionHandler');
         $loader->alias('Royalcms\Component\Session\Middleware\StartSession', 'Illuminate\Session\Middleware\StartSession');
-        $loader->alias('Royalcms\Component\Session\SessionInterface', 'Illuminate\Session\SessionInterface');
+//        $loader->alias('Royalcms\Component\Session\SessionInterface', 'Illuminate\Session\SessionInterface');
         $loader->alias('Royalcms\Component\Session\SessionManager', 'Illuminate\Session\SessionManager');
         $loader->alias('Royalcms\Component\Session\Store', 'Illuminate\Session\Store');
 //        $loader->alias('Royalcms\Component\Session\StoreInterface', 'Illuminate\Session\StoreInterface');
