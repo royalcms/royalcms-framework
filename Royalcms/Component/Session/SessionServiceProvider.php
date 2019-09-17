@@ -82,8 +82,8 @@ class SessionServiceProvider extends ServiceProvider
         $loader->alias('Royalcms\Component\Session\FileSessionHandler', 'Illuminate\Session\FileSessionHandler');
         $loader->alias('Royalcms\Component\Session\Middleware\StartSession', 'Illuminate\Session\Middleware\StartSession');
 //        $loader->alias('Royalcms\Component\Session\SessionInterface', 'Illuminate\Session\SessionInterface');
-        $loader->alias('Royalcms\Component\Session\SessionManager', 'Illuminate\Session\SessionManager');
-        $loader->alias('Royalcms\Component\Session\Store', 'Illuminate\Session\Store');
+//        $loader->alias('Royalcms\Component\Session\SessionManager', 'Illuminate\Session\SessionManager');
+//        $loader->alias('Royalcms\Component\Session\Store', 'Illuminate\Session\Store');
 //        $loader->alias('Royalcms\Component\Session\StoreInterface', 'Illuminate\Session\StoreInterface');
         $loader->alias('Royalcms\Component\Session\TokenMismatchException', 'Illuminate\Session\TokenMismatchException');
     }

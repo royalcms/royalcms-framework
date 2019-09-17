@@ -3,7 +3,7 @@
 namespace Royalcms\Component\Session;
 
 use Illuminate\Contracts\Session\Session;
-use Royalcms\Component\Support\Arr;
+use Illuminate\Support\Arr;
 use Royalcms\Component\Support\Str;
 use SessionHandlerInterface;
 use InvalidArgumentException;
@@ -102,6 +102,38 @@ class Store extends \Illuminate\Session\Store implements SessionInterface, Store
                 $this->put($key, $this->bagData[$key]);
             }
         }
+    }
+
+    /**
+     * Flush the session data and regenerate the ID.
+     *
+     * @return bool
+     */
+    public function invalidate($lifetime = null)
+    {
+        return parent::invalidate();
+    }
+
+    /**
+     * Generate a new session ID for the session.
+     *
+     * @param  bool  $destroy
+     * @return bool
+     */
+    public function migrate($destroy = false, $lifetime = null)
+    {
+        return parent::migrate($destroy);
+    }
+
+    /**
+     * Sets an attribute.
+     *
+     * @param string $name
+     * @param mixed $value
+     */
+    public function set($name, $value)
+    {
+        Arr::set($this->attributes, $name, $value);
     }
 
     /**
