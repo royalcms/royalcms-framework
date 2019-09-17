@@ -79,16 +79,6 @@ class Store extends \Illuminate\Session\Store implements SessionInterface, Store
     }
 
     /**
-     * Get a new, random session ID.
-     *
-     * @return string
-     */
-    protected function generateSessionId()
-    {
-        return sha1(uniqid('', true).Str::random(25).microtime(true));
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function save()
@@ -112,14 +102,6 @@ class Store extends \Illuminate\Session\Store implements SessionInterface, Store
                 $this->put($key, $this->bagData[$key]);
             }
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function set($name, $value)
-    {
-        Arr::set($this->attributes, $name, $value);
     }
 
     /**
@@ -180,16 +162,5 @@ class Store extends \Illuminate\Session\Store implements SessionInterface, Store
     {
         return Arr::get($this->bagData, $name, []);
     }
-
-    /**
-     * Get the CSRF token value.
-     *
-     * @return string
-     */
-    public function getToken()
-    {
-        return $this->token();
-    }
-
 
 }
