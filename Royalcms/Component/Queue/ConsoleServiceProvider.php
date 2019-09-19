@@ -2,13 +2,19 @@
 
 namespace Royalcms\Component\Queue;
 
+use Illuminate\Queue\Console\FailedTableCommand;
+use Illuminate\Queue\Console\FlushFailedCommand;
+use Illuminate\Queue\Console\ForgetFailedCommand;
+use Illuminate\Queue\Console\ListFailedCommand;
+use Illuminate\Queue\Console\RetryCommand;
+use Illuminate\Queue\Console\TableCommand;
 use Royalcms\Component\Support\ServiceProvider;
-use Royalcms\Component\Queue\Console\TableCommand;
-use Royalcms\Component\Queue\Console\RetryCommand;
-use Royalcms\Component\Queue\Console\ListFailedCommand;
-use Royalcms\Component\Queue\Console\FlushFailedCommand;
-use Royalcms\Component\Queue\Console\FailedTableCommand;
-use Royalcms\Component\Queue\Console\ForgetFailedCommand;
+//use Royalcms\Component\Queue\Console\TableCommand;
+//use Royalcms\Component\Queue\Console\RetryCommand;
+//use Royalcms\Component\Queue\Console\ListFailedCommand;
+//use Royalcms\Component\Queue\Console\FlushFailedCommand;
+//use Royalcms\Component\Queue\Console\FailedTableCommand;
+//use Royalcms\Component\Queue\Console\ForgetFailedCommand;
 
 class ConsoleServiceProvider extends ServiceProvider
 {
@@ -50,10 +56,14 @@ class ConsoleServiceProvider extends ServiceProvider
             return new FailedTableCommand($app['files'], $app['composer']);
         });
 
-        $this->commands(
-            'command.queue.table', 'command.queue.failed', 'command.queue.retry',
-            'command.queue.forget', 'command.queue.flush', 'command.queue.failed-table'
-        );
+        $this->commands([
+            'command.queue.table',
+            'command.queue.failed',
+            'command.queue.retry',
+            'command.queue.forget',
+            'command.queue.flush',
+            'command.queue.failed-table'
+        ]);
     }
 
     /**
@@ -64,8 +74,12 @@ class ConsoleServiceProvider extends ServiceProvider
     public function provides()
     {
         return [
-            'command.queue.table', 'command.queue.failed', 'command.queue.retry',
-            'command.queue.forget', 'command.queue.flush', 'command.queue.failed-table',
+            'command.queue.table',
+            'command.queue.failed',
+            'command.queue.retry',
+            'command.queue.forget',
+            'command.queue.flush',
+            'command.queue.failed-table',
         ];
     }
 }
