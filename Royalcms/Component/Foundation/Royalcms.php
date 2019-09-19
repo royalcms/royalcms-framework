@@ -58,6 +58,13 @@ class Royalcms extends Application implements RoyalcmsContract
     protected $useStoragePathForOptimizations = false;
 
     /**
+     * The custom system path defined by the developer.
+     *
+     * @var string
+     */
+    protected $systemPath;
+
+    /**
      * Create a new Royalcms application instance.
      *
      * @param  string|null  $basePath
@@ -65,13 +72,7 @@ class Royalcms extends Application implements RoyalcmsContract
      */
     public function __construct($basePath = null)
     {
-        if ($basePath) {
-            $this->setBasePath($basePath);
-        }
-
-        $this->registerBaseBindings();
-        $this->registerBaseServiceProviders();
-        $this->registerCoreContainerAliases();
+        parent::__construct($basePath);
     }
 
     /**
@@ -226,15 +227,34 @@ class Royalcms extends Application implements RoyalcmsContract
      *
      * @return string
      */
-    public function systemPath()
+    public function systemPath($path = null)
     {
-        $path = $this->siteContentPath().DIRECTORY_SEPARATOR.'system';
-
-        if ($this->runningInSite() && is_dir($path)) {
-            return $path;
+        if ($this->systemPath) {
+            $basePath = $this->systemPath;
         } else {
-            return $this->contentPath().DIRECTORY_SEPARATOR.'system';
+            $basePath = $this->siteContentPath().DIRECTORY_SEPARATOR.'system';
+
+            if (! ($this->runningInSite() && is_dir($basePath))) {
+                $basePath = $this->contentPath().DIRECTORY_SEPARATOR.'system';
+            }
         }
+
+        return $basePath . ($path ? DIRECTORY_SEPARATOR.$path : $path);
+    }
+
+    /**
+     * Set the database directory.
+     *
+     * @param  string  $path
+     * @return $this
+     */
+    public function useSystemPath($path)
+    {
+        $this->databasePath = $path;
+
+        $this->instance('path.system', $path);
+
+        return $this;
     }
 
     /**

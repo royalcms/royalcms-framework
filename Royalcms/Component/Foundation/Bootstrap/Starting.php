@@ -2,16 +2,19 @@
 
 namespace Royalcms\Component\Foundation\Bootstrap;
 
+use Dotenv\Dotenv;
+use Dotenv\Exception\InvalidPathException;
+use Illuminate\Support\Env;
 use Royalcms\Component\Contracts\Foundation\Royalcms;
-use InvalidArgumentException;
-use Royalcms\Component\Config\Dotenv;
 
 class Starting
 {
     /**
      * Bootstrap the given application.
      *
-     * @param  \Royalcms\Component\Contracts\Foundation\Royalcms  $royalcms
+     * @param  \Royalcms\Component\Contracts\Foundation\Royalcms|\Royalcms\Component\Foundation\Royalcms
+     *
+     * \Foundation\Royalcms  $royalcms
      * @return void
      */
     public function bootstrap(Royalcms $royalcms)
@@ -39,22 +42,6 @@ class Starting
         |
         */
 
-//        if ( ! extension_loaded('mcrypt') && version_compare(PHP_VERSION, '7.2', '<'))
-//        {
-//            echo 'Mcrypt PHP extension required.'.PHP_EOL;
-//
-//            exit(1);
-//        }
-
-        /*
-         * php >= 7.0
-         */
-        if ( ! interface_exists('Throwable')) {
-            class_alias('\Royalcms\Component\Foundation\Compatible\Throwable', 'Throwable');
-        }
-        if ( ! class_exists('Error')) {
-            class_alias('\Royalcms\Component\Foundation\Compatible\Error', 'Error');
-        }
 
         /*
         |--------------------------------------------------------------------------
@@ -67,19 +54,20 @@ class Starting
         |
         */
 
-        try
-        {
-            Dotenv::load(SITE_PATH, $royalcms->environmentFile());
+        try {
+            $royalcms->useEnvironmentPath(SITE_PATH);
+            if (! file_exists($royalcms->environmentFilePath())) {
+                $royalcms->useEnvironmentPath(SITE_ROOT);
+            }
+
+            Dotenv::create(
+                $royalcms->environmentPath(),
+                $royalcms->environmentFile(),
+                Env::getFactory()
+            );
         }
-        catch (InvalidArgumentException $e)
-        {
-            try {
-                Dotenv::load(SITE_ROOT, $royalcms->environmentFile());
-            }
-            catch (InvalidArgumentException $e)
-            {
-                //
-            }
+        catch (InvalidPathException $e) {
+            //
         }
 
         $royalcms->detectEnvironment(function() {
@@ -87,9 +75,6 @@ class Starting
             return env('ROYALCMS_ENV', 'production');
 
         });
-
-
-
 
     }
 }
