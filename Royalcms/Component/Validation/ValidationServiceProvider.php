@@ -6,6 +6,26 @@ class ValidationServiceProvider extends \Illuminate\Validation\ValidationService
 {
 
     /**
+     * The application instance.
+     *
+     * @var \Royalcms\Component\Contracts\Foundation\Royalcms
+     */
+    protected $royalcms;
+
+    /**
+     * Create a new service provider instance.
+     *
+     * @param  \Royalcms\Component\Contracts\Foundation\Royalcms|\Illuminate\Contracts\Foundation\Application  $royalcms
+     * @return void
+     */
+    public function __construct($royalcms)
+    {
+        parent::__construct($royalcms);
+
+        $this->royalcms = $royalcms;
+    }
+
+    /**
      * Register the service provider.
      *
      * @return void
