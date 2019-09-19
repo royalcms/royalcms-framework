@@ -2,7 +2,7 @@
 
 namespace Royalcms\Component\Console\Scheduling;
 
-use Symfony\Component\Process\ProcessUtils;
+use Illuminate\Support\ProcessUtils;
 use Royalcms\Component\Contracts\Foundation\Royalcms;
 use Symfony\Component\Process\PhpExecutableFinder;
 
