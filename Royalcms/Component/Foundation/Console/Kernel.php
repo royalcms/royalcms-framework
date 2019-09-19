@@ -52,7 +52,7 @@ class Kernel implements KernelContract
         'Royalcms\Component\Foundation\Bootstrap\DetectEnvironment',
         'Royalcms\Component\Foundation\Bootstrap\LoadConfiguration',
         'Royalcms\Component\Foundation\Bootstrap\RegisterNamespaces',
-        'Royalcms\Component\Foundation\Bootstrap\ConfigureLogging',
+//        'Royalcms\Component\Foundation\Bootstrap\ConfigureLogging',
         'Royalcms\Component\Foundation\Bootstrap\HandleExceptions',
         'Royalcms\Component\Foundation\Bootstrap\RegisterFacades',
         'Royalcms\Component\Foundation\Bootstrap\SetRequestForConsole',
