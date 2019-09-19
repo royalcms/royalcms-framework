@@ -2,9 +2,12 @@
 
 namespace Royalcms\Component\Database;
 
+use Illuminate\Database\Console\Seeds\SeedCommand;
+use Illuminate\Database\Console\Seeds\SeederMakeCommand;
+use Illuminate\Database\Seeder;
 use Royalcms\Component\Support\ServiceProvider;
-use Royalcms\Component\Database\Console\Seeds\SeedCommand;
-use Royalcms\Component\Database\Console\Seeds\SeederMakeCommand;
+//use Royalcms\Component\Database\Console\Seeds\SeedCommand;
+//use Royalcms\Component\Database\Console\Seeds\SeederMakeCommand;
 
 class SeedServiceProvider extends ServiceProvider
 {
@@ -25,10 +28,6 @@ class SeedServiceProvider extends ServiceProvider
         $this->registerSeedCommand();
 
         $this->registerMakeCommand();
-
-        $this->royalcms->singleton('seeder', function () {
-            return new Seeder;
-        });
 
         $this->commands('command.seed', 'command.seeder.make');
     }
