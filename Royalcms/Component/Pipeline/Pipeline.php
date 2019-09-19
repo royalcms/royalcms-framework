@@ -3,7 +3,7 @@
 namespace Royalcms\Component\Pipeline;
 
 use Closure;
-use Royalcms\Component\Contracts\Container\Container;
+use Illuminate\Contracts\Container\Container;
 use Royalcms\Component\Contracts\Pipeline\Pipeline as PipelineContract;
 
 class Pipeline implements PipelineContract
@@ -11,7 +11,7 @@ class Pipeline implements PipelineContract
     /**
      * The container implementation.
      *
-     * @var \Royalcms\Component\Contracts\Container\Container
+     * @var \Illuminate\Contracts\Container\Container
      */
     protected $container;
 
@@ -39,7 +39,7 @@ class Pipeline implements PipelineContract
     /**
      * Create a new class instance.
      *
-     * @param  \Royalcms\Component\Contracts\Container\Container  $container
+     * @param  \Illuminate\Contracts\Container\Container  $container
      * @return void
      */
     public function __construct(Container $container)
