@@ -15,7 +15,7 @@ class SupportServiceProvider extends \Illuminate\Support\ServiceProvider
     /**
      * Create a new service provider instance.
      *
-     * @param  \Royalcms\Component\Contracts\Foundation\Royalcms  $royalcms
+     * @param  \Royalcms\Component\Contracts\Foundation\Royalcms|\Illuminate\Contracts\Foundation\Application  $royalcms
      * @return void
      */
     public function __construct($royalcms)
