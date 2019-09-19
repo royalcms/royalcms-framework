@@ -3,13 +3,9 @@
 namespace Royalcms\Component\Foundation\Http;
 
 use Exception;
-use Throwable;
 use Royalcms\Component\Routing\Router;
-use Royalcms\Component\Pipeline\Pipeline;
-use Royalcms\Component\Support\Facades\Facade;
 use Royalcms\Component\Contracts\Foundation\Royalcms;
 use Royalcms\Component\Contracts\Http\Kernel as KernelContract;
-use Symfony\Component\Debug\Exception\FatalThrowableError;
 
 class Kernel extends \Illuminate\Foundation\Http\Kernel implements KernelContract
 {
@@ -88,7 +84,7 @@ class Kernel extends \Illuminate\Foundation\Http\Kernel implements KernelContrac
     /**
      * Get the Royalcms application instance.
      *
-     * @return \Royalcms\Component\Contracts\Foundation\Application
+     * @return \Royalcms\Component\Contracts\Foundation\Royalcms
      */
     public function getApplication()
     {
