@@ -2,8 +2,8 @@
 
 namespace Royalcms\Component\Console;
 
+use Illuminate\Contracts\Container\Container;
 use Royalcms\Component\Contracts\Events\Dispatcher;
-use Royalcms\Component\Contracts\Container\Container;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\BufferedOutput;
