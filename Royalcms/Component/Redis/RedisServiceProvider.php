@@ -3,9 +3,8 @@
 namespace Royalcms\Component\Redis;
 
 use Royalcms\Component\Support\Arr;
-use Royalcms\Component\Support\ServiceProvider;
 
-class RedisServiceProvider extends ServiceProvider
+class RedisServiceProvider extends \Illuminate\Redis\RedisServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.
@@ -15,31 +14,53 @@ class RedisServiceProvider extends ServiceProvider
     protected $defer = true;
 
     /**
+     * The application instance.
+     *
+     * @var \Royalcms\Component\Contracts\Foundation\Royalcms
+     */
+    protected $royalcms;
+
+    /**
+     * Create a new service provider instance.
+     *
+     * @param  \Royalcms\Component\Contracts\Foundation\Royalcms|\Illuminate\Contracts\Foundation\Application  $royalcms
+     * @return void
+     */
+    public function __construct($royalcms)
+    {
+        parent::__construct($royalcms);
+
+        $this->royalcms = $royalcms;
+    }
+
+    /**
      * Register the service provider.
      *
      * @return void
      */
     public function register()
     {
-        $this->royalcms->singleton('redis', function ($royalcms) {
-            $config = $royalcms->make('config')->get('database.redis');
+        $this->loadAlias();
 
-            return new RedisManager(Arr::pull($config, 'client', 'predis'), $config);
-        });
-
-        $this->royalcms->bind('redis.connection', function ($royalcms) {
-            return $royalcms['redis']->connection();
-        });
+        parent::register();
     }
 
     /**
-     * Get the services provided by the provider.
-     *
-     * @return array
+     * Load the alias = One less install step for the user
      */
-    public function provides()
+    protected function loadAlias()
     {
-        return ['redis', 'redis.connection'];
+        $this->royalcms->booting(function () {
+            $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
+            $loader->alias('Royalcms\Component\Redis\Connections\Connection', 'Illuminate\Redis\Connections\Connection');
+            $loader->alias('Royalcms\Component\Redis\Connections\PhpRedisClusterConnection', 'Illuminate\Redis\Connections\PhpRedisClusterConnection');
+            $loader->alias('Royalcms\Component\Redis\Connections\PhpRedisConnection', 'Illuminate\Redis\Connections\PhpRedisConnection');
+            $loader->alias('Royalcms\Component\Redis\Connections\PredisClusterConnection', 'Illuminate\Redis\Connections\PredisClusterConnection');
+            $loader->alias('Royalcms\Component\Redis\Connections\PredisConnection', 'Illuminate\Redis\Connections\PredisConnection');
+            $loader->alias('Royalcms\Component\Redis\Connectors\PhpRedisConnector', 'Illuminate\Redis\Connectors\PhpRedisConnector');
+            $loader->alias('Royalcms\Component\Redis\Connectors\PredisConnector', 'Illuminate\Redis\Connectors\PredisConnector');
+            $loader->alias('Royalcms\Component\Redis\RedisManager', 'Illuminate\Redis\RedisManager');
+        });
     }
 
     /**
