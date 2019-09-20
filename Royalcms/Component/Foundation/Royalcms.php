@@ -8,26 +8,18 @@ use Illuminate\Support\Env;
 use Royalcms\Component\Container\ContainerServiceProvider;
 use Royalcms\Component\Contracts\ContractsServiceProvider;
 use Royalcms\Component\Filesystem\FilesystemServiceProvider;
+use Royalcms\Component\Hook\HookServiceProvider;
 use Royalcms\Component\Http\HttpServiceProvider;
 use Royalcms\Component\Support\SupportServiceProvider;
-use RuntimeException;
-use Royalcms\Component\Support\Arr;
-use Royalcms\Component\Support\Str;
-use Royalcms\Component\Http\Request;
-use Royalcms\Component\Container\Container;
 use Royalcms\Component\Filesystem\Filesystem;
-use Royalcms\Component\Support\ServiceProvider;
 use Royalcms\Component\Events\EventServiceProvider;
 use Royalcms\Component\Routing\RoutingServiceProvider;
 use Royalcms\Component\Log\LogServiceProvider;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Royalcms\Component\Contracts\Foundation\Royalcms as RoyalcmsContract;
-use Royalcms\Component\Contracts\Debug\ExceptionHandler;
+use Royalcms\Component\Contracts\Container\Container as ContainerContracts;
 
-class Royalcms extends Application implements RoyalcmsContract
+class Royalcms extends Application implements RoyalcmsContract, ContainerContracts
 {
     /**
      * The Royalcms framework version.
@@ -117,6 +109,7 @@ class Royalcms extends Application implements RoyalcmsContract
         $this->register(new EventServiceProvider($this));
         $this->register(new LogServiceProvider($this));
         $this->register(new RoutingServiceProvider($this));
+        $this->register(new HookServiceProvider($this));
         $this->register(new HttpServiceProvider($this));
         $this->register(new FilesystemServiceProvider($this));
         $this->register(new ContainerServiceProvider($this));
