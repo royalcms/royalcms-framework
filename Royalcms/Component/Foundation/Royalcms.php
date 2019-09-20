@@ -8,7 +8,6 @@ use Illuminate\Support\Env;
 use Royalcms\Component\Container\ContainerServiceProvider;
 use Royalcms\Component\Contracts\ContractsServiceProvider;
 use Royalcms\Component\Filesystem\FilesystemServiceProvider;
-use Royalcms\Component\Hook\HookServiceProvider;
 use Royalcms\Component\Http\HttpServiceProvider;
 use Royalcms\Component\Support\SupportServiceProvider;
 use Royalcms\Component\Filesystem\Filesystem;
@@ -109,7 +108,6 @@ class Royalcms extends Application implements RoyalcmsContract, ContainerContrac
         $this->register(new EventServiceProvider($this));
         $this->register(new LogServiceProvider($this));
         $this->register(new RoutingServiceProvider($this));
-        $this->register(new HookServiceProvider($this));
         $this->register(new HttpServiceProvider($this));
         $this->register(new FilesystemServiceProvider($this));
         $this->register(new ContainerServiceProvider($this));
