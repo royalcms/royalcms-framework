@@ -31,9 +31,9 @@ class CacheServiceProvider extends \Illuminate\Cache\CacheServiceProvider
      */
     public function register()
     {
-        parent::register();
-
         $this->loadAlias();
+
+        parent::register();
     }
 
     /**
