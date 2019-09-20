@@ -3,11 +3,8 @@
 
 namespace Royalcms\Component\Database\Query;
 
-use Illuminate\Database\ConnectionInterface;
+use Illuminate\Database\Concerns\BuildsQueries;
 use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Database\Query\Grammars\Grammar;
-use Illuminate\Database\Query\Processors\Processor;
-use Illuminate\Support\Arr;
 
 class Builder extends QueryBuilder
 {
@@ -40,6 +37,19 @@ class Builder extends QueryBuilder
         if (isset($results[0])) {
             return array_change_key_case((array) $results[0])['aggregate'];
         }
+    }
+
+    /**
+     * Execute the query and get the first result.
+     *
+     * @param  array  $columns
+     * @return \Illuminate\Database\Eloquent\Model|object|static|null
+     */
+    public function first($columns = ['*'])
+    {
+        $results = $this->take(1)->get($columns);
+
+        return count($results) > 0 ? reset($results) : null;
     }
 
 }
