@@ -32,7 +32,7 @@ class Booted
             |
             */
 
-            $path = $royalcms['path.system'].'/start/global.php';
+            $path = $royalcms->contentPath() . '/routes/global.php';
 
             if (file_exists($path)) require $path;
 
@@ -49,7 +49,7 @@ class Booted
             */
             $env = $royalcms['env'];
 
-            $path = $royalcms['path.system']."/start/{$env}.php";
+            $path = $royalcms->contentPath() . "/routes/{$env}.php";
 
             if (file_exists($path)) require $path;
 
@@ -64,7 +64,7 @@ class Booted
             | all of the routes now and return the application to the callers.
             |
             */
-            $routes = $royalcms['path.system'].'/start/routes.php';
+            $routes = $royalcms->contentPath() . '/routes/routes.php';
 
             if (file_exists($routes)) require $routes;
 

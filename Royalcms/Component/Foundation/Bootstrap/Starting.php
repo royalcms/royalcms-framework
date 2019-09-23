@@ -36,7 +36,7 @@ class Starting
         | Check Extensions
         |--------------------------------------------------------------------------
         |
-        | Laravel requires a few extensions to function. Here we will check the
+        | Royalcms requires a few extensions to function. Here we will check the
         | loaded extensions to make sure they are present. If not we'll just
         | bail from here. Otherwise, Composer will crazily fall back code.
         |
