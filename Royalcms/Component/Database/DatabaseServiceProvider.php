@@ -128,7 +128,7 @@ class DatabaseServiceProvider extends LaravelDatabaseServiceProvider
 //            $loader->alias('Royalcms\Component\Database\Eloquent\ScopeInterface', 'Illuminate\Database\Eloquent\ScopeInterface');
             $loader->alias('Royalcms\Component\Database\Eloquent\SoftDeletes', 'Illuminate\Database\Eloquent\SoftDeletes');
             $loader->alias('Royalcms\Component\Database\Eloquent\SoftDeletingScope', 'Illuminate\Database\Eloquent\SoftDeletingScope');
-            $loader->alias('Royalcms\Component\Database\Grammar', 'Illuminate\Database\Grammar');
+//            $loader->alias('Royalcms\Component\Database\Grammar', 'Illuminate\Database\Grammar');
             $loader->alias('Royalcms\Component\Database\MigrationServiceProvider', 'Illuminate\Database\MigrationServiceProvider');
             $loader->alias('Royalcms\Component\Database\Migrations\DatabaseMigrationRepository', 'Illuminate\Database\Migrations\DatabaseMigrationRepository');
             $loader->alias('Royalcms\Component\Database\Migrations\Migration', 'Illuminate\Database\Migrations\Migration');
@@ -139,7 +139,7 @@ class DatabaseServiceProvider extends LaravelDatabaseServiceProvider
             $loader->alias('Royalcms\Component\Database\QueryException', 'Illuminate\Database\QueryException');
             $loader->alias('Royalcms\Component\Database\Query\Expression', 'Illuminate\Database\Query\Expression');
             $loader->alias('Royalcms\Component\Database\Query\Grammars\Grammar', 'Illuminate\Database\Query\Grammars\Grammar');
-            $loader->alias('Royalcms\Component\Database\Query\Grammars\MySqlGrammar', 'Illuminate\Database\Query\Grammars\MySqlGrammar');
+//            $loader->alias('Royalcms\Component\Database\Query\Grammars\MySqlGrammar', 'Illuminate\Database\Query\Grammars\MySqlGrammar');
             $loader->alias('Royalcms\Component\Database\Query\Grammars\PostgresGrammar', 'Illuminate\Database\Query\Grammars\PostgresGrammar');
             $loader->alias('Royalcms\Component\Database\Query\Grammars\SQLiteGrammar', 'Illuminate\Database\Query\Grammars\SQLiteGrammar');
             $loader->alias('Royalcms\Component\Database\Query\Grammars\SqlServerGrammar', 'Illuminate\Database\Query\Grammars\SqlServerGrammar');
