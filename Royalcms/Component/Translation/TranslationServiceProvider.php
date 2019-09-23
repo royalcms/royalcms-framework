@@ -2,7 +2,6 @@
 
 namespace Royalcms\Component\Translation;
 
-use Illuminate\Translation\FileLoader;
 use Illuminate\Translation\Translator;
 use Royalcms\Component\Support\ServiceProvider;
 
@@ -34,16 +33,7 @@ class TranslationServiceProvider extends ServiceProvider
             // configuration so we can easily get both of these values from there.
             $locale = $royalcms['config']['system.locale'];
 
-            $items = [];
-
-            // First we will see if we have a cache translation file. If we do, we'll load
-            // the translation items from that file so that it is very quick. Otherwise
-            // we will need to spin through every translation file and load them all.
-            if (file_exists($cached = $royalcms->getCachedTranslationPath($locale))) {
-                $items = require $cached;
-            }
-
-            $trans = new Translator($loader, $locale, $items);
+            $trans = new Translator($loader, $locale);
 
             $trans->setFallback($royalcms['config']['system.fallback_locale']);
 
@@ -81,7 +71,6 @@ class TranslationServiceProvider extends ServiceProvider
     {
         $this->royalcms->booting(function () {
             $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
-            $loader->alias('Royalcms\Component\Translation\FileLoader', 'Illuminate\Translation\FileLoader');
             $loader->alias('Royalcms\Component\Translation\Translator', 'Illuminate\Translation\Translator');
         });
     }
