@@ -2,6 +2,8 @@
 
 namespace Royalcms\Component\Support;
 
+use Illuminate\Support\Collection;
+
 class SupportServiceProvider extends \Illuminate\Support\ServiceProvider
 {
 
@@ -23,6 +25,14 @@ class SupportServiceProvider extends \Illuminate\Support\ServiceProvider
         parent::__construct($royalcms);
 
         $this->royalcms = $royalcms;
+    }
+
+
+    public function boot()
+    {
+
+        Collection::mixin(new \Royalcms\Component\Support\Mixins\CollectionMixin());
+
     }
 
     /**
