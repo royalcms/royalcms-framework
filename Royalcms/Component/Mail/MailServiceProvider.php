@@ -18,7 +18,7 @@ class MailServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        \RC_Hook::do_action('mail_init');
+//        \RC_Hook::do_action('mail_init');
     }
 
     /**
