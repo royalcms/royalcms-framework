@@ -53,6 +53,7 @@ class SupportServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
         $loader->alias('Royalcms\Component\Support\Collection', 'Illuminate\Support\Collection');
+        $loader->alias('Royalcms\Component\Support\MessageBag', 'Illuminate\Support\MessageBag');
     }
 
 
