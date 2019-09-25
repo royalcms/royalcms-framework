@@ -25,7 +25,7 @@ class BootProviders
         |
         */
 
-        $path = $royalcms['path.system'].'/start/bootstrap.php';
+        $path = $royalcms->contentPath() . '/routes/bootstrap.php';
 
         if (file_exists($path)) require $path;
 
