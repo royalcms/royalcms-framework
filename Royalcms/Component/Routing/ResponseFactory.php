@@ -6,7 +6,7 @@ use JsonSerializable;
 use Royalcms\Component\Support\Str;
 use Royalcms\Component\Http\Response;
 use Royalcms\Component\Http\JsonResponse;
-use Royalcms\Component\Support\Traits\Macroable;
+use Illuminate\Support\Traits\Macroable;
 use Royalcms\Component\Contracts\Support\Arrayable;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Symfony\Component\HttpFoundation\StreamedResponse;
