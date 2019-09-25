@@ -4,6 +4,8 @@ namespace Royalcms\Component\Support;
 
 use Closure;
 use InvalidArgumentException;
+use ReflectionClass;
+use ReflectionMethod;
 
 abstract class Manager
 {
@@ -113,6 +115,30 @@ abstract class Manager
         $this->customCreators[$driver] = $callback;
 
         return $this;
+    }
+
+    /**
+     * Mix another object into the class.
+     *
+     * @royalcms 6.0.0
+     * @param  object  $mixin
+     * @param  bool  $replace
+     * @return void
+     *
+     * @throws \ReflectionException
+     */
+    public function mixin($mixin, $replace = true)
+    {
+        $methods = (new ReflectionClass($mixin))->getMethods(
+            ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_PROTECTED
+        );
+
+        foreach ($methods as $method) {
+            if ($replace || ! isset($this->customCreators[$method->name])) {
+                $method->setAccessible(true);
+                $this->extend($method->name, $method->invoke($mixin));
+            }
+        }
     }
 
     /**
