@@ -142,6 +142,23 @@ abstract class Manager
     }
 
     /**
+     * Will create the instances.
+     *
+     * @royalcms 6.0.0
+     * @param $driver
+     */
+    public function resetDriver($driver)
+    {
+        // If the given driver has not been created before, we will create the instances
+        // here and cache it so we can return it next time very quickly. If there is
+        // already a driver created by this name, we'll just return that instance.
+        if (isset($this->drivers[$driver])) {
+            unset($this->drivers[$driver]);
+            $this->drivers[$driver] = $this->createDriver($driver);
+        }
+    }
+
+    /**
      * Get all of the created "drivers".
      *
      * @return array
