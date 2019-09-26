@@ -44,7 +44,7 @@ class LogServiceProvider extends \Illuminate\Log\LogServiceProvider
     protected function registerLogStore()
     {
         $this->royalcms->singleton('log.store', function($royalcms) {
-            return new FileStore(
+            return new MultiFileLogger(
                 $royalcms['files'], storage_path('logs/')
             );
         });

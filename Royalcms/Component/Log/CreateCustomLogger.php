@@ -69,7 +69,7 @@ class CreateCustomLogger
                 'level'      => 'debug',
                 'days'       => 30,
                 'bubble'     => true,
-                'permission' => 644,
+                'permission' => null,
                 'locking'    => false,
             ];
             $this->loggers[$type] = $this->createDailyDriver($config);

@@ -5,7 +5,7 @@ namespace Royalcms\Component\Log;
 use Royalcms\Component\Filesystem\Filesystem;
 use Monolog\Logger as MonologLogger;
 
-class FileStore
+class MultiFileLogger
 {
     /**
      * The Royalcms Filesystem instance.
@@ -20,8 +20,6 @@ class FileStore
      * @var string
      */
     protected $directory;
-
-
     
     /**
      * Create a new file cache store instance.
@@ -68,6 +66,6 @@ class FileStore
     {
         $customLogger = royalcms(CreateCustomLogger::class);
 
-        return $customLogger->getLogger($type = 'royalcms', $day = 30);
+        return $customLogger->getLogger($type, $day);
     }
 }
