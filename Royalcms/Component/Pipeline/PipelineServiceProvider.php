@@ -2,16 +2,28 @@
 
 namespace Royalcms\Component\Pipeline;
 
-use Royalcms\Component\Support\ServiceProvider;
 
-class PipelineServiceProvider extends ServiceProvider
+class PipelineServiceProvider extends \Illuminate\Pipeline\PipelineServiceProvider
 {
     /**
-     * Indicates if loading of the provider is deferred.
+     * The application instance.
      *
-     * @var bool
+     * @var \Royalcms\Component\Contracts\Foundation\Royalcms
      */
-    protected $defer = true;
+    protected $royalcms;
+
+    /**
+     * Create a new service provider instance.
+     *
+     * @param  \Royalcms\Component\Contracts\Foundation\Royalcms|\Illuminate\Contracts\Foundation\Application  $royalcms
+     * @return void
+     */
+    public function __construct($royalcms)
+    {
+        parent::__construct($royalcms);
+
+        $this->royalcms = $royalcms;
+    }
 
     /**
      * Register the service provider.
@@ -20,20 +32,21 @@ class PipelineServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->royalcms->singleton(
-            'Royalcms\Component\Contracts\Pipeline\Hub', 'Royalcms\Component\Pipeline\Hub'
-        );
+        $this->loadAlias();
+
+        parent::register();
     }
 
     /**
-     * Get the services provided by the provider.
-     *
-     * @return array
+     * Load the alias = One less install step for the user
      */
-    public function provides()
+    protected function loadAlias()
     {
-        return [
-            'Royalcms\Component\Contracts\Pipeline\Hub',
-        ];
+        $this->royalcms->booting(function () {
+            $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
+            $loader->alias('Royalcms\Component\Pipeline\Hub', 'Illuminate\Pipeline\Hub');
+            $loader->alias('Royalcms\Component\Pipeline\Pipeline', 'Illuminate\Pipeline\Pipeline');
+        });
     }
+
 }
