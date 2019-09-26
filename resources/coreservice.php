@@ -50,11 +50,11 @@ return array(
         'RC_Filesystem'                => 'Royalcms\Component\Storage\Facades\Storage',
         'RC_Validator'                 => 'Royalcms\Component\Support\Facades\Validator',
         'RC_View'                      => 'Royalcms\Component\Support\Facades\View',
+        'RC_Mail'                      => 'Royalcms\Component\Support\Facades\Mail',
 
 
         // Component Facades
         'RC_Debugbar'                  => 'Royalcms\Component\Debugbar\Facades\Debugbar',
-        'RC_Mail'                      => 'Royalcms\Component\Mail\Facades\Mail',
         'RC_Timer'                     => 'Royalcms\Component\Timer\Facades\Timer',
         'RC_Gettext'                   => 'Royalcms\Component\Gettext\Facades\Gettext',
         'RC_Locale'                    => 'Royalcms\Component\Gettext\Facades\Gettext',
