@@ -45,7 +45,7 @@ class ContractsServiceProvider extends ServiceProvider
         $loader->alias('Royalcms\Component\Contracts\Cache\Store', 'Illuminate\Contracts\Cache\Store');
 
         $loader->alias('Royalcms\Component\Contracts\Config\Repository', 'Illuminate\Contracts\Config\Repository');
-
+        
         $loader->alias('Royalcms\Component\Contracts\Container\ContextualBindingBuilder', 'Illuminate\Contracts\Container\ContextualBindingBuilder');
 
         $loader->alias('Royalcms\Component\Contracts\Cookie\Factory', 'Illuminate\Contracts\Cookie\Factory');

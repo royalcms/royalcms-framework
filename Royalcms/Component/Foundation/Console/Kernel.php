@@ -158,11 +158,11 @@ class Kernel implements KernelContract
      * @param  array  $parameters
      * @return int
      */
-    public function call($command, array $parameters = [])
+    public function call($command, array $parameters = [], $outputBuffer = null)
     {
         $this->bootstrap();
 
-        return $this->getArtisan()->call($command, $parameters);
+        return $this->getArtisan()->call($command, $parameters, $outputBuffer);
     }
 
     /**
