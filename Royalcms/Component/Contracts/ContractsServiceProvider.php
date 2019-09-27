@@ -46,9 +46,6 @@ class ContractsServiceProvider extends ServiceProvider
 
         $loader->alias('Royalcms\Component\Contracts\Config\Repository', 'Illuminate\Contracts\Config\Repository');
 
-//            $loader->alias('Royalcms\Component\Contracts\Console\Application', 'Illuminate\Contracts\Console\Application');
-//            $loader->alias('Royalcms\Component\Contracts\Console\Kernel', 'Illuminate\Contracts\Console\Kernel');
-
         $loader->alias('Royalcms\Component\Contracts\Container\ContextualBindingBuilder', 'Illuminate\Contracts\Container\ContextualBindingBuilder');
 
         $loader->alias('Royalcms\Component\Contracts\Cookie\Factory', 'Illuminate\Contracts\Cookie\Factory');
@@ -67,15 +64,7 @@ class ContractsServiceProvider extends ServiceProvider
         $loader->alias('Royalcms\Component\Contracts\Filesystem\FileNotFoundException', 'Illuminate\Contracts\Filesystem\FileNotFoundException');
         $loader->alias('Royalcms\Component\Contracts\Filesystem\Filesystem', 'Illuminate\Contracts\Filesystem\Filesystem');
 
-//            $loader->alias('Royalcms\Component\Contracts\Foundation\Application', 'Illuminate\Contracts\Foundation\Application');
-
         $loader->alias('Royalcms\Component\Contracts\Hashing\Hasher', 'Illuminate\Contracts\Hashing\Hasher');
-
-//            $loader->alias('Royalcms\Component\Contracts\Http\Kernel', 'Illuminate\Contracts\Http\Kernel');
-
-//            $loader->alias('Royalcms\Component\Contracts\Mail\Mailable', 'Illuminate\Contracts\Mail\Mailable');
-//            $loader->alias('Royalcms\Component\Contracts\Mail\Mailer', 'Illuminate\Contracts\Mail\Mailer');
-//            $loader->alias('Royalcms\Component\Contracts\Mail\MailQueue', 'Illuminate\Contracts\Mail\MailQueue');
 
         $loader->alias('Royalcms\Component\Contracts\Notifications\Dispatcher', 'Illuminate\Contracts\Notifications\Dispatcher');
         $loader->alias('Royalcms\Component\Contracts\Notifications\Factory', 'Illuminate\Contracts\Notifications\Factory');
