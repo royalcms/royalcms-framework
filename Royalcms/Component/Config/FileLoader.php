@@ -91,51 +91,98 @@ class FileLoader implements LoaderInterface {
 		{
 			return $items;
 		}
-		
+
 		// First we'll get the main configuration file for the groups. Once we have
 		// that we can check for any environment specific files, which will get
 		// merged on top of the main arrays to make the environments cascade.
-		$file = "{$this->basePath}/{$group}.php";
-		
-		if ($this->files->exists($file))
-		{
-		    $items = $this->files->getRequire($file);
-		}
+        $items1 = $this->loadBasePath($environment, $group, $namespace);
+
 		
 		/* 站点使用独立配置文件时不加载系统配置文件 */
-		if (null === $namespace && null !== $this->defaultPath && 
-		    !(defined('USE_AUTONOMY_CONFIG') && true === USE_AUTONOMY_CONFIG))
-		{
-		    $file = "{$this->defaultPath}/{$group}.php";
-		    
-		    if ($this->files->exists($file))
-		    {
-		        $items = $this->mergeEnvironment($items, $file);
-		    }
-		}
+        $items2 = $this->loadDefaultPath($environment, $group, $namespace);
+
 
 		// First we'll get the main configuration file for the groups. Once we have
 		// that we can check for any environment specific files, which will get
 		// merged on top of the main arrays to make the environments cascade.
-		$file = "{$path}/{$group}.php";
-
-		if ($this->files->exists($file))
-		{
-			$items = $this->mergeEnvironment($items, $file);
-		}
+        $items3 = $this->loadSitePath($environment, $group, $namespace, $path);
 
 		// Finally we're ready to check for the environment specific configuration
 		// file which will be merged on top of the main arrays so that they get
 		// precedence over them if we are currently in an environments setup.
-		$file = "{$path}/{$environment}/{$group}.php";
+        $items4 = $this->loadEnvironmentPath($environment, $group, $namespace, $path);
 
-		if ($this->files->exists($file))
-		{
-			$items = $this->mergeEnvironment($items, $file);
-		}
+        $items = array_replace_recursive($items1, $items2, $items3, $items4);
 
 		return $items;
 	}
+
+
+	protected function loadBasePath($environment, $group, $namespace = null)
+    {
+        $file = "{$this->basePath}/{$group}.php";
+        $items = [];
+
+        if ($this->files->exists($file)) {
+            $items = $this->files->getRequire($file);
+        }
+
+        return $items;
+    }
+
+    protected function loadDefaultPath($environment, $group, $namespace = null)
+    {
+        $items = [];
+
+        if (defined('USE_AUTONOMY_CONFIG') && true === USE_AUTONOMY_CONFIG)
+        {
+            return $items;
+        }
+
+        $file = "{$this->defaultPath}/{$group}.php";
+
+        if ($this->files->exists($file))
+        {
+            $items = $this->files->getRequire($file);
+        }
+
+        return $items;
+    }
+
+    protected function loadSitePath($environment, $group, $namespace = null, $path = null)
+    {
+        if (empty($path)) {
+            $path = $this->getPath($namespace);
+        }
+
+        $file = "{$path}/{$group}.php";
+        $items = [];
+
+        if ($this->files->exists($file))
+        {
+            $items = $this->files->getRequire($file);
+        }
+
+        return $items;
+    }
+
+    protected function loadEnvironmentPath($environment, $group, $namespace = null, $path = null)
+    {
+        if (empty($path)) {
+            $path = $this->getPath($namespace);
+        }
+
+        $file = "{$path}/{$environment}/{$group}.php";
+        $items = [];
+
+        if ($this->files->exists($file))
+        {
+            $items = $this->files->getRequire($file);
+        }
+
+        return $items;
+    }
+
 
 	/**
 	 * Merge the items in the given file into the items.
