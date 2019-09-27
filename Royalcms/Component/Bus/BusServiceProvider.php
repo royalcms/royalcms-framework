@@ -2,16 +2,28 @@
 
 namespace Royalcms\Component\Bus;
 
-use Royalcms\Component\Support\ServiceProvider;
 
-class BusServiceProvider extends ServiceProvider
+class BusServiceProvider extends \Illuminate\Bus\BusServiceProvider
 {
     /**
-     * Indicates if loading of the provider is deferred.
+     * The application instance.
      *
-     * @var bool
+     * @var \Royalcms\Component\Contracts\Foundation\Royalcms
      */
-    protected $defer = true;
+    protected $royalcms;
+
+    /**
+     * Create a new service provider instance.
+     *
+     * @param  \Royalcms\Component\Contracts\Foundation\Royalcms  $royalcms
+     * @return void
+     */
+    public function __construct($royalcms)
+    {
+        parent::__construct($royalcms);
+
+        $this->royalcms = $royalcms;
+    }
 
     /**
      * Register the service provider.
@@ -20,32 +32,21 @@ class BusServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->royalcms->singleton('Royalcms\Component\Bus\Dispatcher', function ($royalcms) {
-            return new Dispatcher($royalcms, function () use ($royalcms) {
-                return $royalcms['Royalcms\Component\Contracts\Queue\Queue'];
-            });
-        });
+        $this->loadAlias();
 
-        $this->royalcms->alias(
-            'Royalcms\Component\Bus\Dispatcher', 'Royalcms\Component\Contracts\Bus\Dispatcher'
-        );
-
-        $this->royalcms->alias(
-            'Royalcms\Component\Bus\Dispatcher', 'Royalcms\Component\Contracts\Bus\QueueingDispatcher'
-        );
+        parent::register();
     }
 
     /**
-     * Get the services provided by the provider.
-     *
-     * @return array
+     * Load the alias = One less install step for the user
      */
-    public function provides()
+    protected function loadAlias()
     {
-        return [
-            'Royalcms\Component\Bus\Dispatcher',
-            'Royalcms\Component\Contracts\Bus\Dispatcher',
-            'Royalcms\Component\Contracts\Bus\QueueingDispatcher',
-        ];
+        $this->royalcms->booting(function() {
+            $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
+            $loader->alias('Royalcms\Component\Bus\Dispatcher', 'Illuminate\Bus\Dispatcher');
+            $loader->alias('Royalcms\Component\Bus\Queueable', 'Illuminate\Bus\Queueable');
+        });
     }
+
 }
