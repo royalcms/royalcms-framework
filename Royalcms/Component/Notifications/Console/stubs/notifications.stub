@@ -2,6 +2,7 @@
 
 use Royalcms\Component\Database\Schema\Blueprint;
 use Royalcms\Component\Database\Migrations\Migration;
+use Royalcms\Component\Support\Facades\Schema;
 
 class CreateNotificationsTable extends Migration
 {
