@@ -2,13 +2,29 @@
 
 namespace Royalcms\Component\Auth;
 
-use Royalcms\Component\Auth\Access\Gate;
-use Royalcms\Component\Support\ServiceProvider;
-use Royalcms\Component\Contracts\Auth\Access\Gate as GateContract;
-use Royalcms\Component\Contracts\Auth\Authenticatable as AuthenticatableContract;
 
-class AuthServiceProvider extends ServiceProvider
+class AuthServiceProvider extends \Illuminate\Auth\AuthServiceProvider
 {
+    /**
+     * The application instance.
+     *
+     * @var \Royalcms\Component\Contracts\Foundation\Royalcms
+     */
+    protected $royalcms;
+
+    /**
+     * Create a new service provider instance.
+     *
+     * @param  \Royalcms\Component\Contracts\Foundation\Royalcms  $royalcms
+     * @return void
+     */
+    public function __construct($royalcms)
+    {
+        parent::__construct($royalcms);
+
+        $this->royalcms = $royalcms;
+    }
+
     /**
      * Register the service provider.
      *
@@ -16,73 +32,34 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->registerAuthenticator();
+        $this->loadAlias();
 
-        $this->registerUserResolver();
-
-        $this->registerAccessGate();
-
-        $this->registerRequestRebindHandler();
+        parent::register();
     }
 
     /**
-     * Register the authenticator services.
-     *
-     * @return void
+     * Load the alias = One less install step for the user
      */
-    protected function registerAuthenticator()
+    protected function loadAlias()
     {
-        $this->royalcms->singleton('auth', function ($royalcms) {
-            // Once the authentication service has actually been requested by the developer
-            // we will set a variable in the application indicating such. This helps us
-            // know that we need to set any queued cookies in the after event later.
-            $royalcms['auth.loaded'] = true;
-
-            return new AuthManager($royalcms);
-        });
-
-        $this->royalcms->singleton('auth.driver', function ($royalcms) {
-            return $royalcms['auth']->driver();
+        $this->royalcms->booting(function() {
+            $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
+            $loader->alias('Royalcms\Component\Auth\GenericUser', 'Illuminate\Auth\GenericUser');
+            $loader->alias('Royalcms\Component\Auth\DatabaseUserProvider', 'Illuminate\Auth\DatabaseUserProvider');
+            $loader->alias('Royalcms\Component\Auth\EloquentUserProvider', 'Illuminate\Auth\EloquentUserProvider');
+            $loader->alias('Royalcms\Component\Auth\GeneratorServiceProvider', 'Illuminate\Auth\GeneratorServiceProvider');
+            $loader->alias('Royalcms\Component\Auth\AuthManager', 'Illuminate\Auth\AuthManager');
+            $loader->alias('Royalcms\Component\Auth\Authenticatable', 'Illuminate\Auth\Authenticatable');
+            $loader->alias('Royalcms\Component\Auth\Passwords\CanResetPassword', 'Illuminate\Auth\Passwords\CanResetPassword');
+            $loader->alias('Royalcms\Component\Auth\Passwords\DatabaseTokenRepository', 'Illuminate\Auth\Passwords\DatabaseTokenRepository');
+            $loader->alias('Royalcms\Component\Auth\Passwords\PasswordBroker', 'Illuminate\Auth\Passwords\PasswordBroker');
+            $loader->alias('Royalcms\Component\Auth\Passwords\PasswordResetServiceProvider', 'Illuminate\Auth\Passwords\PasswordResetServiceProvider');
+            $loader->alias('Royalcms\Component\Auth\Passwords\TokenRepositoryInterface', 'Illuminate\Auth\Passwords\TokenRepositoryInterface');
+            $loader->alias('Royalcms\Component\Auth\Middleware\AuthenticateWithBasicAuth', 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth');
+            $loader->alias('Royalcms\Component\Auth\Access\Gate', 'Illuminate\Auth\Access\Gate');
+            $loader->alias('Royalcms\Component\Auth\Access\HandlesAuthorization', 'Illuminate\Auth\Access\HandlesAuthorization');
+            $loader->alias('Royalcms\Component\Auth\Access\Response', 'Illuminate\Auth\Access\Response');
         });
     }
 
-    /**
-     * Register a resolver for the authenticated user.
-     *
-     * @return void
-     */
-    protected function registerUserResolver()
-    {
-        $this->royalcms->bind(AuthenticatableContract::class, function ($royalcms) {
-            return $royalcms['auth']->user();
-        });
-    }
-
-    /**
-     * Register the access gate service.
-     *
-     * @return void
-     */
-    protected function registerAccessGate()
-    {
-        $this->royalcms->singleton(GateContract::class, function ($royalcms) {
-            return new Gate($royalcms, function () use ($royalcms) {
-                return $royalcms['auth']->user();
-            });
-        });
-    }
-
-    /**
-     * Register a resolver for the authenticated user.
-     *
-     * @return void
-     */
-    protected function registerRequestRebindHandler()
-    {
-        $this->royalcms->rebinding('request', function ($royalcms, $request) {
-            $request->setUserResolver(function () use ($royalcms) {
-                return $royalcms['auth']->user();
-            });
-        });
-    }
 }

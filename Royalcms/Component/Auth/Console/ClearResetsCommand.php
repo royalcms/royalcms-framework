@@ -27,7 +27,7 @@ class ClearResetsCommand extends Command
      */
     public function fire()
     {
-        $this->laravel['auth.password.tokens']->deleteExpired();
+        $this->royalcms['auth.password.tokens']->deleteExpired();
 
         $this->info('Expired reset tokens cleared!');
     }
