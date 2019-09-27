@@ -2,16 +2,28 @@
 
 namespace Royalcms\Component\Broadcasting;
 
-use Royalcms\Component\Support\ServiceProvider;
 
-class BroadcastServiceProvider extends ServiceProvider
+class BroadcastServiceProvider extends \Illuminate\Broadcasting\BroadcastServiceProvider
 {
     /**
-     * Indicates if loading of the provider is deferred.
+     * The application instance.
      *
-     * @var bool
+     * @var \Royalcms\Component\Contracts\Foundation\Royalcms
      */
-    protected $defer = true;
+    protected $royalcms;
+
+    /**
+     * Create a new service provider instance.
+     *
+     * @param  \Royalcms\Component\Contracts\Foundation\Royalcms  $royalcms
+     * @return void
+     */
+    public function __construct($royalcms)
+    {
+        parent::__construct($royalcms);
+
+        $this->royalcms = $royalcms;
+    }
 
     /**
      * Register the service provider.
@@ -20,30 +32,24 @@ class BroadcastServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->royalcms->singleton('Royalcms\Component\Broadcasting\BroadcastManager', function ($royalcms) {
-            return new BroadcastManager($royalcms);
-        });
+        $this->loadAlias();
 
-        $this->royalcms->singleton('Royalcms\Component\Contracts\Broadcasting\Broadcaster', function ($royalcms) {
-            return $royalcms->make('Royalcms\Component\Broadcasting\BroadcastManager')->connection();
-        });
-
-        $this->royalcms->alias(
-            'Royalcms\Component\Broadcasting\BroadcastManager', 'Royalcms\Component\Contracts\Broadcasting\Factory'
-        );
+        parent::register();
     }
 
     /**
-     * Get the services provided by the provider.
-     *
-     * @return array
+     * Load the alias = One less install step for the user
      */
-    public function provides()
+    protected function loadAlias()
     {
-        return [
-            'Royalcms\Component\Broadcasting\BroadcastManager',
-            'Royalcms\Component\Contracts\Broadcasting\Factory',
-            'Royalcms\Component\Contracts\Broadcasting\Broadcaster',
-        ];
+        $this->royalcms->booting(function() {
+            $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
+            $loader->alias('Royalcms\Component\Broadcasting\BroadcastEvent', 'Illuminate\Broadcasting\BroadcastEvent');
+            $loader->alias('Royalcms\Component\Broadcasting\BroadcastManager', 'Illuminate\Broadcasting\BroadcastManager');
+            $loader->alias('Royalcms\Component\Broadcasting\BroadcastManager', 'Illuminate\Broadcasting\PrivateChannel');
+            $loader->alias('Royalcms\Component\Broadcasting\Broadcasters\LogBroadcaster', 'Illuminate\Broadcasting\Broadcasters\LogBroadcaster');
+            $loader->alias('Royalcms\Component\Broadcasting\Broadcasters\PusherBroadcaster', 'Illuminate\Broadcasting\Broadcasters\PusherBroadcaster');
+            $loader->alias('Royalcms\Component\Broadcasting\Broadcasters\RedisBroadcaster', 'Illuminate\Broadcasting\Broadcasters\RedisBroadcaster');
+        });
     }
 }
