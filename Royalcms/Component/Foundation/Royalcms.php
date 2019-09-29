@@ -164,7 +164,7 @@ class Royalcms extends Application implements RoyalcmsContract, ContainerContrac
     public function path($path = '')
     {
         if ($this->runningInSite()) {
-            $appPath = $this->sitePath().DIRECTORY_SEPARATOR.RC_SITE;
+            $appPath = $this->sitePath().DIRECTORY_SEPARATOR.$this->currentSite();
         } else {
             $appPath = $this->basePath();
         }
@@ -523,6 +523,16 @@ class Royalcms extends Application implements RoyalcmsContract, ContainerContrac
     public function runningInSite()
     {
         return defined('RC_SITE');
+    }
+
+    /**
+     * Return current Site directory name.
+     *
+     * @return string
+     */
+    public function currentSite()
+    {
+        return RC_SITE;
     }
 
     /**
