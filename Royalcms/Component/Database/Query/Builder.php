@@ -5,6 +5,7 @@ namespace Royalcms\Component\Database\Query;
 
 use Illuminate\Database\Concerns\BuildsQueries;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Royalcms\Component\Support\Arr;
 
 class Builder extends QueryBuilder
 {
