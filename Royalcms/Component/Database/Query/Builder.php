@@ -52,4 +52,25 @@ class Builder extends QueryBuilder
         return count($results) > 0 ? reset($results) : null;
     }
 
+    /**
+     * Get an array with the values of a given column.
+     *
+     * @param  string  $column
+     * @param  string|null  $key
+     * @return array
+     */
+    public function lists($column, $key = null)
+    {
+        $results = $this->get(is_null($key) ? [$column] : [$column, $key]);
+
+        // If the columns are qualified with a table or have an alias, we cannot use
+        // those directly in the "pluck" operations since the results from the DB
+        // are only keyed by the column itself. We'll strip the table out here.
+        return Arr::pluck(
+            $results,
+            $this->stripTableForPluck($column),
+            $this->stripTableForPluck($key)
+        );
+    }
+
 }
