@@ -2,6 +2,7 @@
 
 namespace Royalcms\Component\Foundation\Bootstrap;
 
+use Royalcms\Component\Foundation\PackageManifest;
 use Royalcms\Component\Support\Facades\Facade;
 use Royalcms\Component\Foundation\AliasLoader;
 use Royalcms\Component\Contracts\Foundation\Royalcms;
@@ -19,9 +20,10 @@ class RegisterFacades
         Facade::clearResolvedInstances();
 
         Facade::setFacadeRoyalcms($royalcms);
-
+        
         AliasLoader::getInstance($royalcms->make('config')->get('coreservice.aliases'));
         AliasLoader::getInstance($royalcms->make('config')->get('facade'));
+        AliasLoader::getInstance($royalcms->make(PackageManifest::class)->aliases());
         AliasLoader::getInstance()->register();
     }
 }

@@ -4,7 +4,9 @@ namespace Royalcms\Component\Foundation;
 
 use Closure;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Env;
+use Illuminate\Support\Str;
 use Royalcms\Component\Foundation\PackageManifest;
 use Royalcms\Component\Container\ContainerServiceProvider;
 use Royalcms\Component\Contracts\ContractsServiceProvider;
@@ -547,10 +549,17 @@ class Royalcms extends Application implements RoyalcmsContract, ContainerContrac
      */
     public function registerConfiguredProviders()
     {
+        $providers = Collection::make($this->config['coreservice.providers'])
+            ->partition(function ($provider) {
+                return Str::startsWith($provider, 'Illuminate\\');
+            });
+
+        $providers->splice(1, 0, [$this->make(PackageManifest::class)->providers()]);
+
         $manifestPath = $this->getCachedServicesPath();
 
         (new ProviderRepository($this, new Filesystem, $manifestPath))
-                    ->load($this->config['coreservice.providers']);
+                    ->load($providers->collapse()->toArray());
     }
 
     /**
