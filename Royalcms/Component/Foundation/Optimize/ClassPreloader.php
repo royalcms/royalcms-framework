@@ -74,9 +74,7 @@ class ClassPreloader
     {
         $royalcms = $this->royalcms;
 
-        $core = require __DIR__.'/configs/config.php';
-
-        $files = array_merge($core, $royalcms['config']->get('compile.files', []));
+        $files = array_merge($this->getFrameworkFiles(), $this->getCompileFiles());
 
         foreach ($royalcms['config']->get('compile.providers', []) as $provider) {
             $files = array_merge($files, forward_static_call([$provider, 'compiles']));
@@ -86,21 +84,22 @@ class ClassPreloader
     }
 
     /**
-     * Get the node traverser used by the command.
-     *
-     * Note that this method is only called if we're using Class Preloader 2.x.
-     *
-     * @return \ClassPreloader\Parser\NodeTraverser
+     * @return mixed
      */
-    protected function getTraverser()
+    protected function getFrameworkFiles()
     {
-        $traverser = new NodeTraverser;
+        $core = require __DIR__.'/configs/config.php';
 
-        $traverser->addVisitor(new DirVisitor(true));
-
-        $traverser->addVisitor(new FileVisitor(true));
-
-        return $traverser;
+        return $core;
     }
+
+    /**
+     * @return mixed
+     */
+    protected function getCompileFiles()
+    {
+        return $royalcms['config']->get('compile.files', []);
+    }
+
 
 }
