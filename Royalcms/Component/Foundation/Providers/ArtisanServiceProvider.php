@@ -2,9 +2,10 @@
 
 namespace Royalcms\Component\Foundation\Providers;
 
-use Royalcms\Component\Foundation\Console\OptimizeClearCommand;
-use Royalcms\Component\Foundation\Console\PackageDiscoverCommand;
 use Royalcms\Component\Support\ServiceProvider;
+use Royalcms\Component\Foundation\Console\OptimizeClearCommand;
+use Royalcms\Component\Foundation\Console\OptimizeCompileCommand;
+use Royalcms\Component\Foundation\Console\PackageDiscoverCommand;
 use Royalcms\Component\Foundation\Console\UpCommand;
 use Royalcms\Component\Foundation\Console\DownCommand;
 use Royalcms\Component\Foundation\Console\ServeCommand;
@@ -55,6 +56,7 @@ class ArtisanServiceProvider extends ServiceProvider
         'KeyGenerate'      => 'command.key.generate',
         'Optimize'         => 'command.optimize',
         'OptimizeClear'    => 'command.optimize.clear',
+        'OptimizeCompile'  => 'command.optimize.compile',
         'PackageDiscover'  => 'command.package.discover',
         'RouteCache'       => 'command.route.cache',
         'RouteClear'       => 'command.route.clear',
@@ -294,8 +296,8 @@ class ArtisanServiceProvider extends ServiceProvider
      */
     protected function registerOptimizeCommand()
     {
-        $this->royalcms->singleton('command.optimize', function ($royalcms) {
-            return new OptimizeCommand($royalcms['composer']);
+        $this->royalcms->singleton('command.optimize', function () {
+            return new OptimizeCommand;
         });
     }
 
@@ -307,6 +309,17 @@ class ArtisanServiceProvider extends ServiceProvider
     {
         $this->royalcms->singleton('command.optimize.clear', function () {
             return new OptimizeClearCommand;
+        });
+    }
+
+    /**
+     * Register the command.
+     * @return void
+     */
+    protected function registerOptimizeCompileCommand()
+    {
+        $this->royalcms->singleton('command.optimize.compile', function ($royalcms) {
+            return new OptimizeCompileCommand($royalcms['composer']);
         });
     }
 

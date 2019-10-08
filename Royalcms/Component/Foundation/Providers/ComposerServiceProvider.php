@@ -7,12 +7,6 @@ use Royalcms\Component\Support\ServiceProvider;
 
 class ComposerServiceProvider extends ServiceProvider
 {
-    /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = true;
 
     /**
      * Register the service provider.
@@ -24,6 +18,8 @@ class ComposerServiceProvider extends ServiceProvider
         $this->royalcms->singleton('composer', function ($royalcms) {
             return new Composer($royalcms['files'], $royalcms->basePath());
         });
+
+        $this->royalcms->alias('composer', Composer::class);
     }
 
     /**
@@ -33,6 +29,9 @@ class ComposerServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['composer'];
+        return [
+            'composer',
+            Composer::class
+        ];
     }
 }
