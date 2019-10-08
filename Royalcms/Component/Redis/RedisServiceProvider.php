@@ -71,7 +71,7 @@ class RedisServiceProvider extends \Illuminate\Redis\RedisServiceProvider
     public static function compiles()
     {
         $basePath = royalcms('path.base');
-        $dir = static::guessPackageClassPath('royalcms/redis');
+        $dir = __DIR__;
 
         return [
             $basePath . "/vendor/predis/predis/src/Command/CommandInterface.php",
