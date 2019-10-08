@@ -63,7 +63,6 @@ return array(
         'RC_Error'                     => 'Royalcms\Component\Error\Facades\Error',
         'RC_ENV'                       => 'Royalcms\Component\Environment\Facades\Environment',
         'RC_Variable'                  => 'Royalcms\Component\Variable\Facades\Variable',
-        'RC_App'                       => 'Royalcms\Component\App\Facades\App',
         'RC_Widget'                    => 'Royalcms\Component\Widget\Facades\Widget',
         'RC_Uri'                       => 'Royalcms\Component\Url\Facades\Uri',
         'RC_Url'                       => 'Royalcms\Component\Url\Url',
