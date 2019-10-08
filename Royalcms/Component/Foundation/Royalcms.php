@@ -5,6 +5,7 @@ namespace Royalcms\Component\Foundation;
 use Closure;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Env;
+use Royalcms\Component\Foundation\PackageManifest;
 use Royalcms\Component\Container\ContainerServiceProvider;
 use Royalcms\Component\Contracts\ContractsServiceProvider;
 use Royalcms\Component\Filesystem\FilesystemServiceProvider;
@@ -94,6 +95,10 @@ class Royalcms extends Application implements RoyalcmsContract, ContainerContrac
     protected function registerBaseBindings()
     {
         parent::registerBaseBindings();
+
+        $this->instance(PackageManifest::class, new PackageManifest(
+            new \Illuminate\Filesystem\Filesystem, $this->basePath(), $this->getCachedPackagesPath()
+        ));
 
         $this->instance('royalcms', $this);
     }

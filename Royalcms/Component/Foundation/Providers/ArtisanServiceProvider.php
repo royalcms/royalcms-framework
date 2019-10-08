@@ -2,6 +2,8 @@
 
 namespace Royalcms\Component\Foundation\Providers;
 
+use Royalcms\Component\Foundation\Console\OptimizeClearCommand;
+use Royalcms\Component\Foundation\Console\PackageDiscoverCommand;
 use Royalcms\Component\Support\ServiceProvider;
 use Royalcms\Component\Foundation\Console\UpCommand;
 use Royalcms\Component\Foundation\Console\DownCommand;
@@ -38,70 +40,80 @@ use Royalcms\Component\Foundation\Console\TranslationClearCommand;
 class ArtisanServiceProvider extends ServiceProvider
 {
     /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = true;
-
-    /**
      * The commands to be registered.
-     *
      * @var array
      */
     protected $commands = [
-        'AppName' => 'command.app.name',
-        'ClearCompiled' => 'command.clear-compiled',
-        'CommandMake' => 'command.command.make',
-        'ConfigCache' => 'command.config.cache',
-        'ConfigClear' => 'command.config.clear',
-        'ConsoleMake' => 'command.console.make',
-        'EventGenerate' => 'command.event.generate',
-        'EventMake' => 'command.event.make',
-        'Down' => 'command.down',
-        'Environment' => 'command.environment',
-        'HandlerCommand' => 'command.handler.command',
-        'HandlerEvent' => 'command.handler.event',
-        'JobMake' => 'command.job.make',
-        'KeyGenerate' => 'command.key.generate',
-        'ListenerMake' => 'command.listener.make',
-        'ModelMake' => 'command.model.make',
-        'Optimize' => 'command.optimize',
-        'PolicyMake' => 'command.policy.make',
-        'ProviderMake' => 'command.provider.make',
-        'RequestMake' => 'command.request.make',
-        'RouteCache' => 'command.route.cache',
-        'RouteClear' => 'command.route.clear',
-        'RouteList' => 'command.route.list',
-        'Serve' => 'command.serve',
-        'TestMake' => 'command.test.make',
-        'Tinker' => 'command.tinker',
-        'Up' => 'command.up',
-        'VendorPublish' => 'command.vendor.publish',
-        'ViewClear' => 'command.view.clear',
+        'AppName'          => 'command.app.name',
+        'ClearCompiled'    => 'command.clear-compiled',
+        'ConfigCache'      => 'command.config.cache',
+        'ConfigClear'      => 'command.config.clear',
+        'Down'             => 'command.down',
+        'Environment'      => 'command.environment',
+        'HandlerCommand'   => 'command.handler.command',
+        'HandlerEvent'     => 'command.handler.event',
+        'KeyGenerate'      => 'command.key.generate',
+        'Optimize'         => 'command.optimize',
+        'OptimizeClear'    => 'command.optimize.clear',
+        'PackageDiscover'  => 'command.package.discover',
+        'RouteCache'       => 'command.route.cache',
+        'RouteClear'       => 'command.route.clear',
+        'RouteList'        => 'command.route.list',
+        'Up'               => 'command.up',
+        'ViewClear'        => 'command.view.clear',
         'TranslationCache' => 'command.trans.cache',
         'TranslationClear' => 'command.trans.clear',
     ];
 
     /**
+     * The commands to be registered.
+     * @var array
+     */
+    protected $devCommands = [
+        'CommandMake'   => 'command.command.make',
+        'ConsoleMake'   => 'command.console.make',
+        'EventGenerate' => 'command.event.generate',
+        'EventMake'     => 'command.event.make',
+        'JobMake'       => 'command.job.make',
+        'ListenerMake'  => 'command.listener.make',
+        'ModelMake'     => 'command.model.make',
+        'Optimize'      => 'command.optimize',
+        'PolicyMake'    => 'command.policy.make',
+        'ProviderMake'  => 'command.provider.make',
+        'RequestMake'   => 'command.request.make',
+        'TestMake'      => 'command.test.make',
+        'VendorPublish' => 'command.vendor.publish',
+        'Serve'         => 'command.serve',
+        'Tinker'        => 'command.tinker',
+    ];
+
+    /**
      * Register the service provider.
-     *
      * @return void
      */
     public function register()
     {
-        foreach (array_keys($this->commands) as $command) {
-            $method = "register{$command}Command";
+        $this->registerCommands(array_merge(
+            $this->commands, $this->devCommands
+        ));
+    }
 
-            call_user_func_array([$this, $method], []);
+    /**
+     * Register the given commands.
+     * @param array $commands
+     * @return void
+     */
+    protected function registerCommands(array $commands)
+    {
+        foreach (array_keys($commands) as $command) {
+            call_user_func_array([$this, "register{$command}Command"], []);
         }
 
-        $this->commands(array_values($this->commands));
+        $this->commands(array_values($commands));
     }
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerAppNameCommand()
@@ -113,7 +125,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerClearCompiledCommand()
@@ -125,7 +136,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerCommandMakeCommand()
@@ -137,7 +147,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerConfigCacheCommand()
@@ -149,7 +158,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerConfigClearCommand()
@@ -161,7 +169,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerConsoleMakeCommand()
@@ -173,7 +180,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerEventGenerateCommand()
@@ -185,7 +191,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerEventMakeCommand()
@@ -197,7 +202,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerDownCommand()
@@ -209,7 +213,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerEnvironmentCommand()
@@ -221,7 +224,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerHandlerCommandCommand()
@@ -233,7 +235,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerHandlerEventCommand()
@@ -245,7 +246,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerJobMakeCommand()
@@ -257,7 +257,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerKeyGenerateCommand()
@@ -269,7 +268,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerListenerMakeCommand()
@@ -281,7 +279,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerModelMakeCommand()
@@ -293,7 +290,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerOptimizeCommand()
@@ -305,7 +301,28 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
+     * @return void
+     */
+    protected function registerOptimizeClearCommand()
+    {
+        $this->royalcms->singleton('command.optimize.clear', function () {
+            return new OptimizeClearCommand;
+        });
+    }
+
+    /**
+     * Register the command.
+     * @return void
+     */
+    protected function registerPackageDiscoverCommand()
+    {
+        $this->royalcms->singleton('command.package.discover', function () {
+            return new PackageDiscoverCommand;
+        });
+    }
+
+    /**
+     * Register the command.
      * @return void
      */
     protected function registerProviderMakeCommand()
@@ -317,7 +334,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerRequestMakeCommand()
@@ -329,7 +345,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerRouteCacheCommand()
@@ -341,7 +356,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerRouteClearCommand()
@@ -353,7 +367,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerRouteListCommand()
@@ -365,7 +378,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerServeCommand()
@@ -377,7 +389,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerTestMakeCommand()
@@ -389,7 +400,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerTinkerCommand()
@@ -401,7 +411,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerUpCommand()
@@ -413,7 +422,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerVendorPublishCommand()
@@ -425,7 +433,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerViewClearCommand()
@@ -437,7 +444,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerPolicyMakeCommand()
@@ -449,7 +455,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerTranslationCacheCommand()
@@ -461,7 +466,6 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Register the command.
-     *
      * @return void
      */
     protected function registerTranslationClearCommand()
@@ -473,11 +477,10 @@ class ArtisanServiceProvider extends ServiceProvider
 
     /**
      * Get the services provided by the provider.
-     *
      * @return array
      */
     public function provides()
     {
-        return array_values($this->commands);
+        return array_merge(array_values($this->commands), array_values($this->devCommands));
     }
 }
