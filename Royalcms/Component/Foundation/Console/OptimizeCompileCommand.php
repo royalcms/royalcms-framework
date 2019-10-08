@@ -6,7 +6,7 @@ use PhpParser\Lexer;
 use PhpParser\Parser;
 use ClassPreloader\Factory;
 use Royalcms\Component\Console\Command;
-use ClassPreloader\ClassPreloader;
+use Royalcms\Component\Foundation\Optimize\ClassPreloader;
 use Royalcms\Component\Foundation\Composer;
 use ClassPreloader\Parser\DirVisitor;
 use ClassPreloader\Parser\FileVisitor;
@@ -40,16 +40,25 @@ class OptimizeCompileCommand extends Command
     protected $composer;
 
     /**
+     * The class Pre Loader instance.
+     *
+     * @var \Royalcms\Component\Foundation\Composer
+     */
+    protected $classPreLoader;
+
+    /**
      * Create a new optimize command instance.
      *
      * @param  \Royalcms\Component\Foundation\Composer  $composer
      * @return void
      */
-    public function __construct(Composer $composer)
+    public function __construct(Composer $composer, ClassPreloader $classPreLoader)
     {
         parent::__construct();
 
         $this->composer = $composer;
+
+        $this->classPreLoader = $classPreLoader;
     }
 
     /**
@@ -69,88 +78,10 @@ class OptimizeCompileCommand extends Command
 
         if ($this->option('force') || ! $this->royalcms['config']['system.debug']) {
             $this->info('Compiling common classes');
-            $this->compileClasses();
+            $this->classPreLoader->compileClasses();
         } else {
             $this->call('clear-compiled');
         }
-    }
-
-    /**
-     * Generate the compiled class file.
-     *
-     * @return void
-     */
-    protected function compileClasses()
-    {
-        $preloader = $this->getClassPreloader();
-
-        $handle = $preloader->prepareOutput($this->royalcms->getCachedCompilePath());
-
-        foreach ($this->getClassFiles() as $file) {
-            try {
-                fwrite($handle, $preloader->getCode($file, false)."\n");
-            } catch (SkipFileException $ex) {
-                // Class Preloader 2.x
-            } catch (VisitorExceptionInterface $e) {
-                // Class Preloader 3.x
-            }
-        }
-
-        fclose($handle);
-    }
-
-    /**
-     * Get the class preloader used by the command.
-     *
-     * @return \ClassPreloader\ClassPreloader
-     */
-    protected function getClassPreloader()
-    {
-        // Class Preloader 3.x
-        if (class_exists(Factory::class)) {
-            return (new Factory)->create(['skip' => true]);
-        }
-
-        // Class Preloader 2.x
-        //return new ClassPreloader(new PrettyPrinter, new Parser(new Lexer), $this->getTraverser());
-    }
-
-    /**
-     * Get the node traverser used by the command.
-     *
-     * Note that this method is only called if we're using Class Preloader 2.x.
-     *
-     * @return \ClassPreloader\Parser\NodeTraverser
-     */
-    protected function getTraverser()
-    {
-        $traverser = new NodeTraverser;
-
-        $traverser->addVisitor(new DirVisitor(true));
-
-        $traverser->addVisitor(new FileVisitor(true));
-
-        return $traverser;
-    }
-
-    /**
-     * Get the classes that should be combined and compiled.
-     *
-     * @return array
-     */
-    protected function getClassFiles()
-    {
-        $royalcms = $this->royalcms;
-
-        $core = require __DIR__.'/Optimize/config.php';
-
-        $files = array_merge($core, $royalcms['config']->get('compile.files', []));
-
-        foreach ($royalcms['config']->get('compile.providers', []) as $provider) {
-            $files = array_merge($files, forward_static_call([$provider, 'compiles']));
-        }
-
-        return array_map('realpath', $files);
     }
 
     /**
