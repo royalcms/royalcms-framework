@@ -3,6 +3,7 @@
 namespace Royalcms\Component\Foundation\Providers;
 
 use Royalcms\Component\Foundation\Composer;
+use Royalcms\Component\Foundation\Optimize\ClassPreloader;
 use Royalcms\Component\Support\ServiceProvider;
 
 class ComposerServiceProvider extends ServiceProvider
@@ -20,6 +21,10 @@ class ComposerServiceProvider extends ServiceProvider
         });
 
         $this->royalcms->alias('composer', Composer::class);
+
+        $this->royalcms->singleton(ClassPreloader::class, function ($royalcms) {
+            return new ClassPreloader($royalcms);
+        });
     }
 
     /**
@@ -31,7 +36,8 @@ class ComposerServiceProvider extends ServiceProvider
     {
         return [
             'composer',
-            Composer::class
+            Composer::class,
+            ClassPreloader::class
         ];
     }
 }

@@ -319,7 +319,7 @@ class ArtisanServiceProvider extends ServiceProvider
     protected function registerOptimizeCompileCommand()
     {
         $this->royalcms->singleton('command.optimize.compile', function ($royalcms) {
-            return new OptimizeCompileCommand($royalcms['composer']);
+            return new OptimizeCompileCommand($royalcms['composer'], $royalcms['Royalcms\Component\Foundation\Optimize\ClassPreloader']);
         });
     }
 
