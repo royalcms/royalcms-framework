@@ -175,8 +175,8 @@ return array(
         'Royalcms\Component\Foundation\Providers\FoundationServiceProvider',
 
         // Command
-        'Royalcms\Component\Foundation\Providers\ArtisanServiceProvider',
         'Royalcms\Component\Foundation\Providers\ComposerServiceProvider',
+        'Royalcms\Component\Foundation\Providers\ArtisanServiceProvider',
         'Royalcms\Component\Foundation\Providers\ConsoleSupportServiceProvider',
 
 
