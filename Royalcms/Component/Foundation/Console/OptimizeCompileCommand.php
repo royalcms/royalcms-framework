@@ -78,7 +78,7 @@ class OptimizeCompileCommand extends Command
 
         if ($this->option('force') || ! $this->royalcms['config']['system.debug']) {
             $this->info('Compiling common classes');
-            $this->classPreLoader->compileClasses();
+            $this->classPreLoader->compile();
         } else {
             $this->call('clear-compiled');
         }
