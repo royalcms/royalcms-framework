@@ -693,6 +693,18 @@ class Royalcms extends Application implements RoyalcmsContract, ContainerContrac
     }
 
     /**
+     * Get the path to the cached "aliases.php" file.
+     *
+     * @return string
+     */
+    public function getCachedAliasesPath()
+    {
+        $path = $this->contentPath().'/bootstrap/cache/aliases.php';
+
+        return Env::get('APP_ALIASES_CACHE', $path);
+    }
+
+    /**
      * Get the path to the cached services.json file.
      *
      * @return string

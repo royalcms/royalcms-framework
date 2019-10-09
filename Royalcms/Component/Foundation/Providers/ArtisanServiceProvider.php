@@ -2,6 +2,7 @@
 
 namespace Royalcms\Component\Foundation\Providers;
 
+use Royalcms\Component\Foundation\Console\OptimizeAliasCommand;
 use Royalcms\Component\Support\ServiceProvider;
 use Royalcms\Component\Foundation\Console\OptimizeClearCommand;
 use Royalcms\Component\Foundation\Console\OptimizeCompileCommand;
@@ -56,6 +57,7 @@ class ArtisanServiceProvider extends ServiceProvider
         'KeyGenerate'      => 'command.key.generate',
         'Optimize'         => 'command.optimize',
         'OptimizeClear'    => 'command.optimize.clear',
+        'OptimizeAlias'    => 'command.optimize.alias',
         'OptimizeCompile'  => 'command.optimize.compile',
         'PackageDiscover'  => 'command.package.discover',
         'RouteCache'       => 'command.route.cache',
@@ -316,10 +318,21 @@ class ArtisanServiceProvider extends ServiceProvider
      * Register the command.
      * @return void
      */
+    protected function registerOptimizeAliasCommand()
+    {
+        $this->royalcms->singleton('command.optimize.alias', function ($royalcms) {
+            return new OptimizeAliasCommand($royalcms['classaliasloader']);
+        });
+    }
+
+    /**
+     * Register the command.
+     * @return void
+     */
     protected function registerOptimizeCompileCommand()
     {
         $this->royalcms->singleton('command.optimize.compile', function ($royalcms) {
-            return new OptimizeCompileCommand($royalcms['composer'], $royalcms['Royalcms\Component\Foundation\Optimize\ClassPreloader']);
+            return new OptimizeCompileCommand($royalcms['composer'], $royalcms['classpreloader']);
         });
     }
 
