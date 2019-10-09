@@ -687,14 +687,9 @@ class Royalcms extends Application implements RoyalcmsContract, ContainerContrac
      */
     public function getCachedCompilePath()
     {
-        if ($this->vendorIsWritableForOptimizations())
-        {
-            return $this->contentPath().'/bootstrap/cache/compiled.php';
-        }
-        else
-        {
-            return $this->storagePath().'/framework/compiled.php';
-        }
+        $path = $this->contentPath().'/bootstrap/cache/compiled.php';
+
+        return Env::get('APP_COMPILED_CACHE', $path);
     }
 
     /**
