@@ -8,7 +8,6 @@ class SessionServiceProvider extends ServiceProvider
 {
     /**
      * Register the service provider.
-     *
      * @return void
      */
     public function register()
@@ -26,20 +25,17 @@ class SessionServiceProvider extends ServiceProvider
 
     /**
      * Setup the default session driver for the application.
-     *
      * @return void
      */
     protected function setupDefaultDriver()
     {
-        if ($this->royalcms->runningInConsole())
-        {
+        if ($this->royalcms->runningInConsole()) {
             $this->royalcms['config']['session.driver'] = 'array';
         }
     }
 
     /**
      * Register the session manager instance.
-     *
      * @return void
      */
     protected function registerSessionManager()
@@ -51,7 +47,6 @@ class SessionServiceProvider extends ServiceProvider
 
     /**
      * Register the session driver instance.
-     *
      * @return void
      */
     protected function registerSessionDriver()
@@ -72,20 +67,29 @@ class SessionServiceProvider extends ServiceProvider
     protected function loadAlias()
     {
         $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
-        $loader->alias('Royalcms\Component\Session\CacheBasedSessionHandler', 'Illuminate\Session\CacheBasedSessionHandler');
-//        $loader->alias('Royalcms\Component\Session\CommandsServiceProvider', 'Illuminate\Session\CommandsServiceProvider');
-        $loader->alias('Royalcms\Component\Session\Console\SessionTableCommand', 'Illuminate\Session\Console\SessionTableCommand');
-        $loader->alias('Royalcms\Component\Session\CookieSessionHandler', 'Illuminate\Session\CookieSessionHandler');
-        $loader->alias('Royalcms\Component\Session\DatabaseSessionHandler', 'Illuminate\Session\DatabaseSessionHandler');
-        $loader->alias('Royalcms\Component\Session\EncryptedStore', 'Illuminate\Session\EncryptedStore');
-        $loader->alias('Royalcms\Component\Session\ExistenceAwareInterface', 'Illuminate\Session\ExistenceAwareInterface');
-        $loader->alias('Royalcms\Component\Session\FileSessionHandler', 'Illuminate\Session\FileSessionHandler');
-        $loader->alias('Royalcms\Component\Session\Middleware\StartSession', 'Illuminate\Session\Middleware\StartSession');
-//        $loader->alias('Royalcms\Component\Session\SessionInterface', 'Illuminate\Session\SessionInterface');
-//        $loader->alias('Royalcms\Component\Session\SessionManager', 'Illuminate\Session\SessionManager');
-//        $loader->alias('Royalcms\Component\Session\Store', 'Illuminate\Session\Store');
-//        $loader->alias('Royalcms\Component\Session\StoreInterface', 'Illuminate\Session\StoreInterface');
-        $loader->alias('Royalcms\Component\Session\TokenMismatchException', 'Illuminate\Session\TokenMismatchException');
+
+        foreach (self::aliases() as $class => $alias) {
+            $loader->alias($class, $alias);
+        }
+    }
+
+    /**
+     * Load the alias = One less install step for the user
+     */
+    public static function aliases()
+    {
+
+        return [
+            'Royalcms\Component\Session\CacheBasedSessionHandler'    => 'Illuminate\Session\CacheBasedSessionHandler',
+            'Royalcms\Component\Session\Console\SessionTableCommand' => 'Illuminate\Session\Console\SessionTableCommand',
+            'Royalcms\Component\Session\CookieSessionHandler'        => 'Illuminate\Session\CookieSessionHandler',
+            'Royalcms\Component\Session\DatabaseSessionHandler'      => 'Illuminate\Session\DatabaseSessionHandler',
+            'Royalcms\Component\Session\EncryptedStore'              => 'Illuminate\Session\EncryptedStore',
+            'Royalcms\Component\Session\ExistenceAwareInterface'     => 'Illuminate\Session\ExistenceAwareInterface',
+            'Royalcms\Component\Session\FileSessionHandler'          => 'Illuminate\Session\FileSessionHandler',
+            'Royalcms\Component\Session\Middleware\StartSession'     => 'Illuminate\Session\Middleware\StartSession',
+            'Royalcms\Component\Session\TokenMismatchException'      => 'Illuminate\Session\TokenMismatchException'
+        ];
     }
 
 }
