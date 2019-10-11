@@ -7,15 +7,13 @@ class BusServiceProvider extends \Illuminate\Bus\BusServiceProvider
 {
     /**
      * The application instance.
-     *
      * @var \Royalcms\Component\Contracts\Foundation\Royalcms
      */
     protected $royalcms;
 
     /**
      * Create a new service provider instance.
-     *
-     * @param  \Royalcms\Component\Contracts\Foundation\Royalcms  $royalcms
+     * @param \Royalcms\Component\Contracts\Foundation\Royalcms $royalcms
      * @return void
      */
     public function __construct($royalcms)
@@ -27,7 +25,6 @@ class BusServiceProvider extends \Illuminate\Bus\BusServiceProvider
 
     /**
      * Register the service provider.
-     *
      * @return void
      */
     public function register()
@@ -42,11 +39,23 @@ class BusServiceProvider extends \Illuminate\Bus\BusServiceProvider
      */
     protected function loadAlias()
     {
-        $this->royalcms->booting(function() {
-            $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
-            $loader->alias('Royalcms\Component\Bus\Dispatcher', 'Illuminate\Bus\Dispatcher');
-            $loader->alias('Royalcms\Component\Bus\Queueable', 'Illuminate\Bus\Queueable');
-        });
+        $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
+
+        foreach (self::aliases() as $class => $alias) {
+            $loader->alias($class, $alias);
+        }
+    }
+
+    /**
+     * Load the alias = One less install step for the user
+     */
+    public static function aliases()
+    {
+
+        return [
+            'Royalcms\Component\Bus\Dispatcher' => 'Illuminate\Bus\Dispatcher',
+            'Royalcms\Component\Bus\Queueable'  => 'Illuminate\Bus\Queueable'
+        ];
     }
 
 }
