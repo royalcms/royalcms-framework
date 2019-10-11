@@ -11,7 +11,6 @@ class RoutingServiceProvider extends ServiceProvider
 {
     /**
      * Register the service provider.
-     *
      * @return void
      */
     public function register()
@@ -35,7 +34,6 @@ class RoutingServiceProvider extends ServiceProvider
 
     /**
      * Register the router instance.
-     *
      * @return void
      */
     protected function registerRouter()
@@ -47,7 +45,6 @@ class RoutingServiceProvider extends ServiceProvider
 
     /**
      * Register the URL generator service.
-     *
      * @return void
      */
     protected function registerUrlGenerator()
@@ -62,8 +59,8 @@ class RoutingServiceProvider extends ServiceProvider
 
             $url = new UrlGenerator(
                 $routes, $royalcms->rebinding(
-                    'request', $this->requestRebinder()
-                )
+                'request', $this->requestRebinder()
+            )
             );
 
             $url->setSessionResolver(function () {
@@ -83,7 +80,6 @@ class RoutingServiceProvider extends ServiceProvider
 
     /**
      * Get the URL generator request rebinder.
-     *
      * @return \Closure
      */
     protected function requestRebinder()
@@ -95,7 +91,6 @@ class RoutingServiceProvider extends ServiceProvider
 
     /**
      * Register the Redirector service.
-     *
      * @return void
      */
     protected function registerRedirector()
@@ -117,7 +112,6 @@ class RoutingServiceProvider extends ServiceProvider
 
     /**
      * Register a binding for the PSR-7 request implementation.
-     *
      * @return void
      */
     protected function registerPsrRequest()
@@ -129,7 +123,6 @@ class RoutingServiceProvider extends ServiceProvider
 
     /**
      * Register a binding for the PSR-7 response implementation.
-     *
      * @return void
      */
     protected function registerPsrResponse()
@@ -141,7 +134,6 @@ class RoutingServiceProvider extends ServiceProvider
 
     /**
      * Register the response factory implementation.
-     *
      * @return void
      */
     protected function registerResponseFactory()
@@ -150,18 +142,17 @@ class RoutingServiceProvider extends ServiceProvider
             return new ResponseFactory($royalcms['Illuminate\Contracts\View\Factory'], $royalcms['redirect']);
         });
 
-        //$this->royalcms->alias('response', 'Royalcms\Component\Contracts\Routing\ResponseFactory');
+        //$this->royalcms->alias('response' => 'Royalcms\Component\Contracts\Routing\ResponseFactory');
     }
 
     /**
      * Register the router instance.
-     *
      * @royalcms 5.0.0
      * @return void
      */
     protected function registerResponse()
     {
-        $this->royalcms->singleton('response', function($royalcms) {
+        $this->royalcms->singleton('response', function ($royalcms) {
             return new \Royalcms\Component\Http\Response();
         });
     }
@@ -173,21 +164,34 @@ class RoutingServiceProvider extends ServiceProvider
     protected function loadAlias()
     {
         $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
-        $loader->alias('Royalcms\Component\Routing\Console\ControllerMakeCommand', 'Illuminate\Routing\Console\ControllerMakeCommand');
-        $loader->alias('Royalcms\Component\Routing\Console\MiddlewareMakeCommand', 'Illuminate\Routing\Console\MiddlewareMakeCommand');
-        $loader->alias('Royalcms\Component\Routing\Matching\HostValidator', 'Illuminate\Routing\Matching\HostValidator');
-        $loader->alias('Royalcms\Component\Routing\Matching\MethodValidator', 'Illuminate\Routing\Matching\MethodValidator');
-        $loader->alias('Royalcms\Component\Routing\Matching\SchemeValidator', 'Illuminate\Routing\Matching\SchemeValidator');
-        $loader->alias('Royalcms\Component\Routing\Matching\UriValidator', 'Illuminate\Routing\Matching\UriValidator');
-        $loader->alias('Royalcms\Component\Routing\Matching\ValidatorInterfacer', 'Illuminate\Routing\Matching\ValidatorInterface');
-        $loader->alias('Royalcms\Component\Routing\Redirector', 'Illuminate\Routing\Redirector');
-        $loader->alias('Royalcms\Component\Routing\ResourceRegistrar', 'Illuminate\Routing\ResourceRegistrar');
-        $loader->alias('Royalcms\Component\Routing\Route', 'Illuminate\Routing\Route');
-        $loader->alias('Royalcms\Component\Routing\RouteCollection', 'Illuminate\Routing\RouteCollection');
-        $loader->alias('Royalcms\Component\Routing\RouteDependencyResolverTrait', 'Illuminate\Routing\RouteDependencyResolverTrait');
-        $loader->alias('Royalcms\Component\Routing\Router', 'Illuminate\Routing\Router');
-        $loader->alias('Royalcms\Component\Routing\UrlGenerator', 'Illuminate\Routing\UrlGenerator');
-//        $loader->alias('Royalcms\Component\Routing\ControllerDispatcher', 'Illuminate\Routing\ControllerDispatcher');
+
+        foreach (self::aliases() as $class => $alias) {
+            $loader->alias($class, $alias);
+        }
+    }
+
+    /**
+     * Load the alias = One less install step for the user
+     */
+    public static function aliases()
+    {
+
+        return [
+            'Royalcms\Component\Routing\Console\ControllerMakeCommand' => 'Illuminate\Routing\Console\ControllerMakeCommand',
+            'Royalcms\Component\Routing\Console\MiddlewareMakeCommand' => 'Illuminate\Routing\Console\MiddlewareMakeCommand',
+            'Royalcms\Component\Routing\Matching\HostValidator'        => 'Illuminate\Routing\Matching\HostValidator',
+            'Royalcms\Component\Routing\Matching\MethodValidator'      => 'Illuminate\Routing\Matching\MethodValidator',
+            'Royalcms\Component\Routing\Matching\SchemeValidator'      => 'Illuminate\Routing\Matching\SchemeValidator',
+            'Royalcms\Component\Routing\Matching\UriValidator'         => 'Illuminate\Routing\Matching\UriValidator',
+            'Royalcms\Component\Routing\Matching\ValidatorInterfacer'  => 'Illuminate\Routing\Matching\ValidatorInterface',
+            'Royalcms\Component\Routing\Redirector'                    => 'Illuminate\Routing\Redirector',
+            'Royalcms\Component\Routing\ResourceRegistrar'             => 'Illuminate\Routing\ResourceRegistrar',
+            'Royalcms\Component\Routing\Route'                         => 'Illuminate\Routing\Route',
+            'Royalcms\Component\Routing\RouteCollection'               => 'Illuminate\Routing\RouteCollection',
+            'Royalcms\Component\Routing\RouteDependencyResolverTrait'  => 'Illuminate\Routing\RouteDependencyResolverTrait',
+            'Royalcms\Component\Routing\Router'                        => 'Illuminate\Routing\Router',
+            'Royalcms\Component\Routing\UrlGenerator'                  => 'Illuminate\Routing\UrlGenerator',
+        ];
     }
 
 }
