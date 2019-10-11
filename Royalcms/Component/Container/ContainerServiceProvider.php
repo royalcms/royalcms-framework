@@ -9,7 +9,6 @@ class ContainerServiceProvider extends ServiceProvider
 
     /**
      * Register the service provider.
-     *
      * @return void
      */
     public function register()
@@ -24,9 +23,22 @@ class ContainerServiceProvider extends ServiceProvider
     protected function loadAlias()
     {
         $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
-        $loader->alias('Royalcms\Component\Container\Container', 'Illuminate\Container\Container');
-        $loader->alias('Royalcms\Component\Container\ContextualBindingBuilder', 'Illuminate\Container\ContextualBindingBuilder');
+
+        foreach (self::aliases() as $class => $alias) {
+            $loader->alias($class, $alias);
+        }
     }
 
+    /**
+     * Load the alias = One less install step for the user
+     */
+    public static function aliases()
+    {
+
+        return [
+            'Royalcms\Component\Container\Container'                => 'Illuminate\Container\Container',
+            'Royalcms\Component\Container\ContextualBindingBuilder' => 'Illuminate\Container\ContextualBindingBuilder'
+        ];
+    }
 
 }
