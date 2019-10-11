@@ -11,7 +11,27 @@ class ClassAliasLoader
 {
 
     protected $providers = [
+        'Royalcms\Component\Auth\AuthServiceProvider',
+        'Royalcms\Component\Broadcasting\BroadcastServiceProvider',
+        'Royalcms\Component\Bus\BusServiceProvider',
+        'Royalcms\Component\Cache\CacheServiceProvider',
+        'Royalcms\Component\Container\ContainerServiceProvider',
         'Royalcms\Component\Contracts\ContractsServiceProvider',
+        'Royalcms\Component\Cookie\CookieServiceProvider',
+        'Royalcms\Component\Database\DatabaseServiceProvider',
+        'Royalcms\Component\Filesystem\FilesystemServiceProvider',
+        'Royalcms\Component\Http\HttpServiceProvider',
+        'Royalcms\Component\Notifications\NotificationServiceProvider',
+        'Royalcms\Component\Pagination\PaginationServiceProvider',
+        'Royalcms\Component\Pipeline\PipelineServiceProvider',
+        'Royalcms\Component\Queue\QueueServiceProvider',
+        'Royalcms\Component\Redis\RedisServiceProvider',
+        'Royalcms\Component\Routing\RoutingServiceProvider',
+        'Royalcms\Component\Session\SessionServiceProvider',
+        'Royalcms\Component\Support\SupportServiceProvider',
+        'Royalcms\Component\Translation\TranslationServiceProvider',
+        'Royalcms\Component\Validation\ValidationServiceProvider',
+        'Royalcms\Component\View\ViewServiceProvider',
     ];
 
     /**
