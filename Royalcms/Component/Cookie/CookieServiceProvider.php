@@ -7,15 +7,13 @@ class CookieServiceProvider extends \Illuminate\Cookie\CookieServiceProvider
 {
     /**
      * The application instance.
-     *
      * @var \Royalcms\Component\Contracts\Foundation\Royalcms
      */
     protected $royalcms;
 
     /**
      * Create a new service provider instance.
-     *
-     * @param  \Royalcms\Component\Contracts\Foundation\Royalcms  $royalcms
+     * @param \Royalcms\Component\Contracts\Foundation\Royalcms $royalcms
      * @return void
      */
     public function __construct($royalcms)
@@ -27,7 +25,6 @@ class CookieServiceProvider extends \Illuminate\Cookie\CookieServiceProvider
 
     /**
      * Register the service provider.
-     *
      * @return void
      */
     public function register()
@@ -42,12 +39,24 @@ class CookieServiceProvider extends \Illuminate\Cookie\CookieServiceProvider
      */
     protected function loadAlias()
     {
-        $this->royalcms->booting(function() {
-            $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
-            $loader->alias('Royalcms\Component\Cookie\Middleware\AddQueuedCookiesToResponse', 'Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse');
-            $loader->alias('Royalcms\Component\Cookie\Middleware\EncryptCookies', 'Illuminate\Cookie\Middleware\EncryptCookies');
-            $loader->alias('Royalcms\Component\Cookie\CookieJar', 'Illuminate\Cookie\CookieJar');
-        });
+        $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
+
+        foreach (self::aliases() as $class => $alias) {
+            $loader->alias($class, $alias);
+        }
+    }
+
+    /**
+     * Load the alias = One less install step for the user
+     */
+    public static function aliases()
+    {
+
+        return [
+            'Royalcms\Component\Cookie\Middleware\AddQueuedCookiesToResponse' => 'Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse',
+            'Royalcms\Component\Cookie\Middleware\EncryptCookies'             => 'Illuminate\Cookie\Middleware\EncryptCookies',
+            'Royalcms\Component\Cookie\CookieJar'                             => 'Illuminate\Cookie\CookieJar',
+        ];
     }
 
 }
