@@ -69,10 +69,22 @@ class TranslationServiceProvider extends ServiceProvider
      */
     protected function loadAlias()
     {
-        $this->royalcms->booting(function () {
-            $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
-            $loader->alias('Royalcms\Component\Translation\Translator', 'Illuminate\Translation\Translator');
-        });
+        $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
+
+        foreach (self::aliases() as $class => $alias) {
+            $loader->alias($class, $alias);
+        }
+    }
+
+    /**
+     * Load the alias = One less install step for the user
+     */
+    public static function aliases()
+    {
+
+        return [
+            'Royalcms\Component\Translation\Translator' => 'Illuminate\Translation\Translator',
+        ];
     }
 
 }
