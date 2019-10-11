@@ -7,7 +7,6 @@ class FilesystemServiceProvider extends \Illuminate\Filesystem\FilesystemService
 
     /**
      * Register the service provider.
-     *
      * @return void
      */
     public function register()
@@ -24,11 +23,23 @@ class FilesystemServiceProvider extends \Illuminate\Filesystem\FilesystemService
     protected function loadAlias()
     {
         $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
-//        $loader->alias('Royalcms\Component\Filesystem\ClassFinder', 'Illuminate\Filesystem\ClassFinder');
-        $loader->alias('Royalcms\Component\Filesystem\Filesystem', 'Illuminate\Filesystem\Filesystem');
-        $loader->alias('Royalcms\Component\Filesystem\FilesystemAdapter', 'Illuminate\Filesystem\FilesystemAdapter');
-        $loader->alias('Royalcms\Component\Filesystem\FilesystemManager', 'Illuminate\Filesystem\FilesystemManager');
+
+        foreach (self::aliases() as $class => $alias) {
+            $loader->alias($class, $alias);
+        }
     }
 
+    /**
+     * Load the alias = One less install step for the user
+     */
+    public static function aliases()
+    {
+
+        return [
+            'Royalcms\Component\Filesystem\Filesystem'        => 'Illuminate\Filesystem\Filesystem',
+            'Royalcms\Component\Filesystem\FilesystemAdapter' => 'Illuminate\Filesystem\FilesystemAdapter',
+            'Royalcms\Component\Filesystem\FilesystemManager' => 'Illuminate\Filesystem\FilesystemManager'
+        ];
+    }
 
 }
