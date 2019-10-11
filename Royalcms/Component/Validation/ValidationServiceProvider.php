@@ -7,15 +7,13 @@ class ValidationServiceProvider extends \Illuminate\Validation\ValidationService
 
     /**
      * The application instance.
-     *
      * @var \Royalcms\Component\Contracts\Foundation\Royalcms
      */
     protected $royalcms;
 
     /**
      * Create a new service provider instance.
-     *
-     * @param  \Royalcms\Component\Contracts\Foundation\Royalcms|\Illuminate\Contracts\Foundation\Application  $royalcms
+     * @param \Royalcms\Component\Contracts\Foundation\Royalcms|\Illuminate\Contracts\Foundation\Application $royalcms
      * @return void
      */
     public function __construct($royalcms)
@@ -27,7 +25,6 @@ class ValidationServiceProvider extends \Illuminate\Validation\ValidationService
 
     /**
      * Register the service provider.
-     *
      * @return void
      */
     public function register()
@@ -42,14 +39,26 @@ class ValidationServiceProvider extends \Illuminate\Validation\ValidationService
      */
     protected function loadAlias()
     {
-        $this->royalcms->booting(function() {
-            $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
-            $loader->alias('Royalcms\Component\Validation\DatabasePresenceVerifier', 'Illuminate\Validation\DatabasePresenceVerifier');
-            $loader->alias('Royalcms\Component\Validation\Factory', 'Illuminate\Validation\Factory');
-            $loader->alias('Royalcms\Component\Validation\PresenceVerifierInterface', 'Illuminate\Validation\PresenceVerifierInterface');
-            $loader->alias('Royalcms\Component\Validation\ValidatesWhenResolvedTrait', 'Illuminate\Validation\ValidatesWhenResolvedTrait');
-            $loader->alias('Royalcms\Component\Validation\Validator', 'Illuminate\Validation\Validator');
-        });
+        $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
+
+        foreach (self::aliases() as $class => $alias) {
+            $loader->alias($class, $alias);
+        }
+    }
+
+    /**
+     * Load the alias = One less install step for the user
+     */
+    public static function aliases()
+    {
+
+        return [
+            'Royalcms\Component\Validation\DatabasePresenceVerifier'   => 'Illuminate\Validation\DatabasePresenceVerifier',
+            'Royalcms\Component\Validation\Factory'                    => 'Illuminate\Validation\Factory',
+            'Royalcms\Component\Validation\PresenceVerifierInterface'  => 'Illuminate\Validation\PresenceVerifierInterface',
+            'Royalcms\Component\Validation\ValidatesWhenResolvedTrait' => 'Illuminate\Validation\ValidatesWhenResolvedTrait',
+            'Royalcms\Component\Validation\Validator'                  => 'Illuminate\Validation\Validator',
+        ];
     }
 
 
