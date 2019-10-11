@@ -9,15 +9,13 @@ class SupportServiceProvider extends \Illuminate\Support\ServiceProvider
 
     /**
      * The application instance.
-     *
      * @var \Royalcms\Component\Contracts\Foundation\Royalcms
      */
     protected $royalcms;
 
     /**
      * Create a new service provider instance.
-     *
-     * @param  \Royalcms\Component\Contracts\Foundation\Royalcms|\Illuminate\Contracts\Foundation\Application  $royalcms
+     * @param \Royalcms\Component\Contracts\Foundation\Royalcms|\Illuminate\Contracts\Foundation\Application $royalcms
      * @return void
      */
     public function __construct($royalcms)
@@ -37,7 +35,6 @@ class SupportServiceProvider extends \Illuminate\Support\ServiceProvider
 
     /**
      * Register the service provider.
-     *
      * @return void
      */
     public function register()
@@ -52,21 +49,34 @@ class SupportServiceProvider extends \Illuminate\Support\ServiceProvider
     protected function loadAlias()
     {
         $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
-        $loader->alias('Royalcms\Component\Support\Collection', 'Illuminate\Support\Collection');
-        $loader->alias('Royalcms\Component\Support\MessageBag', 'Illuminate\Support\MessageBag');
-        $loader->alias('Royalcms\Component\Support\Fluent', 'Illuminate\Support\Fluent');
-        $loader->alias('Royalcms\Component\Support\ViewErrorBag', 'Illuminate\Support\ViewErrorBag');
-        $loader->alias('Royalcms\Component\Support\Pluralizer', 'Illuminate\Support\Pluralizer');
-        $loader->alias('Royalcms\Component\Support\Optional', 'Illuminate\Support\Optional');
-        $loader->alias('Royalcms\Component\Support\NamespacedItemResolver', 'Illuminate\Support\NamespacedItemResolver');
-        $loader->alias('Royalcms\Component\Support\HtmlString', 'Illuminate\Support\HtmlString');
-        $loader->alias('Royalcms\Component\Support\HigherOrderTapProxy', 'Illuminate\Support\HigherOrderTapProxy');
-        $loader->alias('Royalcms\Component\Support\HigherOrderCollectionProxy', 'Illuminate\Support\HigherOrderCollectionProxy');
-        $loader->alias('Royalcms\Component\Support\Carbon', 'Illuminate\Support\Carbon');
-        $loader->alias('Royalcms\Component\Support\Traits\CapsuleManagerTrait', 'Illuminate\Support\Traits\CapsuleManagerTrait');
-        $loader->alias('Royalcms\Component\Support\Traits\Macroable', 'Illuminate\Support\Traits\Macroable');
 
-        $loader->alias('Royalcms\Component\Support\ClassLoader', 'Royalcms\Component\ClassLoader\ClassLoader');
+        foreach (self::aliases() as $class => $alias) {
+            $loader->alias($class, $alias);
+        }
+    }
+
+    /**
+     * Load the alias = One less install step for the user
+     */
+    public static function aliases()
+    {
+
+        return [
+            'Royalcms\Component\Support\Collection'                 => 'Illuminate\Support\Collection',
+            'Royalcms\Component\Support\MessageBag'                 => 'Illuminate\Support\MessageBag',
+            'Royalcms\Component\Support\Fluent'                     => 'Illuminate\Support\Fluent',
+            'Royalcms\Component\Support\ViewErrorBag'               => 'Illuminate\Support\ViewErrorBag',
+            'Royalcms\Component\Support\Pluralizer'                 => 'Illuminate\Support\Pluralizer',
+            'Royalcms\Component\Support\Optional'                   => 'Illuminate\Support\Optional',
+            'Royalcms\Component\Support\NamespacedItemResolver'     => 'Illuminate\Support\NamespacedItemResolver',
+            'Royalcms\Component\Support\HtmlString'                 => 'Illuminate\Support\HtmlString',
+            'Royalcms\Component\Support\HigherOrderTapProxy'        => 'Illuminate\Support\HigherOrderTapProxy',
+            'Royalcms\Component\Support\HigherOrderCollectionProxy' => 'Illuminate\Support\HigherOrderCollectionProxy',
+            'Royalcms\Component\Support\Carbon'                     => 'Illuminate\Support\Carbon',
+            'Royalcms\Component\Support\Traits\CapsuleManagerTrait' => 'Illuminate\Support\Traits\CapsuleManagerTrait',
+            'Royalcms\Component\Support\Traits\Macroable'           => 'Illuminate\Support\Traits\Macroable',
+            'Royalcms\Component\Support\ClassLoader'                => 'Royalcms\Component\ClassLoader\ClassLoader'
+        ];
     }
 
 
