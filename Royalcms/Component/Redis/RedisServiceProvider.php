@@ -8,22 +8,19 @@ class RedisServiceProvider extends \Illuminate\Redis\RedisServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.
-     *
      * @var bool
      */
     protected $defer = true;
 
     /**
      * The application instance.
-     *
      * @var \Royalcms\Component\Contracts\Foundation\Royalcms
      */
     protected $royalcms;
 
     /**
      * Create a new service provider instance.
-     *
-     * @param  \Royalcms\Component\Contracts\Foundation\Royalcms|\Illuminate\Contracts\Foundation\Application  $royalcms
+     * @param \Royalcms\Component\Contracts\Foundation\Royalcms|\Illuminate\Contracts\Foundation\Application $royalcms
      * @return void
      */
     public function __construct($royalcms)
@@ -35,7 +32,6 @@ class RedisServiceProvider extends \Illuminate\Redis\RedisServiceProvider
 
     /**
      * Register the service provider.
-     *
      * @return void
      */
     public function register()
@@ -50,28 +46,39 @@ class RedisServiceProvider extends \Illuminate\Redis\RedisServiceProvider
      */
     protected function loadAlias()
     {
-        $this->royalcms->booting(function () {
-            $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
-            $loader->alias('Royalcms\Component\Redis\Connections\Connection', 'Illuminate\Redis\Connections\Connection');
-            $loader->alias('Royalcms\Component\Redis\Connections\PhpRedisClusterConnection', 'Illuminate\Redis\Connections\PhpRedisClusterConnection');
-            $loader->alias('Royalcms\Component\Redis\Connections\PhpRedisConnection', 'Illuminate\Redis\Connections\PhpRedisConnection');
-            $loader->alias('Royalcms\Component\Redis\Connections\PredisClusterConnection', 'Illuminate\Redis\Connections\PredisClusterConnection');
-            $loader->alias('Royalcms\Component\Redis\Connections\PredisConnection', 'Illuminate\Redis\Connections\PredisConnection');
-            $loader->alias('Royalcms\Component\Redis\Connectors\PhpRedisConnector', 'Illuminate\Redis\Connectors\PhpRedisConnector');
-            $loader->alias('Royalcms\Component\Redis\Connectors\PredisConnector', 'Illuminate\Redis\Connectors\PredisConnector');
-            $loader->alias('Royalcms\Component\Redis\RedisManager', 'Illuminate\Redis\RedisManager');
-        });
+        $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
+
+        foreach (self::aliases() as $class => $alias) {
+            $loader->alias($class, $alias);
+        }
+    }
+
+    /**
+     * Load the alias = One less install step for the user
+     */
+    public static function aliases()
+    {
+
+        return [
+            'Royalcms\Component\Redis\Connections\Connection'                => 'Illuminate\Redis\Connections\Connection',
+            'Royalcms\Component\Redis\Connections\PhpRedisClusterConnection' => 'Illuminate\Redis\Connections\PhpRedisClusterConnection',
+            'Royalcms\Component\Redis\Connections\PhpRedisConnection'        => 'Illuminate\Redis\Connections\PhpRedisConnection',
+            'Royalcms\Component\Redis\Connections\PredisClusterConnection'   => 'Illuminate\Redis\Connections\PredisClusterConnection',
+            'Royalcms\Component\Redis\Connections\PredisConnection'          => 'Illuminate\Redis\Connections\PredisConnection',
+            'Royalcms\Component\Redis\Connectors\PhpRedisConnector'          => 'Illuminate\Redis\Connectors\PhpRedisConnector',
+            'Royalcms\Component\Redis\Connectors\PredisConnector'            => 'Illuminate\Redis\Connectors\PredisConnector',
+            'Royalcms\Component\Redis\RedisManager'                          => 'Illuminate\Redis\RedisManager',
+        ];
     }
 
     /**
      * Get a list of files that should be compiled for the package.
-     *
      * @return array
      */
     public static function compiles()
     {
         $basePath = royalcms('path.base');
-        $dir = __DIR__;
+        $dir      = __DIR__;
 
         return [
             $basePath . "/vendor/predis/predis/src/Command/CommandInterface.php",
