@@ -6,13 +6,16 @@ namespace Royalcms\Component\Foundation\Optimize;
 use ClassPreloader\Exceptions\DirConstantException;
 use ClassPreloader\Exceptions\FileConstantException;
 use ClassPreloader\Exceptions\StrictTypesException;
-use ClassPreloader\Factory;
 use ClassPreloader\Parser\DirVisitor;
 use ClassPreloader\Parser\FileVisitor;
 use ClassPreloader\Parser\NodeTraverser;
+use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\Namespace_;
+use PhpParser\ParserFactory;
 use Royalcms\Component\Foundation\Composer;
 use Royalcms\Component\Foundation\Royalcms;
 use Royalcms\Component\Support\Facades\Log;
+use Royalcms\Component\Preloader\Factory;
 
 class ClassPreloader
 {
@@ -60,9 +63,7 @@ class ClassPreloader
         foreach ($files as $file) {
             try {
                 if (file_exists($file)) {
-                    $file = realpath($file);
-                    $code = $preloader->getCode($file, false);
-                    fwrite($handle, $code."\n");
+                    $this->prepareOutputCode($file, $handle, $preloader);
                 }
                 else {
                     Log::notice($file . ' file not found.');
@@ -86,6 +87,18 @@ class ClassPreloader
     }
 
     /**
+     * @param $file
+     * @param $handle
+     */
+    protected function prepareOutputCode($file, $handle, $preloader)
+    {
+        $file = realpath($file);
+        $code = $preloader->getCode($file, false);
+        fwrite($handle, $code."\n");
+    }
+
+
+    /**
      * Get the class preloader used by the command.
      *
      * @return \ClassPreloader\ClassPreloader
@@ -94,7 +107,10 @@ class ClassPreloader
     {
         // Class Preloader 3.x
         if (class_exists(Factory::class)) {
-            return (new Factory)->create(['skip' => true]);
+            return (new Factory)->create([
+                'skip' => true,
+                'strict' => true,
+            ]);
         }
     }
 
