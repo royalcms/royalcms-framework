@@ -7,15 +7,13 @@ class BroadcastServiceProvider extends \Illuminate\Broadcasting\BroadcastService
 {
     /**
      * The application instance.
-     *
      * @var \Royalcms\Component\Contracts\Foundation\Royalcms
      */
     protected $royalcms;
 
     /**
      * Create a new service provider instance.
-     *
-     * @param  \Royalcms\Component\Contracts\Foundation\Royalcms  $royalcms
+     * @param \Royalcms\Component\Contracts\Foundation\Royalcms $royalcms
      * @return void
      */
     public function __construct($royalcms)
@@ -27,7 +25,6 @@ class BroadcastServiceProvider extends \Illuminate\Broadcasting\BroadcastService
 
     /**
      * Register the service provider.
-     *
      * @return void
      */
     public function register()
@@ -42,14 +39,26 @@ class BroadcastServiceProvider extends \Illuminate\Broadcasting\BroadcastService
      */
     protected function loadAlias()
     {
-        $this->royalcms->booting(function() {
-            $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
-            $loader->alias('Royalcms\Component\Broadcasting\BroadcastEvent', 'Illuminate\Broadcasting\BroadcastEvent');
-            $loader->alias('Royalcms\Component\Broadcasting\BroadcastManager', 'Illuminate\Broadcasting\BroadcastManager');
-            $loader->alias('Royalcms\Component\Broadcasting\BroadcastManager', 'Illuminate\Broadcasting\PrivateChannel');
-            $loader->alias('Royalcms\Component\Broadcasting\Broadcasters\LogBroadcaster', 'Illuminate\Broadcasting\Broadcasters\LogBroadcaster');
-            $loader->alias('Royalcms\Component\Broadcasting\Broadcasters\PusherBroadcaster', 'Illuminate\Broadcasting\Broadcasters\PusherBroadcaster');
-            $loader->alias('Royalcms\Component\Broadcasting\Broadcasters\RedisBroadcaster', 'Illuminate\Broadcasting\Broadcasters\RedisBroadcaster');
-        });
+        $loader = \Royalcms\Component\Foundation\AliasLoader::getInstance();
+
+        foreach (self::aliases() as $class => $alias) {
+            $loader->alias($class, $alias);
+        }
+    }
+
+    /**
+     * Load the alias = One less install step for the user
+     */
+    public static function aliases()
+    {
+
+        return [
+            'Royalcms\Component\Broadcasting\BroadcastEvent'                 => 'Illuminate\Broadcasting\BroadcastEvent',
+            'Royalcms\Component\Broadcasting\BroadcastManager'               => 'Illuminate\Broadcasting\BroadcastManager',
+            'Royalcms\Component\Broadcasting\BroadcastManager'               => 'Illuminate\Broadcasting\PrivateChannel',
+            'Royalcms\Component\Broadcasting\Broadcasters\LogBroadcaster'    => 'Illuminate\Broadcasting\Broadcasters\LogBroadcaster',
+            'Royalcms\Component\Broadcasting\Broadcasters\PusherBroadcaster' => 'Illuminate\Broadcasting\Broadcasters\PusherBroadcaster',
+            'Royalcms\Component\Broadcasting\Broadcasters\RedisBroadcaster'  => 'Illuminate\Broadcasting\Broadcasters\RedisBroadcaster'
+        ];
     }
 }
