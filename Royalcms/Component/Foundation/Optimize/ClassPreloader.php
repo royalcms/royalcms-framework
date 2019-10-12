@@ -60,6 +60,8 @@ class ClassPreloader
 
         $files = $this->getClassFiles();
 
+        $files = array_unique($files);
+
         foreach ($files as $file) {
             try {
                 if (file_exists($file)) {
