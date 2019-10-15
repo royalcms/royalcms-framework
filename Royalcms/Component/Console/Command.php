@@ -2,6 +2,7 @@
 
 namespace Royalcms\Component\Console;
 
+//use Illuminate\Console\OutputStyle;
 use Royalcms\Component\Contracts\Support\Arrayable;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -11,10 +12,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
-use Symfony\Component\Console\Command\Command as SymfonyCommand;
+use Illuminate\Console\Command as LaravelCommand;
 use Royalcms\Component\Contracts\Foundation\Royalcms as FoundationRoyalcms;
 
-class Command extends SymfonyCommand
+class Command extends LaravelCommand
 {
     /**
      * The Royalcms application instance.
@@ -23,102 +24,91 @@ class Command extends SymfonyCommand
      */
     protected $royalcms;
 
-    /**
-     * The input interface implementation.
-     *
-     * @var \Symfony\Component\Console\Input\InputInterface
-     */
-    protected $input;
+//    /**
+//     * The input interface implementation.
+//     *
+//     * @var \Symfony\Component\Console\Input\InputInterface
+//     */
+//    protected $input;
 
-    /**
-     * The output interface implementation.
-     *
-     * @var \Royalcms\Component\Console\OutputStyle
-     */
-    protected $output;
+//    /**
+//     * The output interface implementation.
+//     *
+//     * @var \Royalcms\Component\Console\OutputStyle
+//     */
+//    protected $output;
 
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature;
+//    /**
+//     * The name and signature of the console command.
+//     *
+//     * @var string
+//     */
+//    protected $signature;
 
-    /**
-     * The console command name.
-     *
-     * @var string
-     */
-    protected $name;
+//    /**
+//     * The console command name.
+//     *
+//     * @var string
+//     */
+//    protected $name;
+//
+//    /**
+//     * The console command description.
+//     *
+//     * @var string
+//     */
+//    protected $description;
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description;
+//    /**
+//     * Create a new console command instance.
+//     *
+//     * @return void
+//     */
+//    public function __construct()
+//    {
+//        parent::__construct();
+//
+//        $this->royalcms = $this->laravel;
+//    }
 
-    /**
-     * Create a new console command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        // We will go ahead and set the name, description, and parameters on console
-        // commands just to make things a little easier on the developer. This is
-        // so they don't have to all be manually specified in the constructors.
-        if (isset($this->signature)) {
-            $this->configureUsingFluentDefinition();
-        } else {
-            parent::__construct($this->name);
-        }
+//    /**
+//     * Configure the console command using a fluent definition.
+//     *
+//     * @return void
+//     */
+//    protected function configureUsingFluentDefinition()
+//    {
+//        list($name, $arguments, $options) = Parser::parse($this->signature);
+//
+//        parent::__construct($name);
+//
+//        foreach ($arguments as $argument) {
+//            $this->getDefinition()->addArgument($argument);
+//        }
+//
+//        foreach ($options as $option) {
+//            $this->getDefinition()->addOption($option);
+//        }
+//    }
 
-        $this->setDescription($this->description);
-
-        if (! isset($this->signature)) {
-            $this->specifyParameters();
-        }
-    }
-
-    /**
-     * Configure the console command using a fluent definition.
-     *
-     * @return void
-     */
-    protected function configureUsingFluentDefinition()
-    {
-        list($name, $arguments, $options) = Parser::parse($this->signature);
-
-        parent::__construct($name);
-
-        foreach ($arguments as $argument) {
-            $this->getDefinition()->addArgument($argument);
-        }
-
-        foreach ($options as $option) {
-            $this->getDefinition()->addOption($option);
-        }
-    }
-
-    /**
-     * Specify the arguments and options on the command.
-     *
-     * @return void
-     */
-    protected function specifyParameters()
-    {
-        // We will loop through all of the arguments and options for the command and
-        // set them all on the base command instance. This specifies what can get
-        // passed into these commands as "parameters" to control the execution.
-        foreach ($this->getArguments() as $arguments) {
-            call_user_func_array([$this, 'addArgument'], $arguments);
-        }
-
-        foreach ($this->getOptions() as $options) {
-            call_user_func_array([$this, 'addOption'], $options);
-        }
-    }
+//    /**
+//     * Specify the arguments and options on the command.
+//     *
+//     * @return void
+//     */
+//    protected function specifyParameters()
+//    {
+//        // We will loop through all of the arguments and options for the command and
+//        // set them all on the base command instance. This specifies what can get
+//        // passed into these commands as "parameters" to control the execution.
+//        foreach ($this->getArguments() as $arguments) {
+//            call_user_func_array([$this, 'addArgument'], $arguments);
+//        }
+//
+//        foreach ($this->getOptions() as $options) {
+//            call_user_func_array([$this, 'addOption'], $options);
+//        }
+//    }
 
     /**
      * Run the console command.
@@ -131,7 +121,9 @@ class Command extends SymfonyCommand
     {
         $this->input = $input;
 
-        $this->output = new OutputStyle($input, $output);
+        $this->output = $this->royalcms->make(
+            OutputStyle::class, ['input' => $input, 'output' => $output]
+        );
 
         return parent::run($input, $output);
     }
@@ -236,35 +228,35 @@ class Command extends SymfonyCommand
         return $this->output->ask($question, $default);
     }
 
-    /**
-     * Prompt the user for input with auto completion.
-     *
-     * @param  string  $question
-     * @param  array   $choices
-     * @param  string  $default
-     * @return string
-     */
-    public function anticipate($question, array $choices, $default = null)
-    {
-        return $this->askWithCompletion($question, $choices, $default);
-    }
+//    /**
+//     * Prompt the user for input with auto completion.
+//     *
+//     * @param  string  $question
+//     * @param  array   $choices
+//     * @param  string  $default
+//     * @return string
+//     */
+//    public function anticipate($question, array $choices, $default = null)
+//    {
+//        return $this->askWithCompletion($question, $choices, $default);
+//    }
 
-    /**
-     * Prompt the user for input with auto completion.
-     *
-     * @param  string  $question
-     * @param  array   $choices
-     * @param  string  $default
-     * @return string
-     */
-    public function askWithCompletion($question, array $choices, $default = null)
-    {
-        $question = new Question($question, $default);
-
-        $question->setAutocompleterValues($choices);
-
-        return $this->output->askQuestion($question);
-    }
+//    /**
+//     * Prompt the user for input with auto completion.
+//     *
+//     * @param  string  $question
+//     * @param  array   $choices
+//     * @param  string  $default
+//     * @return string
+//     */
+//    public function askWithCompletion($question, array $choices, $default = null)
+//    {
+//        $question = new Question($question, $default);
+//
+//        $question->setAutocompleterValues($choices);
+//
+//        return $this->output->askQuestion($question);
+//    }
 
     /**
      * Prompt the user for input but hide the answer from the console.
@@ -301,126 +293,126 @@ class Command extends SymfonyCommand
         return $this->output->askQuestion($question);
     }
 
-    /**
-     * Format input to textual table.
-     *
-     * @param  array   $headers
-     * @param  \Royalcms\Component\Contracts\Support\Arrayable|array  $rows
-     * @param  string  $style
-     * @return void
-     */
-    public function table(array $headers, $rows, $style = 'default')
-    {
-        $table = new Table($this->output);
+//    /**
+//     * Format input to textual table.
+//     *
+//     * @param  array   $headers
+//     * @param  \Royalcms\Component\Contracts\Support\Arrayable|array  $rows
+//     * @param  string  $style
+//     * @return void
+//     */
+//    public function table(array $headers, $rows, $style = 'default')
+//    {
+//        $table = new Table($this->output);
+//
+//        if ($rows instanceof Arrayable) {
+//            $rows = $rows->toArray();
+//        }
+//
+//        $table->setHeaders($headers)->setRows($rows)->setStyle($style)->render();
+//    }
 
-        if ($rows instanceof Arrayable) {
-            $rows = $rows->toArray();
-        }
+//    /**
+//     * Write a string as information output.
+//     *
+//     * @param  string  $string
+//     * @return void
+//     */
+//    public function info($string)
+//    {
+//        $this->output->writeln("<info>$string</info>");
+//    }
 
-        $table->setHeaders($headers)->setRows($rows)->setStyle($style)->render();
-    }
+//    /**
+//     * Write a string as standard output.
+//     *
+//     * @param  string  $string
+//     * @return void
+//     */
+//    public function line($string)
+//    {
+//        $this->output->writeln($string);
+//    }
 
-    /**
-     * Write a string as information output.
-     *
-     * @param  string  $string
-     * @return void
-     */
-    public function info($string)
-    {
-        $this->output->writeln("<info>$string</info>");
-    }
+//    /**
+//     * Write a string as comment output.
+//     *
+//     * @param  string  $string
+//     * @return void
+//     */
+//    public function comment($string)
+//    {
+//        $this->output->writeln("<comment>$string</comment>");
+//    }
 
-    /**
-     * Write a string as standard output.
-     *
-     * @param  string  $string
-     * @return void
-     */
-    public function line($string)
-    {
-        $this->output->writeln($string);
-    }
+//    /**
+//     * Write a string as question output.
+//     *
+//     * @param  string  $string
+//     * @return void
+//     */
+//    public function question($string)
+//    {
+//        $this->output->writeln("<question>$string</question>");
+//    }
 
-    /**
-     * Write a string as comment output.
-     *
-     * @param  string  $string
-     * @return void
-     */
-    public function comment($string)
-    {
-        $this->output->writeln("<comment>$string</comment>");
-    }
+//    /**
+//     * Write a string as error output.
+//     *
+//     * @param  string  $string
+//     * @return void
+//     */
+//    public function error($string)
+//    {
+//        $this->output->writeln("<error>$string</error>");
+//    }
 
-    /**
-     * Write a string as question output.
-     *
-     * @param  string  $string
-     * @return void
-     */
-    public function question($string)
-    {
-        $this->output->writeln("<question>$string</question>");
-    }
+//    /**
+//     * Write a string as warning output.
+//     *
+//     * @param  string  $string
+//     * @return void
+//     */
+//    public function warn($string)
+//    {
+//        if (! $this->output->getFormatter()->hasStyle('warning')) {
+//            $style = new OutputFormatterStyle('yellow');
+//
+//            $this->output->getFormatter()->setStyle('warning', $style);
+//        }
+//
+//        $this->output->writeln("<warning>$string</warning>");
+//    }
 
-    /**
-     * Write a string as error output.
-     *
-     * @param  string  $string
-     * @return void
-     */
-    public function error($string)
-    {
-        $this->output->writeln("<error>$string</error>");
-    }
+//    /**
+//     * Get the console command arguments.
+//     *
+//     * @return array
+//     */
+//    protected function getArguments()
+//    {
+//        return [];
+//    }
+//
+//    /**
+//     * Get the console command options.
+//     *
+//     * @return array
+//     */
+//    protected function getOptions()
+//    {
+//        return [];
+//    }
 
-    /**
-     * Write a string as warning output.
-     *
-     * @param  string  $string
-     * @return void
-     */
-    public function warn($string)
-    {
-        if (! $this->output->getFormatter()->hasStyle('warning')) {
-            $style = new OutputFormatterStyle('yellow');
-
-            $this->output->getFormatter()->setStyle('warning', $style);
-        }
-
-        $this->output->writeln("<warning>$string</warning>");
-    }
-
-    /**
-     * Get the console command arguments.
-     *
-     * @return array
-     */
-    protected function getArguments()
-    {
-        return [];
-    }
-
-    /**
-     * Get the console command options.
-     *
-     * @return array
-     */
-    protected function getOptions()
-    {
-        return [];
-    }
-
-    /**
-     * Get the output implementation.
-     *
-     * @return \Symfony\Component\Console\Output\OutputInterface
-     */
-    public function getOutput()
-    {
-        return $this->output;
-    }
+//    /**
+//     * Get the output implementation.
+//     *
+//     * @return \Symfony\Component\Console\Output\OutputInterface
+//     */
+//    public function getOutput()
+//    {
+//        return $this->output;
+//    }
 
     /**
      * Get the Royalcms application instance.
@@ -441,5 +433,7 @@ class Command extends SymfonyCommand
     public function setRoyalcms(FoundationRoyalcms $royalcms)
     {
         $this->royalcms = $royalcms;
+        $this->laravel = $royalcms;
     }
+
 }
