@@ -7,11 +7,12 @@ use Royalcms\Component\Contracts\Events\Dispatcher;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Console\Application as SymfonyApplication;
+use Illuminate\Console\Application as LaravelApplication;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
+use Illuminate\Console\Command as LaravelCommand;
 use Royalcms\Component\Contracts\Console\Royalcms as RoyalcmsContract;
 
-class Royalcms extends SymfonyApplication implements RoyalcmsContract
+class Royalcms extends LaravelApplication implements RoyalcmsContract
 {
     /**
      * The Royalcms application instance.
@@ -20,12 +21,12 @@ class Royalcms extends SymfonyApplication implements RoyalcmsContract
      */
     protected $royalcms;
 
-    /**
-     * The output from the previous command.
-     *
-     * @var \Symfony\Component\Console\Output\BufferedOutput
-     */
-    protected $lastOutput;
+//    /**
+//     * The output from the previous command.
+//     *
+//     * @var \Symfony\Component\Console\Output\BufferedOutput
+//     */
+//    protected $lastOutput;
 
     /**
      * Create a new Artisan console application.
@@ -37,11 +38,11 @@ class Royalcms extends SymfonyApplication implements RoyalcmsContract
      */
     public function __construct(Container $royalcms, Dispatcher $events, $version)
     {
-        parent::__construct('Royalcms Framework', $version);
-
         $this->royalcms = $royalcms;
-        $this->setAutoExit(false);
-        $this->setCatchExceptions(false);
+
+        parent::__construct($royalcms, $events, $version);
+
+        $this->setName('Royalcms Framework');
 
         $events->fire('royalcms.start', [$this]);
     }
@@ -90,7 +91,9 @@ class Royalcms extends SymfonyApplication implements RoyalcmsContract
         if ($command instanceof Command) {
             $command->setRoyalcms($this->royalcms);
         }
-
+        elseif ($command instanceof LaravelCommand) {
+            $command->setLaravel($this->royalcms);
+        }
         return $this->addToParent($command);
     }
 
@@ -102,7 +105,7 @@ class Royalcms extends SymfonyApplication implements RoyalcmsContract
      */
     protected function addToParent(SymfonyCommand $command)
     {
-        return parent::add($command);
+        return parent::addToParent($command);
     }
 
     /**
