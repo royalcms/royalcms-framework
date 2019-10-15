@@ -551,7 +551,7 @@ class Royalcms extends Application implements RoyalcmsContract, ContainerContrac
     {
         $providers = Collection::make($this->config['coreservice.providers'])
             ->partition(function ($provider) {
-                return Str::startsWith($provider, 'Illuminate\\');
+                return Str::startsWith($provider, 'Royalcms\\Component\\') || Str::startsWith($provider, 'Illuminate\\');
             });
 
         $providers->splice(1, 0, [$this->make(PackageManifest::class)->providers()]);
@@ -871,7 +871,8 @@ class Royalcms extends Application implements RoyalcmsContract, ContainerContrac
                 'Royalcms\Component\Contracts\Container\Container',
                 'Royalcms\Component\Contracts\Foundation\Royalcms',
                 \Illuminate\Contracts\Foundation\Application::class,
-                \Psr\Container\ContainerInterface::class
+                \Illuminate\Foundation\Application::class,
+                \Psr\Container\ContainerInterface::class,
             ],
             'auth'                 => [
                 'Royalcms\Component\Auth\AuthManager',
