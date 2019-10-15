@@ -68,9 +68,16 @@ class PackageManifest extends \Illuminate\Foundation\PackageManifest
 
         $ignoreAll = in_array('*', $ignore = $this->packagesToIgnore());
 
-        $this->write(collect($packages)->mapWithKeys(function ($package) {
+        $royalcms_packages = collect($packages)->mapWithKeys(function ($package) {
             return [$this->format($package['name']) => $package['extra']['royalcms'] ?? []];
-        })->each(function ($configuration) use (&$ignore) {
+        })->filter()->all();
+        $laravel_packages = collect($packages)->mapWithKeys(function ($package) {
+            return [$this->format($package['name']) => $package['extra']['laravel'] ?? []];
+        })->filter()->all();
+
+        $packages = array_merge($royalcms_packages, $laravel_packages);
+   
+        $this->write(collect($packages)->each(function ($configuration) use (&$ignore) {
             $ignore = array_merge($ignore, $configuration['dont-discover'] ?? []);
         })->reject(function ($configuration, $package) use ($ignore, $ignoreAll) {
             return $ignoreAll || in_array($package, $ignore);
