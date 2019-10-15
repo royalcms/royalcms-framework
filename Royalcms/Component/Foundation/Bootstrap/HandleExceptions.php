@@ -23,7 +23,7 @@ class HandleExceptions
     public function bootstrap(Royalcms $royalcms)
     {
         $this->royalcms = $royalcms;
-
+        
         $this->royalcms->register(new ExceptionServiceProvider($royalcms));
 
         $this->startExceptionHandling();
@@ -38,7 +38,9 @@ class HandleExceptions
     {
         $this->royalcms['exception']->register($this->royalcms->environment());
 
-        $this->royalcms['exception.display']->setDebug($this->royalcms['config']['system.debug']);
+        if ($this->royalcms->has('exception.display')) {
+            $this->royalcms['exception.display']->setDebug($this->royalcms['config']['system.debug']);
+        }
 
     }
 
