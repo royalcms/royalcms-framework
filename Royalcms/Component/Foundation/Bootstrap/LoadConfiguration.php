@@ -39,6 +39,9 @@ class LoadConfiguration
 
         $royalcms->instance('config', $config);
 
+        // app.php and system.php is same.
+        $royalcms['config']->set('app', $royalcms['config']->get('system'));
+
         // Next we will spin through all of the configuration files in the configuration
         // directory and load each one into the repository. This will make all of the
         // options available to the developer for use in various parts of this app.
