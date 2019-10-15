@@ -5,6 +5,8 @@ namespace Royalcms\Component\Exception;
 use Exception;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Foundation\Exceptions\WhoopsHandler;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Exceptions\Handler as LaravelExceptionHandler;
 use Psr\Log\LoggerInterface;
 use Royalcms\Component\Http\Response;
 use Royalcms\Component\Auth\Access\UnauthorizedException;
@@ -20,33 +22,15 @@ use Closure;
 use Whoops\Handler\HandlerInterface;
 use Whoops\Run as Whoops;
 
-class Handler implements ExceptionHandlerContract
+class Handler extends LaravelExceptionHandler implements ExceptionHandlerContract
 {
-    /**
-     * The log implementation.
-     *
-     * @var \Psr\Log\LoggerInterface
-     */
-    protected $log;
 
     /**
-     * A list of the exception types that should not be reported.
+     * A list of the internal exception types that should not be reported.
      *
      * @var array
      */
-    protected $dontReport = [];
-
-
-    /**
-     * Create a new exception handler instance.
-     *
-     * @param  \Psr\Log\LoggerInterface  $log
-     * @return void
-     */
-    public function __construct(LoggerInterface $log)
-    {
-        $this->log = $log;
-    }
+    protected $internalDontReport = [];
 
     /**
      * Report or log an exception.
@@ -56,37 +40,24 @@ class Handler implements ExceptionHandlerContract
      */
     public function report(Exception $e)
     {
-        if ($this->shouldReport($e)) {
-            $this->log->error($e);
-        }
-    }
-
-    /**
-     * Determine if the exception should be reported.
-     *
-     * @param  \Exception  $e
-     * @return bool
-     */
-    public function shouldReport(Exception $e)
-    {
-        return ! $this->shouldntReport($e);
-    }
-
-    /**
-     * Determine if the exception is in the "do not report" list.
-     *
-     * @param  \Exception  $e
-     * @return bool
-     */
-    protected function shouldntReport(Exception $e)
-    {
-        foreach ($this->dontReport as $type) {
-            if ($e instanceof $type) {
-                return true;
-            }
+        if ($this->shouldntReport($e)) {
+            return;
         }
 
-        return false;
+        if (is_callable($reportCallable = [$e, 'report'])) {
+            return $this->container->call($reportCallable);
+        }
+
+        try {
+            $logger = $this->container->make(LoggerInterface::class);
+        } catch (Exception $ex) {
+            throw $e;
+        }
+
+        $logger->error(
+            $e->getMessage(),
+            array_merge($this->context(), ['exception' => $e]
+            ));
     }
 
     /**
@@ -163,6 +134,18 @@ class Handler implements ExceptionHandlerContract
      */
     protected function convertExceptionToResponse(Exception $e)
     {
+        $royalcms = royalcms();
+
+        // If one of the custom error handlers returned a response, we will send that
+        // response back to the client after preparing it. This allows a specific
+        // type of exceptions to handled by a Closure giving great flexibility.
+        if ($royalcms->has('exception.handler')) {
+            $response = $royalcms['exception.handler']->handleException($e);
+            if ( ! is_null($response)) {
+                return $response;
+            }
+        }
+
         return SymfonyResponse::create(
             $this->renderExceptionContent($e),
             $this->isHttpException($e) ? $e->getStatusCode() : 500,
@@ -183,7 +166,7 @@ class Handler implements ExceptionHandlerContract
             ob_end_clean();
 
             $royalcms = royalcms();
-
+            
             // If one of the custom error handlers returned a response, we will send that
             // response back to the client after preparing it. This allows a specific
             // type of exceptions to handled by a Closure giving great flexibility.
@@ -253,17 +236,6 @@ class Handler implements ExceptionHandlerContract
     protected function isUnauthorizedException(Exception $e)
     {
         return $e instanceof UnauthorizedException;
-    }
-
-    /**
-     * Determine if the given exception is an HTTP exception.
-     *
-     * @param  \Exception  $e
-     * @return bool
-     */
-    protected function isHttpException(Exception $e)
-    {
-        return $e instanceof HttpException;
     }
 
 }

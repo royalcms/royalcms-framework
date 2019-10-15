@@ -22,18 +22,9 @@ class CustomHandlers
      * @param  \Exception  $e
      * @return string
      */
-    protected function renderExceptionContent(Exception $e)
+    public function handleException(Exception $e)
     {
-        ob_end_clean();
-
-        $response = $this->callCustomHandlers($e);
-
-        // If one of the custom error handlers returned a response, we will send that
-        // response back to the client after preparing it. This allows a specific
-        // type of exceptions to handled by a Closure giving great flexibility.
-        if ( ! is_null($response)) {
-            return $response;
-        }
+        return $this->callCustomHandlers($e);
     }
 
     /**
