@@ -111,10 +111,10 @@ class Handler extends LaravelExceptionHandler implements ExceptionHandlerContrac
     /**
      * Render the given HttpException.
      *
-     * @param  \Symfony\Component\HttpKernel\Exception\HttpException  $e
+     * @param  \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface  $e
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function renderHttpException(HttpException $e)
+    protected function renderHttpException(HttpExceptionInterface $e)
     {
         $status = $e->getStatusCode();
 
