@@ -4,6 +4,8 @@
 namespace Royalcms\Component\Exception;
 
 use Closure;
+use Exception;
+use ReflectionFunction;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class CustomHandlers
