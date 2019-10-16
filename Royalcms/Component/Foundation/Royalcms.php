@@ -870,6 +870,7 @@ class Royalcms extends Application implements RoyalcmsContract, ContainerContrac
                 'Royalcms\Component\Foundation\Royalcms',
                 'Royalcms\Component\Contracts\Container\Container',
                 'Royalcms\Component\Contracts\Foundation\Royalcms',
+                \Illuminate\Contracts\Container\Container::class,
                 \Illuminate\Contracts\Foundation\Application::class,
                 \Illuminate\Foundation\Application::class,
                 \Psr\Container\ContainerInterface::class,
