@@ -59,6 +59,13 @@ class Royalcms extends Application implements RoyalcmsContract, ContainerContrac
     protected $systemPath;
 
     /**
+     * The custom site name defined by the developer.
+     *
+     * @var string
+     */
+    protected $site;
+
+    /**
      * Create a new Royalcms application instance.
      *
      * @param  string|null  $basePath
@@ -424,7 +431,7 @@ class Royalcms extends Application implements RoyalcmsContract, ContainerContrac
 
             $basePath = $this->siteContentPath().DIRECTORY_SEPARATOR.'database';
 
-            if (! ($this->runningInSite() && is_dir($path))) {
+            if (! ($this->runningInSite() && is_dir($basePath))) {
                 $basePath = $this->contentPath().DIRECTORY_SEPARATOR.'database';
             }
 
@@ -498,7 +505,7 @@ class Royalcms extends Application implements RoyalcmsContract, ContainerContrac
 
             $basePath = $this->siteContentPath().DIRECTORY_SEPARATOR.'storages';
 
-            if (! ($this->runningInSite() && is_dir($path)) ) {
+            if (! ($this->runningInSite() && is_dir($basePath)) ) {
                 $basePath = $this->contentPath().DIRECTORY_SEPARATOR.'storages';
             }
 
@@ -522,6 +529,13 @@ class Royalcms extends Application implements RoyalcmsContract, ContainerContrac
         return $this;
     }
 
+    public function useSiteDirectory($site)
+    {
+        $this->site = $site;
+
+        return $this;
+    }
+
     /**
      * Determine if we are running in the console.
      *
@@ -539,7 +553,11 @@ class Royalcms extends Application implements RoyalcmsContract, ContainerContrac
      */
     public function currentSite()
     {
-        return RC_SITE;
+        if (empty($this->site) && defined('RC_SITE')) {
+            $this->site = RC_SITE;
+        }
+
+        return $this->site;
     }
 
     /**
