@@ -24,6 +24,8 @@ abstract class ServiceProvider extends \Illuminate\Support\ServiceProvider
     public function __construct($royalcms)
     {
         $this->royalcms = $royalcms;
+
+        parent::__construct($royalcms);
     }
 
     /**
