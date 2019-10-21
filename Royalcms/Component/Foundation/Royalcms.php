@@ -35,7 +35,7 @@ class Royalcms extends Application implements RoyalcmsContract, ContainerContrac
      *
      * @var string
      */
-    const RELEASE = '2019-09-08';
+    const RELEASE = '2019-10-21';
 
     /**
      * A custom callback used to configure Monolog.
