@@ -740,6 +740,16 @@ class Royalcms extends Application implements RoyalcmsContract, ContainerContrac
     }
 
     /**
+     * Get the path to the cached application_packages.php file.
+     *
+     * @return string
+     */
+    public function getCachedAppPackagesPath()
+    {
+        return $this->normalizeCachePath('APP_APPPACKAGES_CACHE', 'cache/apppackages.php');
+    }
+
+    /**
      * Determine if vendor path is writable.
      *
      * @return bool
