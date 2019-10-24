@@ -113,7 +113,6 @@ class DatabaseServiceProvider extends LaravelDatabaseServiceProvider
             'Royalcms\Component\Database\Console\Seeds\StatusCommand'             => 'Illuminate\Database\Console\Seeds\SeederMakeCommand',
             'Royalcms\Component\Database\DatabaseManager'                         => 'Illuminate\Database\DatabaseManager',
             'Royalcms\Component\Database\DetectsLostConnections'                  => 'Illuminate\Database\DetectsLostConnections',
-            'Royalcms\Component\Database\Eloquent\Collection'                     => 'Illuminate\Database\Eloquent\Collection',
             'Royalcms\Component\Database\Eloquent\Factory'                        => 'Illuminate\Database\Eloquent\Factory',
             'Royalcms\Component\Database\Eloquent\FactoryBuilder'                 => 'Illuminate\Database\Eloquent\FactoryBuilder',
             'Royalcms\Component\Database\Eloquent\MassAssignmentException'        => 'Illuminate\Database\Eloquent\MassAssignmentException',

@@ -20,4 +20,15 @@ class Model extends LaravelModel
         return new \Royalcms\Component\Database\Eloquent\Builder($query);
     }
 
+    /**
+     * Create a new Eloquent Collection instance.
+     *
+     * @param  array  $models
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function newCollection(array $models = [])
+    {
+        return new Collection($models);
+    }
+    
 }
