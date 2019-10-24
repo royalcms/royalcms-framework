@@ -84,7 +84,7 @@ class Builder extends QueryBuilder
      *
      * @deprecated since version 5.1.
      */
-    public function pluck($column)
+    public function pluck($column, $key = null)
     {
         return $this->value($column);
     }
