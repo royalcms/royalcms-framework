@@ -40,4 +40,25 @@ class MySqlConnection extends LaravelMySqlConnection
         );
     }
 
+    /**
+     * Get the default fetch mode for the connection.
+     *
+     * @return int
+     */
+    public function getFetchMode()
+    {
+        return $this->fetchMode;
+    }
+
+    /**
+     * Set the default fetch mode for the connection.
+     *
+     * @param  int  $fetchMode
+     * @return int
+     */
+    public function setFetchMode($fetchMode)
+    {
+        $this->fetchMode = $fetchMode;
+    }
+
 }
