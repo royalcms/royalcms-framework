@@ -11,7 +11,7 @@ class Schema extends Facade
      * Get a schema builder instance for a connection.
      *
      * @param  string  $name
-     * @return \Royalcms\Component\Database\Schema\Builder
+     * @return \Royalcms\Component\Database\Schema\MySqlBuilder
      */
     public static function connection($name)
     {
@@ -21,7 +21,7 @@ class Schema extends Facade
     /**
      * Get a schema builder instance for the default connection.
      *
-     * @return \Royalcms\Component\Database\Schema\Builder
+     * @return \Royalcms\Component\Database\Schema\MySqlBuilder
      */
     protected static function getFacadeAccessor()
     {
