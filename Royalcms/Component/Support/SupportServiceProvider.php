@@ -64,7 +64,7 @@ class SupportServiceProvider extends \Illuminate\Support\ServiceProvider
         return [
             'Royalcms\Component\Support\Collection'                 => 'Illuminate\Support\Collection',
             'Royalcms\Component\Support\MessageBag'                 => 'Illuminate\Support\MessageBag',
-            'Royalcms\Component\Support\Fluent'                     => 'Illuminate\Support\Fluent',
+//            'Royalcms\Component\Support\Fluent'                     => 'Illuminate\Support\Fluent',
             'Royalcms\Component\Support\ViewErrorBag'               => 'Illuminate\Support\ViewErrorBag',
             'Royalcms\Component\Support\Pluralizer'                 => 'Illuminate\Support\Pluralizer',
             'Royalcms\Component\Support\Optional'                   => 'Illuminate\Support\Optional',
