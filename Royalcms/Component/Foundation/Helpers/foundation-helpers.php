@@ -701,7 +701,7 @@ if (! function_exists('trans')) {
             return royalcms('translator');
         }
 
-        return royalcms('translator')->trans($id, $parameters, $domain, $locale);
+        return royalcms('translator')->get($id, $parameters, $domain, $locale);
     }
 }
 
@@ -718,7 +718,7 @@ if (! function_exists('trans_choice')) {
      */
     function trans_choice($id, $number, array $parameters = [], $domain = 'messages', $locale = null)
     {
-        return royalcms('translator')->transChoice($id, $number, $parameters, $domain, $locale);
+        return royalcms('translator')->choice($id, $number, $parameters, $domain, $locale);
     }
 }
 
