@@ -3,9 +3,9 @@
 
 namespace Royalcms\Component\Foundation\Optimize;
 
-use ClassPreloader\Exceptions\DirConstantException;
-use ClassPreloader\Exceptions\FileConstantException;
-use ClassPreloader\Exceptions\StrictTypesException;
+use ClassPreloader\Exception\DirConstantException;
+use ClassPreloader\Exception\FileConstantException;
+use ClassPreloader\Exception\StrictTypesException;
 use ClassPreloader\Parser\DirVisitor;
 use ClassPreloader\Parser\FileVisitor;
 use ClassPreloader\Parser\NodeTraverser;
@@ -110,7 +110,7 @@ class ClassPreloader
         // Class Preloader 3.x
         if (class_exists(Factory::class)) {
             return Factory::create([
-                'skip' => false,
+                'skip' => true,
                 'strict' => true,
             ]);
         }
