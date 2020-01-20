@@ -109,8 +109,8 @@ class ClassPreloader
     {
         // Class Preloader 3.x
         if (class_exists(Factory::class)) {
-            return (new Factory)->create([
-                'skip' => true,
+            return Factory::create([
+                'skip' => false,
                 'strict' => true,
             ]);
         }

@@ -4,7 +4,6 @@ namespace Royalcms\Component\Foundation\Console;
 
 use PhpParser\Lexer;
 use PhpParser\Parser;
-use ClassPreloader\Factory;
 use Royalcms\Component\Console\Command;
 use Royalcms\Component\Foundation\Optimize\ClassPreloader;
 use Royalcms\Component\Foundation\Composer;

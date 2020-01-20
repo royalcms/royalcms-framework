@@ -1,4 +1,6 @@
-<?php namespace Royalcms\Component\Foundation;
+<?php
+
+namespace Royalcms\Component\Foundation;
 
 use Exception;
 use BadMethodCallException;
@@ -20,7 +22,8 @@ abstract class RoyalcmsObject
         return $instance;
     }
     
-    public static function singleton() {
+    public static function singleton()
+    {
         $key = get_called_class();
         if (! isset(static::$registered_instance[$key]['singleton'])) {
             self::$registered_instance[$key]['singleton'] = new static();
@@ -28,7 +31,8 @@ abstract class RoyalcmsObject
         return self::$registered_instance[$key]['singleton'];
     }
     
-    public static function allInstance() {
+    public static function allInstance()
+    {
         return self::$registered_instance;
     }
 
@@ -91,7 +95,5 @@ abstract class RoyalcmsObject
         throw new BadMethodCallException('Calling unknown method: ' . __CLASS__ . "::{$name}()");
     }
 }
-
-class UnknownPropertyException extends Exception {}
 
 // end
