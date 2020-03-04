@@ -87,6 +87,16 @@ class Royalcms extends Application implements RoyalcmsContract, ContainerContrac
     }
 
     /**
+     * Get the version number of the laravel.
+     *
+     * @return string
+     */
+    public function laravelVersion()
+    {
+        return Application::VERSION;
+    }
+
+    /**
      * Get the release number of the royalcms.
      *
      * @return string
