@@ -113,11 +113,11 @@ class ControllerDispatcher extends \Illuminate\Routing\ControllerDispatcher
     /**
      * Get the middleware for the controller instance.
      *
-     * @param  \Royalcms\Component\Routing\Controller  $instance
+     * @param  \Royalcms\Component\Routing\Controller  $controller
      * @param  string  $method
      * @return array
      */
-    public function getMiddleware($instance, $method)
+    public function getMiddleware($controller, $method)
     {
         if (! method_exists($controller, 'getMiddleware')) {
             return [];
@@ -125,7 +125,7 @@ class ControllerDispatcher extends \Illuminate\Routing\ControllerDispatcher
 
         $results = [];
 
-        foreach ($instance->getMiddleware() as $name => $data) {
+        foreach ($controller->getMiddleware() as $name => $data) {
             if (! $this->methodExcludedByOptions($method, $data['options'])) {
                 $results[] = $this->resolveMiddlewareClassName($name);
             }
