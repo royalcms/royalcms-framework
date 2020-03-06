@@ -136,7 +136,18 @@ class FileLoader implements LoaderInterface {
 
         if (defined('USE_AUTONOMY_CONFIG') && true === USE_AUTONOMY_CONFIG)
         {
-            return $items;
+            if (defined('USE_AUTONOMY_CONFIG_GROUP')) {
+                //多个值逗号分隔
+                $noSupportGroups = USE_AUTONOMY_CONFIG_GROUP;
+                $noSupportGroups = explode(',', $noSupportGroups);
+
+                if (in_array($group, $noSupportGroups)) {
+                    return $items;
+                }
+            }
+            else {
+                return $items;
+            }
         }
 
         $file = "{$this->defaultPath}/{$group}.php";
