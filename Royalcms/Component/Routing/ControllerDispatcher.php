@@ -125,12 +125,13 @@ class ControllerDispatcher extends \Illuminate\Routing\ControllerDispatcher
 
         $results = [];
 
-        foreach ($controller->getMiddleware() as $name => $data) {
+        foreach ($controller->getMiddleware() as $data) {
+            $name = $data['middleware'];
             if (! $this->methodExcludedByOptions($method, $data['options'])) {
                 $results[] = $this->resolveMiddlewareClassName($name);
             }
         }
-
+        
         return $results;
     }
 
