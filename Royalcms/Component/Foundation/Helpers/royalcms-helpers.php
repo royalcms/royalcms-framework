@@ -970,8 +970,7 @@ if ( ! function_exists('rc_parse_str'))
     /**
      * Parses a string into variables to be stored in an array.
      *
-     * Uses {@link http://www.php.net/parse_str parse_str()} and stripslashes if
-     * {@link http://www.php.net/magic_quotes magic_quotes_gpc} is on.
+     * Uses {@link http://www.php.net/parse_str parse_str()}.
      *
      * @since 2.2.1
      *
@@ -983,9 +982,7 @@ if ( ! function_exists('rc_parse_str'))
     function rc_parse_str($string, &$array)
     {
         parse_str($string, $array);
-        if (get_magic_quotes_gpc()) {
-            $array = rc_stripslashes($array);
-        }
+  
         /**
          * Filter the array of variables derived from a parsed string.
          *
@@ -1017,14 +1014,23 @@ if ( ! function_exists('rc_parse_args'))
     function rc_parse_args($args, $defaults = '')
     {
         if (is_object($args))
+        {
             $r = get_object_vars($args);
+        }
         elseif (is_array($args))
-        $r = & $args;
+        {
+            $r = & $args;
+        }
         else
+        {
             rc_parse_str($args, $r);
+        }
     
         if (is_array($defaults))
+        {
             return array_merge($defaults, $r);
+        }
+        
         return $r;
     }
 }
