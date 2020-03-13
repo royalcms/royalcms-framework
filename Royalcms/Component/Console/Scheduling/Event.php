@@ -12,222 +12,223 @@ use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ProcessUtils;
 use Royalcms\Component\Contracts\Container\Container;
 use Royalcms\Component\Contracts\Foundation\Royalcms;
+use Illuminate\Console\Scheduling\Event as LaravelEvent;
 
-class Event
+class Event extends LaravelEvent
 {
-    /**
-     * The command string.
-     *
-     * @var string
-     */
-    public $command;
+//    /**
+//     * The command string.
+//     *
+//     * @var string
+//     */
+//    public $command;
 
-    /**
-     * The cron expression representing the event's frequency.
-     *
-     * @var string
-     */
-    public $expression = '* * * * * *';
+//    /**
+//     * The cron expression representing the event's frequency.
+//     *
+//     * @var string
+//     */
+//    public $expression = '* * * * * *';
 
-    /**
-     * The timezone the date should be evaluated on.
-     *
-     * @var \DateTimeZone|string
-     */
-    public $timezone;
+//    /**
+//     * The timezone the date should be evaluated on.
+//     *
+//     * @var \DateTimeZone|string
+//     */
+//    public $timezone;
 
-    /**
-     * The user the command should run as.
-     *
-     * @var string
-     */
-    public $user;
+//    /**
+//     * The user the command should run as.
+//     *
+//     * @var string
+//     */
+//    public $user;
 
-    /**
-     * The list of environments the command should run under.
-     *
-     * @var array
-     */
-    public $environments = [];
+//    /**
+//     * The list of environments the command should run under.
+//     *
+//     * @var array
+//     */
+//    public $environments = [];
 
-    /**
-     * Indicates if the command should run in maintenance mode.
-     *
-     * @var bool
-     */
-    public $evenInMaintenanceMode = false;
+//    /**
+//     * Indicates if the command should run in maintenance mode.
+//     *
+//     * @var bool
+//     */
+//    public $evenInMaintenanceMode = false;
 
-    /**
-     * Indicates if the command should not overlap itself.
-     *
-     * @var bool
-     */
-    public $withoutOverlapping = false;
+//    /**
+//     * Indicates if the command should not overlap itself.
+//     *
+//     * @var bool
+//     */
+//    public $withoutOverlapping = false;
 
-    /**
-     * The filter callback.
-     *
-     * @var \Closure
-     */
-    protected $filter;
+//    /**
+//     * The filter callback.
+//     *
+//     * @var \Closure
+//     */
+//    protected $filter;
 
-    /**
-     * The reject callback.
-     *
-     * @var \Closure
-     */
-    protected $reject;
+//    /**
+//     * The reject callback.
+//     *
+//     * @var \Closure
+//     */
+//    protected $reject;
 
-    /**
-     * The location that output should be sent to.
-     *
-     * @var string
-     */
-    public $output = '/dev/null';
+//    /**
+//     * The location that output should be sent to.
+//     *
+//     * @var string
+//     */
+//    public $output = '/dev/null';
 
-    /**
-     * Indicates whether output should be appended.
-     *
-     * @var bool
-     */
-    protected $shouldAppendOutput = false;
+//    /**
+//     * Indicates whether output should be appended.
+//     *
+//     * @var bool
+//     */
+//    protected $shouldAppendOutput = false;
 
-    /**
-     * The array of callbacks to be run before the event is started.
-     *
-     * @var array
-     */
-    protected $beforeCallbacks = [];
+//    /**
+//     * The array of callbacks to be run before the event is started.
+//     *
+//     * @var array
+//     */
+//    protected $beforeCallbacks = [];
 
-    /**
-     * The array of callbacks to be run after the event is finished.
-     *
-     * @var array
-     */
-    protected $afterCallbacks = [];
+//    /**
+//     * The array of callbacks to be run after the event is finished.
+//     *
+//     * @var array
+//     */
+//    protected $afterCallbacks = [];
 
-    /**
-     * The human readable description of the event.
-     *
-     * @var string
-     */
-    public $description;
+//    /**
+//     * The human readable description of the event.
+//     *
+//     * @var string
+//     */
+//    public $description;
 
-    /**
-     * Create a new event instance.
-     *
-     * @param  string  $command
-     * @return void
-     */
-    public function __construct($command)
-    {
-        $this->command = $command;
-        $this->output = $this->getDefaultOutput();
-    }
+//    /**
+//     * Create a new event instance.
+//     *
+//     * @param  string  $command
+//     * @return void
+//     */
+//    public function __construct($command)
+//    {
+//        $this->command = $command;
+//        $this->output = $this->getDefaultOutput();
+//    }
 
-    /**
-     * Get the default output depending on the OS.
-     *
-     * @return string
-     */
-    protected function getDefaultOutput()
-    {
-        return (DIRECTORY_SEPARATOR == '\\') ? 'NUL' : '/dev/null';
-    }
+//    /**
+//     * Get the default output depending on the OS.
+//     *
+//     * @return string
+//     */
+//    protected function getDefaultOutput()
+//    {
+//        return (DIRECTORY_SEPARATOR == '\\') ? 'NUL' : '/dev/null';
+//    }
 
-    /**
-     * Run the given event.
-     *
-     * @param  \Royalcms\Component\Contracts\Container\Container  $container
-     * @return void
-     */
-    public function run(Container $container)
-    {
-        if (count($this->afterCallbacks) > 0 || count($this->beforeCallbacks) > 0) {
-            $this->runCommandInForeground($container);
-        } else {
-            $this->runCommandInBackground();
-        }
-    }
+//    /**
+//     * Run the given event.
+//     *
+//     * @param  \Royalcms\Component\Contracts\Container\Container  $container
+//     * @return void
+//     */
+//    public function run(Container $container)
+//    {
+//        if (count($this->afterCallbacks) > 0 || count($this->beforeCallbacks) > 0) {
+//            $this->runCommandInForeground($container);
+//        } else {
+//            $this->runCommandInBackground();
+//        }
+//    }
 
-    /**
-     * Run the command in the background using exec.
-     *
-     * @return void
-     */
-    protected function runCommandInBackground()
-    {
-        chdir(base_path());
+//    /**
+//     * Run the command in the background using exec.
+//     *
+//     * @return void
+//     */
+//    protected function runCommandInBackground()
+//    {
+//        chdir(base_path());
+//
+//        exec($this->buildCommand());
+//    }
 
-        exec($this->buildCommand());
-    }
+//    /**
+//     * Run the command in the foreground.
+//     *
+//     * @param  \Royalcms\Component\Contracts\Container\Container  $container
+//     * @return void
+//     */
+//    protected function runCommandInForeground(Container $container)
+//    {
+//        $this->callBeforeCallbacks($container);
+//
+//        with(new Process(
+//            trim($this->buildCommand(), '& '), base_path(), null, null, null
+//        ))->run();
+//
+//        $this->callAfterCallbacks($container);
+//    }
 
-    /**
-     * Run the command in the foreground.
-     *
-     * @param  \Royalcms\Component\Contracts\Container\Container  $container
-     * @return void
-     */
-    protected function runCommandInForeground(Container $container)
-    {
-        $this->callBeforeCallbacks($container);
+//    /**
+//     * Call all of the "before" callbacks for the event.
+//     *
+//     * @param  \Royalcms\Component\Contracts\Container\Container  $container
+//     * @return void
+//     */
+//    protected function callBeforeCallbacks(Container $container)
+//    {
+//        foreach ($this->beforeCallbacks as $callback) {
+//            $container->call($callback);
+//        }
+//    }
 
-        with(new Process(
-            trim($this->buildCommand(), '& '), base_path(), null, null, null
-        ))->run();
+//    /**
+//     * Call all of the "after" callbacks for the event.
+//     *
+//     * @param  \Royalcms\Component\Contracts\Container\Container  $container
+//     * @return void
+//     */
+//    protected function callAfterCallbacks(Container $container)
+//    {
+//        foreach ($this->afterCallbacks as $callback) {
+//            $container->call($callback);
+//        }
+//    }
 
-        $this->callAfterCallbacks($container);
-    }
-
-    /**
-     * Call all of the "before" callbacks for the event.
-     *
-     * @param  \Royalcms\Component\Contracts\Container\Container  $container
-     * @return void
-     */
-    protected function callBeforeCallbacks(Container $container)
-    {
-        foreach ($this->beforeCallbacks as $callback) {
-            $container->call($callback);
-        }
-    }
-
-    /**
-     * Call all of the "after" callbacks for the event.
-     *
-     * @param  \Royalcms\Component\Contracts\Container\Container  $container
-     * @return void
-     */
-    protected function callAfterCallbacks(Container $container)
-    {
-        foreach ($this->afterCallbacks as $callback) {
-            $container->call($callback);
-        }
-    }
-
-    /**
-     * Build the command string.
-     *
-     * @return string
-     */
-    public function buildCommand()
-    {
-        $output = ProcessUtils::escapeArgument($this->output);
-
-        $redirect = $this->shouldAppendOutput ? ' >> ' : ' > ';
-
-        if ($this->withoutOverlapping) {
-            if (windows_os()) {
-                $command = '(echo \'\' > "'.$this->mutexPath().'" & '.$this->command.' & del "'.$this->mutexPath().'")'.$redirect.$output.' 2>&1 &';
-            } else {
-                $command = '(touch '.$this->mutexPath().'; '.$this->command.'; rm '.$this->mutexPath().')'.$redirect.$output.' 2>&1 &';
-            }
-        } else {
-            $command = $this->command.$redirect.$output.' 2>&1 &';
-        }
-
-        return $this->user && ! windows_os() ? 'sudo -u '.$this->user.' -- sh -c \''.$command.'\'' : $command;
-    }
+//    /**
+//     * Build the command string.
+//     *
+//     * @return string
+//     */
+//    public function buildCommand()
+//    {
+//        $output = ProcessUtils::escapeArgument($this->output);
+//
+//        $redirect = $this->shouldAppendOutput ? ' >> ' : ' > ';
+//
+//        if ($this->withoutOverlapping) {
+//            if (windows_os()) {
+//                $command = '(echo \'\' > "'.$this->mutexPath().'" & '.$this->command.' & del "'.$this->mutexPath().'")'.$redirect.$output.' 2>&1 &';
+//            } else {
+//                $command = '(touch '.$this->mutexPath().'; '.$this->command.'; rm '.$this->mutexPath().')'.$redirect.$output.' 2>&1 &';
+//            }
+//        } else {
+//            $command = $this->command.$redirect.$output.' 2>&1 &';
+//        }
+//
+//        return $this->user && ! windows_os() ? 'sudo -u '.$this->user.' -- sh -c \''.$command.'\'' : $command;
+//    }
 
     /**
      * Get the mutex path for the scheduled command.
@@ -239,54 +240,54 @@ class Event
         return storage_path('framework/schedule-'.md5($this->expression.$this->command));
     }
 
-    /**
-     * Determine if the given event should run based on the Cron expression.
-     *
-     * @param  \Royalcms\Component\Contracts\Foundation\Royalcms  $royalcms
-     * @return bool
-     */
-    public function isDue(Royalcms $royalcms)
-    {
-        if (! $this->runsInMaintenanceMode() && $royalcms->isDownForMaintenance()) {
-            return false;
-        }
+//    /**
+//     * Determine if the given event should run based on the Cron expression.
+//     *
+//     * @param  \Royalcms\Component\Contracts\Foundation\Royalcms  $royalcms
+//     * @return bool
+//     */
+//    public function isDue(Royalcms $royalcms)
+//    {
+//        if (! $this->runsInMaintenanceMode() && $royalcms->isDownForMaintenance()) {
+//            return false;
+//        }
+//
+//        return $this->expressionPasses() &&
+//               $this->filtersPass($royalcms) &&
+//               $this->runsInEnvironment($royalcms->environment());
+//    }
 
-        return $this->expressionPasses() &&
-               $this->filtersPass($royalcms) &&
-               $this->runsInEnvironment($royalcms->environment());
-    }
+//    /**
+//     * Determine if the Cron expression passes.
+//     *
+//     * @return bool
+//     */
+//    protected function expressionPasses()
+//    {
+//        $date = Carbon::now();
+//
+//        if ($this->timezone) {
+//            $date->setTimezone($this->timezone);
+//        }
+//
+//        return CronExpression::factory($this->expression)->isDue($date->toDateTimeString());
+//    }
 
-    /**
-     * Determine if the Cron expression passes.
-     *
-     * @return bool
-     */
-    protected function expressionPasses()
-    {
-        $date = Carbon::now();
-
-        if ($this->timezone) {
-            $date->setTimezone($this->timezone);
-        }
-
-        return CronExpression::factory($this->expression)->isDue($date->toDateTimeString());
-    }
-
-    /**
-     * Determine if the filters pass for the event.
-     *
-     * @param  \Royalcms\Component\Contracts\Foundation\Royalcms  $royalcms
-     * @return bool
-     */
-    protected function filtersPass(Royalcms $royalcms)
-    {
-        if (($this->filter && ! $royalcms->call($this->filter)) ||
-             $this->reject && $royalcms->call($this->reject)) {
-            return false;
-        }
-
-        return true;
-    }
+//    /**
+//     * Determine if the filters pass for the event.
+//     *
+//     * @param  \Royalcms\Component\Contracts\Foundation\Royalcms  $royalcms
+//     * @return bool
+//     */
+//    protected function filtersPass(Royalcms $royalcms)
+//    {
+//        if (($this->filter && ! $royalcms->call($this->filter)) ||
+//             $this->reject && $royalcms->call($this->reject)) {
+//            return false;
+//        }
+//
+//        return true;
+//    }
 
     /**
      * Determine if the event runs in the given environment.

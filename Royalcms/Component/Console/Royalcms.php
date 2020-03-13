@@ -3,6 +3,7 @@
 namespace Royalcms\Component\Console;
 
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Support\ProcessUtils;
 use Royalcms\Component\Contracts\Events\Dispatcher;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputOption;
@@ -11,6 +12,7 @@ use Illuminate\Console\Application as LaravelApplication;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Illuminate\Console\Command as LaravelCommand;
 use Royalcms\Component\Contracts\Console\Royalcms as RoyalcmsContract;
+use Symfony\Component\Process\PhpExecutableFinder;
 
 class Royalcms extends LaravelApplication implements RoyalcmsContract
 {
@@ -45,6 +47,37 @@ class Royalcms extends LaravelApplication implements RoyalcmsContract
         $this->setName('Royalcms Framework');
 
         $events->fire('royalcms.start', [$this]);
+    }
+
+    /**
+     * Determine the proper PHP executable.
+     *
+     * @return string
+     */
+    public static function phpBinary()
+    {
+        return ProcessUtils::escapeArgument((new PhpExecutableFinder)->find(false));
+    }
+
+    /**
+     * Determine the proper Artisan executable.
+     *
+     * @return string
+     */
+    public static function artisanBinary()
+    {
+        return defined('ARTISAN_BINARY') ? ProcessUtils::escapeArgument(ARTISAN_BINARY) : config('system.binary', 'royalcms');
+    }
+
+    /**
+     * Format the given command as a fully-qualified executable command.
+     *
+     * @param  string  $string
+     * @return string
+     */
+    public static function formatCommandString($string)
+    {
+        return sprintf('%s %s %s', static::phpBinary(), static::artisanBinary(), $string);
     }
 
     /**

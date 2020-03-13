@@ -133,13 +133,13 @@ class Command extends LaravelCommand
      *
      * @param  \Symfony\Component\Console\Input\InputInterface  $input
      * @param  \Symfony\Component\Console\Output\OutputInterface  $output
-     * @return mixed
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $method = method_exists($this, 'handle') ? 'handle' : 'fire';
 
-        return $this->royalcms->call([$this, $method]);
+        return (int) $this->royalcms->call([$this, $method]);
     }
 
     /**
