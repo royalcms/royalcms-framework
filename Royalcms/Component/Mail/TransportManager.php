@@ -7,7 +7,7 @@ namespace Royalcms\Component\Mail;
 use ReflectionClass;
 use ReflectionMethod;
 
-class TransportManager extends \Illuminate\Mail\TransportManager
+class TransportManager extends \Illuminate\Mail\MailManager
 {
 
     /**
