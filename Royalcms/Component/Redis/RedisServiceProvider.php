@@ -7,12 +7,6 @@ use Royalcms\Component\Support\Arr;
 class RedisServiceProvider extends \Illuminate\Redis\RedisServiceProvider
 {
     /**
-     * Indicates if loading of the provider is deferred.
-     * @var bool
-     */
-    protected $defer = true;
-
-    /**
      * The application instance.
      * @var \Royalcms\Component\Contracts\Foundation\Royalcms
      */
