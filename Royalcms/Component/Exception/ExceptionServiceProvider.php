@@ -57,7 +57,9 @@ class ExceptionServiceProvider extends ServiceProvider
             return new HandleDisplayExceptions($royalcms['exception.plain'], $royalcms['exception.debug']);
         });
 
-//        $this->royalcms->alias('Royalcms\Component\Contracts\Debug\ExceptionHandler', 'exception.handler');
+        $this->royalcms->alias('exception.handler', 'Royalcms\Component\Contracts\Debug\ExceptionHandler');
+        $this->royalcms->alias('exception.handler', 'Illuminate\Contracts\Debug\ExceptionHandler');
+
 	}
 
     /**

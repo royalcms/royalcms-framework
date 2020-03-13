@@ -3,6 +3,7 @@
 namespace Royalcms\Component\Exception;
 
 use Exception;
+use Throwable;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Foundation\Exceptions\WhoopsHandler;
 use Illuminate\Support\Facades\Auth;
@@ -32,42 +33,15 @@ class Handler extends LaravelExceptionHandler implements ExceptionHandlerContrac
      */
     protected $internalDontReport = [];
 
-    /**
-     * Report or log an exception.
-     *
-     * @param  \Exception  $e
-     * @return void
-     */
-    public function report(Exception $e)
-    {
-        if ($this->shouldntReport($e)) {
-            return;
-        }
-
-        if (is_callable($reportCallable = [$e, 'report'])) {
-            return $this->container->call($reportCallable);
-        }
-
-        try {
-            $logger = $this->container->make(LoggerInterface::class);
-        } catch (Exception $ex) {
-            throw $e;
-        }
-
-        $logger->error(
-            $e->getMessage(),
-            array_merge($this->context(), ['exception' => $e]
-            ));
-    }
 
     /**
      * Render an exception into a response.
      *
      * @param  \Royalcms\Component\Http\Request  $request
-     * @param  \Exception  $e
+     * @param  \Throwable  $e
      * @return \Royalcms\Component\Http\Response
      */
-    public function render($request, Exception $e)
+    public function render($request, Throwable $e)
     {
         if ($this->isUnauthorizedException($e)) {
             $e = new HttpException(403, $e->getMessage());
@@ -100,12 +74,12 @@ class Handler extends LaravelExceptionHandler implements ExceptionHandlerContrac
      * Render an exception to the console.
      *
      * @param  \Symfony\Component\Console\Output\OutputInterface  $output
-     * @param  \Exception  $e
+     * @param  \Throwable  $e
      * @return void
      */
-    public function renderForConsole($output, Exception $e)
+    public function renderForConsole($output, Throwable $e)
     {
-        (new ConsoleApplication)->renderException($e, $output);
+        (new ConsoleApplication)->renderThrowable($e, $output);
     }
 
     /**
@@ -129,10 +103,10 @@ class Handler extends LaravelExceptionHandler implements ExceptionHandlerContrac
     /**
      * Convert the given exception into a Response instance.
      *
-     * @param  \Exception  $e
+     * @param  \Throwable  $e
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function convertExceptionToResponse(Exception $e)
+    protected function convertExceptionToResponse(Throwable $e)
     {
         $royalcms = royalcms();
 
@@ -156,10 +130,10 @@ class Handler extends LaravelExceptionHandler implements ExceptionHandlerContrac
     /**
      * Get the response content for the given exception.
      *
-     * @param  \Exception  $e
+     * @param  \Throwable  $e
      * @return string
      */
-    protected function renderExceptionContent(Exception $e)
+    protected function renderExceptionContent(Throwable $e)
     {
         try {
 
@@ -185,10 +159,10 @@ class Handler extends LaravelExceptionHandler implements ExceptionHandlerContrac
     /**
      * Render an exception to a string using "Whoops".
      *
-     * @param  \Exception  $e
+     * @param  \Throwable  $e
      * @return string
      */
-    protected function renderExceptionWithWhoops(Exception $e)
+    protected function renderExceptionWithWhoops(Throwable $e)
     {
         return tap(new Whoops, function ($whoops) {
             $whoops->appendHandler($this->whoopsHandler());
@@ -216,11 +190,11 @@ class Handler extends LaravelExceptionHandler implements ExceptionHandlerContrac
     /**
      * Render an exception to a string using Symfony.
      *
-     * @param  \Exception  $e
+     * @param  \Throwable  $e
      * @param  bool  $debug
      * @return string
      */
-    protected function renderExceptionWithSymfony(Exception $e, $debug)
+    protected function renderExceptionWithSymfony(Throwable $e, $debug)
     {
         return (new SymfonyExceptionHandler($debug))->getHtml(
             FlattenException::create($e)
