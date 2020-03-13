@@ -165,6 +165,7 @@ return array(
         'Royalcms\Component\Pagination\PaginationServiceProvider',
         'Royalcms\Component\Validation\ValidationServiceProvider',
         'Royalcms\Component\Notifications\NotificationServiceProvider',
+        'Royalcms\Component\Redis\RedisServiceProvider',
         'Royalcms\Component\Queue\QueueServiceProvider',
         'Royalcms\Component\Mail\MailServiceProvider',
         'Royalcms\Component\View\ViewServiceProvider',
