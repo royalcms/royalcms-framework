@@ -2,6 +2,7 @@
 
 namespace Royalcms\Component\Foundation\Providers;
 
+use Illuminate\Foundation\Providers\ArtisanServiceProvider as LaravelArtisanServiceProvider;
 use Royalcms\Component\Foundation\Console\OptimizeAliasCommand;
 use Royalcms\Component\Support\ServiceProvider;
 use Royalcms\Component\Foundation\Console\OptimizeClearCommand;
@@ -39,34 +40,48 @@ use Royalcms\Component\Foundation\Console\HandlerCommandCommand;
 use Royalcms\Component\Foundation\Console\TranslationCacheCommand;
 use Royalcms\Component\Foundation\Console\TranslationClearCommand;
 
-class ArtisanServiceProvider extends ServiceProvider
+class ArtisanServiceProvider extends LaravelArtisanServiceProvider
 {
+    /**
+     * The application instance.
+     *
+     * @var \Royalcms\Component\Contracts\Foundation\Royalcms
+     */
+    protected $royalcms;
+
     /**
      * The commands to be registered.
      * @var array
      */
     protected $commands = [
-        'AppName'                 => 'command.app.name',
-        'ClearCompiled'           => 'command.clear-compiled',
-        'ConfigCache'             => 'command.config.cache',
-        'ConfigClear'             => 'command.config.clear',
-        'Down'                    => 'command.down',
-        'Environment'             => 'command.environment',
-        'HandlerCommand'          => 'command.handler.command',
-        'HandlerEvent'            => 'command.handler.event',
-        'KeyGenerate'             => 'command.key.generate',
-        'Optimize'                => 'command.optimize',
-        'OptimizeClear'           => 'command.optimize.clear',
-        'OptimizeAlias'           => 'command.optimize.alias',
-        'OptimizeCompile'         => 'command.optimize.compile',
-        'PackageDiscover'         => 'command.package.discover',
-        'RouteCache'              => 'command.route.cache',
-        'RouteClear'              => 'command.route.clear',
-        'RouteList'               => 'command.route.list',
-        'Up'                      => 'command.up',
-        'ViewClear'               => 'command.view.clear',
-        'TranslationCache'        => 'command.trans.cache',
-        'TranslationClear'        => 'command.trans.clear',
+//        'AppName'                 => 'command.app.name',
+        'ClearCompiled'             => 'command.clear-compiled',
+        'ConfigCache'               => 'command.config.cache',
+        'ConfigClear'               => 'command.config.clear',
+        'Down'                      => 'command.down',
+        'Environment'               => 'command.environment',
+//        'HandlerCommand'          => 'command.handler.command',
+//        'HandlerEvent'            => 'command.handler.event',
+        'KeyGenerate'               => 'command.key.generate',
+        'Optimize'                  => 'command.optimize',
+        'OptimizeClear'             => 'command.optimize.clear',
+        'OptimizeAlias'             => 'command.optimize.alias',
+        'OptimizeCompile'           => 'command.optimize.compile',
+        'PackageDiscover'           => 'command.package.discover',
+        'QueueFailed'               => 'command.queue.failed',
+        'QueueFlush'                => 'command.queue.flush',
+        'QueueForget'               => 'command.queue.forget',
+        'QueueListen'               => 'command.queue.listen',
+        'QueueRestart'              => 'command.queue.restart',
+        'QueueRetry'                => 'command.queue.retry',
+        'QueueWork'                 => 'command.queue.work',
+        'RouteCache'                => 'command.route.cache',
+        'RouteClear'                => 'command.route.clear',
+        'RouteList'                 => 'command.route.list',
+        'Up'                        => 'command.up',
+//        'ViewClear'               => 'command.view.clear',
+//        'TranslationCache'        => 'command.trans.cache',
+//        'TranslationClear'        => 'command.trans.clear',
     ];
 
     /**
@@ -74,47 +89,24 @@ class ArtisanServiceProvider extends ServiceProvider
      * @var array
      */
     protected $devCommands = [
-//        'CommandMake'   => 'command.command.make',
-//        'ConsoleMake'   => 'command.console.make',
-//        'EventGenerate' => 'command.event.generate',
-//        'EventMake'     => 'command.event.make',
-//        'JobMake'       => 'command.job.make',
-//        'ListenerMake'  => 'command.listener.make',
-//        'ModelMake'     => 'command.model.make',
-//        'Optimize'      => 'command.optimize',
-//        'PolicyMake'    => 'command.policy.make',
-//        'ProviderMake'  => 'command.provider.make',
-//        'RequestMake'   => 'command.request.make',
-//        'TestMake'      => 'command.test.make',
-        'VendorPublish' => 'command.vendor.publish',
+//        'VendorPublish' => 'command.vendor.publish',
         'Serve'         => 'command.serve',
         'Tinker'        => 'command.tinker',
     ];
 
     /**
-     * Register the service provider.
+     * Create a new service provider instance.
+     *
+     * @param  \Royalcms\Component\Contracts\Foundation\Royalcms  $royalcms
      * @return void
      */
-    public function register()
+    public function __construct($royalcms)
     {
-        $this->registerCommands(array_merge(
-            $this->commands, $this->devCommands
-        ));
+        parent::__construct($royalcms);
+
+        $this->royalcms = $royalcms;
     }
 
-    /**
-     * Register the given commands.
-     * @param array $commands
-     * @return void
-     */
-    protected function registerCommands(array $commands)
-    {
-        foreach (array_keys($commands) as $command) {
-            call_user_func_array([$this, "register{$command}Command"], []);
-        }
-
-        $this->commands(array_values($commands));
-    }
 
     /**
      * Register the command.
@@ -142,17 +134,6 @@ class ArtisanServiceProvider extends ServiceProvider
      * Register the command.
      * @return void
      */
-    protected function registerCommandMakeCommand()
-    {
-        $this->royalcms->singleton('command.command.make', function ($royalcms) {
-            return new CommandMakeCommand($royalcms['files']);
-        });
-    }
-
-    /**
-     * Register the command.
-     * @return void
-     */
     protected function registerConfigCacheCommand()
     {
         $this->royalcms->singleton('command.config.cache', function ($royalcms) {
@@ -171,16 +152,6 @@ class ArtisanServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * Register the command.
-     * @return void
-     */
-    protected function registerConsoleMakeCommand()
-    {
-        $this->royalcms->singleton('command.console.make', function ($royalcms) {
-            return new ConsoleMakeCommand($royalcms['files']);
-        });
-    }
 
     /**
      * Register the command.
@@ -193,16 +164,6 @@ class ArtisanServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * Register the command.
-     * @return void
-     */
-    protected function registerEventMakeCommand()
-    {
-        $this->royalcms->singleton('command.event.make', function ($royalcms) {
-            return new EventMakeCommand($royalcms['files']);
-        });
-    }
 
     /**
      * Register the command.
@@ -226,38 +187,38 @@ class ArtisanServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * Register the command.
-     * @return void
-     */
-    protected function registerHandlerCommandCommand()
-    {
-        $this->royalcms->singleton('command.handler.command', function ($royalcms) {
-            return new HandlerCommandCommand($royalcms['files']);
-        });
-    }
+//    /**
+//     * Register the command.
+//     * @return void
+//     */
+//    protected function registerHandlerCommandCommand()
+//    {
+//        $this->royalcms->singleton('command.handler.command', function ($royalcms) {
+//            return new HandlerCommandCommand($royalcms['files']);
+//        });
+//    }
 
-    /**
-     * Register the command.
-     * @return void
-     */
-    protected function registerHandlerEventCommand()
-    {
-        $this->royalcms->singleton('command.handler.event', function ($royalcms) {
-            return new HandlerEventCommand($royalcms['files']);
-        });
-    }
+//    /**
+//     * Register the command.
+//     * @return void
+//     */
+//    protected function registerHandlerEventCommand()
+//    {
+//        $this->royalcms->singleton('command.handler.event', function ($royalcms) {
+//            return new HandlerEventCommand($royalcms['files']);
+//        });
+//    }
 
-    /**
-     * Register the command.
-     * @return void
-     */
-    protected function registerJobMakeCommand()
-    {
-        $this->royalcms->singleton('command.job.make', function ($royalcms) {
-            return new JobMakeCommand($royalcms['files']);
-        });
-    }
+//    /**
+//     * Register the command.
+//     * @return void
+//     */
+//    protected function registerJobMakeCommand()
+//    {
+//        $this->royalcms->singleton('command.job.make', function ($royalcms) {
+//            return new JobMakeCommand($royalcms['files']);
+//        });
+//    }
 
     /**
      * Register the command.
@@ -270,27 +231,27 @@ class ArtisanServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * Register the command.
-     * @return void
-     */
-    protected function registerListenerMakeCommand()
-    {
-        $this->royalcms->singleton('command.listener.make', function ($royalcms) {
-            return new ListenerMakeCommand($royalcms['files']);
-        });
-    }
+//    /**
+//     * Register the command.
+//     * @return void
+//     */
+//    protected function registerListenerMakeCommand()
+//    {
+//        $this->royalcms->singleton('command.listener.make', function ($royalcms) {
+//            return new ListenerMakeCommand($royalcms['files']);
+//        });
+//    }
 
-    /**
-     * Register the command.
-     * @return void
-     */
-    protected function registerModelMakeCommand()
-    {
-        $this->royalcms->singleton('command.model.make', function ($royalcms) {
-            return new ModelMakeCommand($royalcms['files']);
-        });
-    }
+//    /**
+//     * Register the command.
+//     * @return void
+//     */
+//    protected function registerModelMakeCommand()
+//    {
+//        $this->royalcms->singleton('command.model.make', function ($royalcms) {
+//            return new ModelMakeCommand($royalcms['files']);
+//        });
+//    }
 
     /**
      * Register the command.
@@ -347,27 +308,27 @@ class ArtisanServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * Register the command.
-     * @return void
-     */
-    protected function registerProviderMakeCommand()
-    {
-        $this->royalcms->singleton('command.provider.make', function ($royalcms) {
-            return new ProviderMakeCommand($royalcms['files']);
-        });
-    }
+//    /**
+//     * Register the command.
+//     * @return void
+//     */
+//    protected function registerProviderMakeCommand()
+//    {
+//        $this->royalcms->singleton('command.provider.make', function ($royalcms) {
+//            return new ProviderMakeCommand($royalcms['files']);
+//        });
+//    }
 
-    /**
-     * Register the command.
-     * @return void
-     */
-    protected function registerRequestMakeCommand()
-    {
-        $this->royalcms->singleton('command.request.make', function ($royalcms) {
-            return new RequestMakeCommand($royalcms['files']);
-        });
-    }
+//    /**
+//     * Register the command.
+//     * @return void
+//     */
+//    protected function registerRequestMakeCommand()
+//    {
+//        $this->royalcms->singleton('command.request.make', function ($royalcms) {
+//            return new RequestMakeCommand($royalcms['files']);
+//        });
+//    }
 
     /**
      * Register the command.
@@ -413,16 +374,16 @@ class ArtisanServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * Register the command.
-     * @return void
-     */
-    protected function registerTestMakeCommand()
-    {
-        $this->royalcms->singleton('command.test.make', function ($royalcms) {
-            return new TestMakeCommand($royalcms['files']);
-        });
-    }
+//    /**
+//     * Register the command.
+//     * @return void
+//     */
+//    protected function registerTestMakeCommand()
+//    {
+//        $this->royalcms->singleton('command.test.make', function ($royalcms) {
+//            return new TestMakeCommand($royalcms['files']);
+//        });
+//    }
 
     /**
      * Register the command.
@@ -468,16 +429,16 @@ class ArtisanServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * Register the command.
-     * @return void
-     */
-    protected function registerPolicyMakeCommand()
-    {
-        $this->royalcms->singleton('command.policy.make', function ($royalcms) {
-            return new PolicyMakeCommand($royalcms['files']);
-        });
-    }
+//    /**
+//     * Register the command.
+//     * @return void
+//     */
+//    protected function registerPolicyMakeCommand()
+//    {
+//        $this->royalcms->singleton('command.policy.make', function ($royalcms) {
+//            return new PolicyMakeCommand($royalcms['files']);
+//        });
+//    }
 
     /**
      * Register the command.
@@ -501,12 +462,12 @@ class ArtisanServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * Get the services provided by the provider.
-     * @return array
-     */
-    public function provides()
-    {
-        return array_merge(array_values($this->commands), array_values($this->devCommands));
-    }
+//    /**
+//     * Get the services provided by the provider.
+//     * @return array
+//     */
+//    public function provides()
+//    {
+//        return array_merge(array_values($this->commands), array_values($this->devCommands));
+//    }
 }

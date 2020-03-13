@@ -2,12 +2,13 @@
 
 namespace Royalcms\Component\Foundation\Providers;
 
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Royalcms\Component\Foundation\Composer;
 use Royalcms\Component\Foundation\Optimize\ClassAliasLoader;
 use Royalcms\Component\Foundation\Optimize\ClassPreloader;
 use Royalcms\Component\Support\ServiceProvider;
 
-class ComposerServiceProvider extends ServiceProvider
+class ComposerServiceProvider extends ServiceProvider implements DeferrableProvider
 {
 
     /**

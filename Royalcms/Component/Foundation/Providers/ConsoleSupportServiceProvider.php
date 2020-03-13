@@ -3,28 +3,34 @@
 namespace Royalcms\Component\Foundation\Providers;
 
 use Royalcms\Component\Support\AggregateServiceProvider;
+use Illuminate\Contracts\Support\DeferrableProvider;
+use Illuminate\Foundation\Providers\ConsoleSupportServiceProvider as LaravelConsoleSupportServiceProvider;
 
-class ConsoleSupportServiceProvider extends AggregateServiceProvider
+class ConsoleSupportServiceProvider extends LaravelConsoleSupportServiceProvider
 {
-    /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = true;
-
     /**
      * The provider class names.
      *
      * @var array
      */
     protected $providers = [
-        'Royalcms\Component\Console\ScheduleServiceProvider',
-        'Royalcms\Component\Database\MigrationServiceProvider',
-        'Royalcms\Component\Database\SeedServiceProvider',
         'Royalcms\Component\Foundation\Providers\ComposerServiceProvider',
-        'Royalcms\Component\Queue\ConsoleServiceProvider',
-        'Royalcms\Component\Routing\GeneratorServiceProvider',
-        'Royalcms\Component\Session\CommandsServiceProvider',
     ];
+
+    /**
+     * Register the service provider.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $providers = config('console.providers', []);
+
+        foreach ($providers as $provider) {
+            $this->providers[] = $provider;
+        }
+
+        parent::register();
+    }
+
 }
