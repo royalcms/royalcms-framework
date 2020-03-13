@@ -130,10 +130,7 @@ return array(
         'Component_Widget_Widget'        => 'Royalcms\Component\Widget\Widget',
         'Component_Event_Event'          => 'Royalcms\Component\Event\Event',
         'Component_Event_Api'            => 'Royalcms\Component\Event\Api',
-
-        //     'Form'            => 'Royalcms\Component\Support\Facades\Form',
-        //     'HTML'            => 'Royalcms\Component\Support\Facades\HTML',
-
+        
     ),
 
     /*
@@ -150,7 +147,6 @@ return array(
     */
 
     'providers' => array(
-
         'Royalcms\Component\Bus\BusServiceProvider',
         'Royalcms\Component\Database\DatabaseServiceProvider',
         'Royalcms\Component\Database\SeedServiceProvider',
@@ -170,25 +166,10 @@ return array(
         'Royalcms\Component\Mail\MailServiceProvider',
         'Royalcms\Component\View\ViewServiceProvider',
 
-
-
         // Foundation
         'Royalcms\Component\Foundation\Providers\FoundationServiceProvider',
 
         // Command
-        'Royalcms\Component\Foundation\Providers\ComposerServiceProvider',
-        'Royalcms\Component\Foundation\Providers\ArtisanServiceProvider',
         'Royalcms\Component\Foundation\Providers\ConsoleSupportServiceProvider',
-
-
-
-
-        //     'Royalcms\Component\Hashing\HashServiceProvider',
-        //     'Royalcms\Component\Html\HtmlServiceProvider',
-
-        //     'Royalcms\Component\Redis\RedisServiceProvider',
-        //     'Royalcms\Component\Remote\RemoteServiceProvider',
-        //     'Royalcms\Component\Workbench\WorkbenchServiceProvider',
-
     ),
 );
