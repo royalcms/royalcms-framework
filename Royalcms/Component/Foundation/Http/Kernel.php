@@ -2,7 +2,7 @@
 
 namespace Royalcms\Component\Foundation\Http;
 
-use Exception;
+use Throwable;
 use Royalcms\Component\Routing\Router;
 use Royalcms\Component\Contracts\Foundation\Royalcms;
 use Royalcms\Component\Contracts\Http\Kernel as KernelContract;
@@ -23,7 +23,7 @@ class Kernel extends \Illuminate\Foundation\Http\Kernel implements KernelContrac
      */
     protected $bootstrappers = [
         'Royalcms\Component\Foundation\Bootstrap\Starting',
-        'Royalcms\Component\Foundation\Bootstrap\DetectEnvironment',
+        'Royalcms\Component\Foundation\Bootstrap\LoadEnvironmentVariables',
         'Royalcms\Component\Foundation\Bootstrap\LoadConfiguration',
         'Royalcms\Component\Foundation\Bootstrap\RegisterNamespaces',
 //        'Royalcms\Component\Foundation\Bootstrap\ConfigureLogging',
@@ -51,10 +51,10 @@ class Kernel extends \Illuminate\Foundation\Http\Kernel implements KernelContrac
     /**
      * Report the exception to the exception handler.
      *
-     * @param  \Exception  $e
+     * @param  \Throwable  $e
      * @return void
      */
-    protected function reportException(Exception $e)
+    protected function reportException(Throwable $e)
     {
         $this->royalcms['Royalcms\Component\Contracts\Debug\ExceptionHandler']->report($e);
     }
@@ -63,10 +63,10 @@ class Kernel extends \Illuminate\Foundation\Http\Kernel implements KernelContrac
      * Render the exception to a response.
      *
      * @param  \Royalcms\Component\Http\Request  $request
-     * @param  \Exception  $e
+     * @param  \Throwable  $e
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function renderException($request, Exception $e)
+    protected function renderException($request, Throwable $e)
     {
         return $this->royalcms['Royalcms\Component\Contracts\Debug\ExceptionHandler']->render($request, $e);
     }

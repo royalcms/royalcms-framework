@@ -3,6 +3,7 @@
 namespace Royalcms\Component\Foundation\Console;
 
 use Exception;
+use Illuminate\Support\Env;
 use Throwable;
 use Royalcms\Component\Contracts\Events\Dispatcher;
 use Royalcms\Component\Console\Scheduling\Schedule;
@@ -11,8 +12,9 @@ use Royalcms\Component\Contracts\Foundation\Royalcms;
 use Royalcms\Component\Contracts\Console\Kernel as KernelContract;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
+use Illuminate\Foundation\Console\Kernel as LaravelKernel;
 
-class Kernel implements KernelContract
+class Kernel extends LaravelKernel implements KernelContract
 {
     /**
      * The application implementation.
@@ -35,12 +37,12 @@ class Kernel implements KernelContract
      */
     protected $artisan;
 
-    /**
-     * The Artisan commands provided by the application.
-     *
-     * @var array
-     */
-    protected $commands = [];
+//    /**
+//     * The Artisan commands provided by the application.
+//     *
+//     * @var array
+//     */
+//    protected $commands = [];
 
     /**
      * The bootstrap classes for the application.
@@ -49,7 +51,7 @@ class Kernel implements KernelContract
      */
     protected $bootstrappers = [
         'Royalcms\Component\Foundation\Bootstrap\Starting',
-        'Royalcms\Component\Foundation\Bootstrap\DetectEnvironment',
+        'Royalcms\Component\Foundation\Bootstrap\LoadEnvironmentVariables',
         'Royalcms\Component\Foundation\Bootstrap\LoadConfiguration',
         'Royalcms\Component\Foundation\Bootstrap\RegisterNamespaces',
 //        'Royalcms\Component\Foundation\Bootstrap\ConfigureLogging',
@@ -76,6 +78,7 @@ class Kernel implements KernelContract
 
         $this->royalcms = $royalcms;
         $this->events = $events;
+        $this->app = $royalcms;
 
         $this->royalcms->booted(function ($royalcms) {
 
@@ -91,11 +94,21 @@ class Kernel implements KernelContract
      */
     protected function defineConsoleSchedule()
     {
-        $this->royalcms->instance(
-            'Royalcms\Component\Console\Scheduling\Schedule', $schedule = new Schedule
-        );
+        $this->royalcms->singleton(Schedule::class, function ($app) {
+            return tap(new Schedule($this->scheduleTimezone()), function ($schedule) {
+                $this->schedule($schedule->useCache($this->scheduleCache()));
+            });
+        });
+    }
 
-        $this->schedule($schedule);
+    /**
+     * Get the name of the cache store that should manage scheduling mutexes.
+     *
+     * @return string
+     */
+    protected function scheduleCache()
+    {
+        return Env::get('SCHEDULE_CACHE_DRIVER');
     }
 
     /**
@@ -141,14 +154,15 @@ class Kernel implements KernelContract
     }
 
     /**
-     * Define the application's command schedule.
+     * Get the timezone that should be used by default for scheduled events.
      *
-     * @param  \Royalcms\Component\Console\Scheduling\Schedule  $schedule
-     * @return void
+     * @return \DateTimeZone|string|null
      */
-    protected function schedule(Schedule $schedule)
+    protected function scheduleTimezone()
     {
-        //
+        $config = $this->royalcms['config'];
+
+        return $config->get('app.schedule_timezone', $config->get('app.timezone'));
     }
 
     /**
@@ -261,10 +275,10 @@ class Kernel implements KernelContract
     /**
      * Report the exception to the exception handler.
      *
-     * @param  \Exception  $e
+     * @param  \Throwable  $e
      * @return void
      */
-    protected function reportException(Exception $e)
+    protected function reportException(Throwable $e)
     {
         $this->royalcms['Royalcms\Component\Contracts\Debug\ExceptionHandler']->report($e);
     }
@@ -273,10 +287,10 @@ class Kernel implements KernelContract
      * Report the exception to the exception handler.
      *
      * @param  \Symfony\Component\Console\Output\OutputInterface  $output
-     * @param  \Exception  $e
+     * @param  \Throwable  $e
      * @return void
      */
-    protected function renderException($output, Exception $e)
+    protected function renderException($output, Throwable $e)
     {
         $this->royalcms['Royalcms\Component\Contracts\Debug\ExceptionHandler']->renderForConsole($output, $e);
     }

@@ -2,9 +2,6 @@
 
 namespace Royalcms\Component\Foundation\Bootstrap;
 
-use Dotenv\Dotenv;
-use Dotenv\Exception\InvalidPathException;
-use Illuminate\Support\Env;
 use Royalcms\Component\Contracts\Foundation\Royalcms;
 
 class Starting
@@ -42,39 +39,6 @@ class Starting
         |
         */
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Detect The Royalcms Environment
-        |--------------------------------------------------------------------------
-        |
-        | Royalcms takes a dead simple approach to your application environments
-        | so you can just specify a machine name for the host that matches a
-        | given environment, then we will automatically detect it for you.
-        |
-        */
-
-        try {
-            $royalcms->useEnvironmentPath(SITE_PATH);
-            if (! file_exists($royalcms->environmentFilePath())) {
-                $royalcms->useEnvironmentPath(SITE_ROOT);
-            }
-
-            Dotenv::create(
-                $royalcms->environmentPath(),
-                $royalcms->environmentFile(),
-                Env::getFactory()
-            );
-        }
-        catch (InvalidPathException $e) {
-            //
-        }
-
-        $royalcms->detectEnvironment(function() {
-
-            return env('ROYALCMS_ENV', 'production');
-
-        });
 
     }
 }

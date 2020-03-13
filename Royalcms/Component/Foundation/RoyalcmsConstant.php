@@ -9,5 +9,5 @@ class RoyalcmsConstant
      *
      * @var string
      */
-    const PHP_REQUIRED = '7.2.0';
+    const PHP_REQUIRED = '7.2.5';
 }
