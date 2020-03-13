@@ -5,6 +5,7 @@ namespace Royalcms\Component\Exception;
 
 use Closure;
 use Exception;
+use Throwable;
 use ReflectionFunction;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
@@ -21,10 +22,10 @@ class CustomHandlers
     /**
      * Get the response content for the given exception.
      *
-     * @param  \Exception  $e
+     * @param  \Throwable  $e
      * @return string
      */
-    public function handleException(Exception $e)
+    public function handleException(Throwable $e)
     {
         return $this->callCustomHandlers($e);
     }
@@ -32,10 +33,10 @@ class CustomHandlers
     /**
      * Handle a console exception.
      *
-     * @param  \Exception  $exception
+     * @param  \Throwable  $exception
      * @return void
      */
-    public function handleConsole($exception)
+    public function handleConsole(Throwable $exception)
     {
         return $this->callCustomHandlers($exception, true);
     }
@@ -43,11 +44,11 @@ class CustomHandlers
     /**
      * Handle the given exception.
      *
-     * @param  \Exception  $exception
+     * @param  \Throwable  $exception
      * @param  bool  $fromConsole
      * @return void
      */
-    protected function callCustomHandlers($exception, $fromConsole = false)
+    protected function callCustomHandlers(Throwable $exception, $fromConsole = false)
     {
         foreach ($this->handlers as $handler)
         {
@@ -98,10 +99,10 @@ class CustomHandlers
      * Determine if the given handler handles this exception.
      *
      * @param  Closure    $handler
-     * @param  \Exception  $exception
+     * @param  \Throwable  $exception
      * @return bool
      */
-    protected function handlesException(Closure $handler, $exception)
+    protected function handlesException(Closure $handler, Throwable $exception)
     {
         $reflection = new ReflectionFunction($handler);
 
@@ -112,10 +113,10 @@ class CustomHandlers
      * Determine if the given handler type hints the exception.
      *
      * @param  ReflectionFunction  $reflection
-     * @param  \Exception  $exception
+     * @param  \Throwable  $exception
      * @return bool
      */
-    protected function hints(ReflectionFunction $reflection, $exception)
+    protected function hints(ReflectionFunction $reflection, Throwable $exception)
     {
         $parameters = $reflection->getParameters();
 
@@ -127,10 +128,10 @@ class CustomHandlers
     /**
      * Format an exception thrown by a handler.
      *
-     * @param  \Exception  $e
+     * @param  \Throwable  $e
      * @return string
      */
-    protected function formatException(\Exception $e)
+    protected function formatException(Throwable $e)
     {
         if (config('system.debug'))
         {

@@ -58,10 +58,10 @@ class Handler extends LaravelExceptionHandler implements ExceptionHandlerContrac
      * Map exception into an Royalcms response.
      *
      * @param  \Symfony\Component\HttpFoundation\Response  $response
-     * @param  \Exception  $e
+     * @param  \Throwable  $e
      * @return \Royalcms\Component\Http\Response
      */
-    protected function toRoyalcmsResponse($response, Exception $e)
+    protected function toRoyalcmsResponse($response, Throwable $e)
     {
         $response = new Response($response->getContent(), $response->getStatusCode(), $response->headers->all());
 
@@ -204,10 +204,10 @@ class Handler extends LaravelExceptionHandler implements ExceptionHandlerContrac
     /**
      * Determine if the given exception is an access unauthorized exception.
      *
-     * @param  \Exception  $e
+     * @param  \Throwable  $e
      * @return bool
      */
-    protected function isUnauthorizedException(Exception $e)
+    protected function isUnauthorizedException(Throwable $e)
     {
         return $e instanceof UnauthorizedException;
     }
