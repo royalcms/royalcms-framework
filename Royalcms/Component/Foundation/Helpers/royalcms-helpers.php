@@ -499,10 +499,8 @@ if ( ! function_exists('_dump'))
     /**
      * 调试输出数据
      *
-     * @param var $var
-     *            变量或对象
-     * @param boolean $output
-     *            输出方式 0 不输出, 1 界面输出, 2 注释输出, 3 txt中断输出
+     * @param mixed $var 变量或对象
+     * @param boolean $output 输出方式 0 不输出, 1 界面输出, 2 注释输出, 3 txt中断输出
      */
     function _dump($var, $output = 0)
     {
