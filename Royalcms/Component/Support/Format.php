@@ -2,9 +2,8 @@
 
 namespace Royalcms\Component\Support;
 
-use Royalcms\Component\Support\Facades\Config;
+use RC_Config;
 use RC_Hook;
-use Royalcms\Component\Support\Facades\Lang;
 use RC_Locale;
 
 class Format
@@ -27,13 +26,60 @@ class Format
             return true;
         }
             
-        $lang = Config::get('system.lang');
-        if ($lang == 'zh-cn') {
+        $lang = RC_Config::get('system.lang');
+        if ($lang == 'zh_CN') {
             $str = $showtime ? date('Y-m-d H:i:s', $times) : date('Y-m-d', $times);
         } else {
             $str = $showtime ? date('m/d/Y H:i:s', $times) : date('m/d/Y', $times);
         }
         return $str;
+    }
+
+    /**
+     * 日期美化，剩余几时几秒
+     * @param $mysec
+     * @return string
+     */
+    public static function seconds2days($mysec)
+    {
+        $mysec = (int)$mysec;
+        if ( $mysec === 0 ) {
+            return '0 second';
+        }
+
+        $mins  = 0;
+        $hours = 0;
+        $days  = 0;
+
+        if ( $mysec >= 60 ) {
+            $mins = (int)($mysec / 60);
+            $mysec = $mysec % 60;
+        }
+        if ( $mins >= 60 ) {
+            $hours = (int)($mins / 60);
+            $mins = $mins % 60;
+        }
+        if ( $hours >= 24 ) {
+            $days = (int)($hours / 24);
+            $hours = $hours % 60;
+        }
+
+        $output = '';
+
+        if ($days){
+            $output .= $days."天";
+        }
+        if ($hours) {
+            $output .= $hours."小时";
+        }
+        if ( $mins ) {
+            $output .= $mins."分";
+        }
+        if ( $mysec ) {
+            $output .= $mysec."秒";
+        }
+        $output = rtrim($output);
+        return $output;
     }
 
     /**
@@ -49,13 +95,13 @@ class Format
         }
             
         $weekarray = array(
-            Lang::lang('Sunday'),
-            Lang::lang('Monday'),
-            Lang::lang('Tuesday'),
-            Lang::lang('Wednesday'),
-            Lang::lang('Thursday'),
-            Lang::lang('Friday'),
-            Lang::lang('Saturday')
+            __('Sunday'),
+            __('Monday'),
+            __('Tuesday'),
+            __('Wednesday'),
+            __('Thursday'),
+            __('Friday'),
+            __('Saturday')
         );
         return $weekarray[date("w", $timestamp)];
     }
