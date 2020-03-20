@@ -2,10 +2,6 @@
 
 namespace Royalcms\Component\Mail;
 
-use Swift_Mailer;
-use Royalcms\Component\Support\Arr;
-use Royalcms\Component\Support\Str;
-use Royalcms\Component\Support\ServiceProvider;
 
 class MailServiceProvider extends \Illuminate\Mail\MailServiceProvider
 {
@@ -28,6 +24,7 @@ class MailServiceProvider extends \Illuminate\Mail\MailServiceProvider
         parent::__construct($royalcms);
 
         $this->royalcms = $royalcms;
+
     }
 
     /**
@@ -35,10 +32,14 @@ class MailServiceProvider extends \Illuminate\Mail\MailServiceProvider
      *
      * @return void
      */
-    protected function registerSwiftTransport()
+    protected function registerIlluminateMailer()
     {
-        $this->royalcms->singleton('swift.transport', function ($royalcms) {
-            return new TransportManager($royalcms);
+        $this->royalcms->singleton('mail.manager', function ($royalcms) {
+            return new MailManager($royalcms);
+        });
+
+        $this->royalcms->bind('mailer', function ($royalcms) {
+            return $royalcms->make('mail.manager')->mailer();
         });
     }
 

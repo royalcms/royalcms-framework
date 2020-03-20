@@ -7,7 +7,7 @@ namespace Royalcms\Component\Mail;
 use ReflectionClass;
 use ReflectionMethod;
 
-class TransportManager extends \Illuminate\Mail\MailManager
+class MailManager extends \Illuminate\Mail\MailManager
 {
 
     /**
@@ -21,9 +21,9 @@ class TransportManager extends \Illuminate\Mail\MailManager
         // If the given driver has not been created before, we will create the instances
         // here and cache it so we can return it next time very quickly. If there is
         // already a driver created by this name, we'll just return that instance.
-        if (isset($this->drivers[$driver])) {
-            unset($this->drivers[$driver]);
-            $this->drivers[$driver] = $this->createDriver($driver);
+        if (isset($this->mailers[$driver])) {
+            unset($this->mailers[$driver]);
+            $this->mailers[$driver] = $this->resolve($driver);
         }
     }
 
