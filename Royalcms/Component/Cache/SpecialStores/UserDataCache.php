@@ -2,10 +2,25 @@
 
 namespace Royalcms\Component\Cache\SpecialStores;
 
-use Royalcms\Component\Support\Facades\Config as RC_Config;
 
 trait UserDataCache
 {
+    /**
+     * @return \Royalcms\Component\Cache\Stores\UserdataCache
+     */
+    public static function userdata()
+    {
+        static $cache;
+
+        if (!empty($cache)) {
+            return $cache;
+        }
+
+        $cache = (new \Royalcms\Component\Cache\Stores\UserdataCache());
+
+        return $cache;
+    }
+
     /**
      * 快速存储用户个人数据
      *
@@ -18,10 +33,7 @@ trait UserDataCache
      */
     public static function userdata_cache_set($name, $data, $userid, $isadmin = false, $expire = null)
     {
-        $config = RC_Config::get('cache.stores.userdata_cache');
-        $expire = $expire ?: $config['expire'];
-        $key = 'userdata_cache:' . $name . $userid . $isadmin;
-        return static::driver('userdata_cache')->put($key, $data, $expire);
+        return static::userdata()->setUserId($userid)->setUserType($isadmin)->set($key, $data, $expire);
     }
     
     /**
@@ -35,8 +47,7 @@ trait UserDataCache
      */
     public static function userdata_cache_get($name, $userid, $isadmin = false, $expire = null)
     {
-        $key = 'userdata_cache:' . $name . $userid . $isadmin;
-        return static::driver('userdata_cache')->get($key);
+        return static::userdata()->setUserId($userid)->setUserType($isadmin)->get($key);
     }
     
     /**
@@ -50,8 +61,7 @@ trait UserDataCache
      */
     public static function userdata_cache_delete($name, $userid, $isadmin = false, $expire = null)
     {
-        $key = 'userdata_cache:' . $name . $userid . $isadmin;
-        return static::driver('userdata_cache')->forget($key);
+        return static::userdata()->setUserId($userid)->setUserType($isadmin)->forget($key);
     }
     
 }

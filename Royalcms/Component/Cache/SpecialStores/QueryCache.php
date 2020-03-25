@@ -2,10 +2,25 @@
 
 namespace Royalcms\Component\Cache\SpecialStores;
 
-use Royalcms\Component\Support\Facades\Config as RC_Config;
 
 trait QueryCache
 {
+    /**
+     * @return \Royalcms\Component\Cache\Stores\QueryCache
+     */
+    public static function query()
+    {
+        static $cache;
+
+        if (!empty($cache)) {
+            return $cache;
+        }
+
+        $cache = (new \Royalcms\Component\Cache\Stores\QueryCache());
+
+        return $cache;
+    }
+
     /**
      * 设置查询缓存
      *
@@ -18,10 +33,7 @@ trait QueryCache
      */
     public static function query_cache_set($name, $data, $expire = null)
     {
-        $config = RC_Config::get('cache.stores.query_cache');
-        $expire = $expire ?: $config['expire'];
-        $key = 'query_cache:'.  $name;
-        return static::driver('query_cache')->put($key, $data, $expire);
+        return static::query()->set($key, $data, $expire);
     }
     
     /**
@@ -36,8 +48,7 @@ trait QueryCache
      */
     public static function query_cache_get($name)
     {
-        $key = 'query_cache:'.  $name;
-        return static::driver('query_cache')->get($key);
+        return static::query()->get($key);
     }
     
     /**
@@ -52,8 +63,7 @@ trait QueryCache
      */
     public static function query_cache_delete($name)
     {
-        $key = 'query_cache:'.  $name;
-        return static::driver('query_cache')->forget($key);
+        return static::query()->forget($key);
     }
     
 }

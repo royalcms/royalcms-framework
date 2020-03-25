@@ -2,10 +2,25 @@
 
 namespace Royalcms\Component\Cache\SpecialStores;
 
-use Royalcms\Component\Support\Facades\Config as RC_Config;
 
 trait TableCache
 {
+    /**
+     * @return \Royalcms\Component\Cache\Stores\TableCache
+     */
+    public static function table()
+    {
+        static $cache;
+
+        if (!empty($cache)) {
+            return $cache;
+        }
+
+        $cache = (new \Royalcms\Component\Cache\Stores\TableCache());
+
+        return $cache;
+    }
+
     /**
      * 设置数据表缓存
      *
@@ -18,10 +33,7 @@ trait TableCache
      */
     public static function table_cache_set($name, $data, $expire = null)
     {
-        $config = RC_Config::get('cache.stores.table_cache');
-        $expire = $expire ?: $config['expire'];
-        $key = 'table_cache:'.  $name;
-        return static::driver('table_cache')->put($key, $data, $expire);
+        return static::table()->set($key, $data, $expire);
     }
     
     /**
@@ -36,8 +48,7 @@ trait TableCache
      */
     public static function table_cache_get($name)
     {
-        $key = 'table_cache:'.  $name;
-        return static::driver('table_cache')->get($key);
+        return static::table()->get($key);
     }
     
     /**
@@ -52,8 +63,7 @@ trait TableCache
      */
     public static function table_cache_delete($name)
     {
-        $key = 'table_cache:'.  $name;
-        return static::driver('table_cache')->forget($key);
+        return static::table()->forget($key);
     }
     
 }
