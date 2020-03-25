@@ -78,6 +78,15 @@ return array(
         ],
         
         /**
+         * 应用缓存
+         */
+        'app_cache' => [
+            'driver' => 'file',
+            'path'   => storage_path().'/cache',
+            'expire'   => 60, //分钟
+        ],
+
+        /**
          * 数据表缓存
          */
         'table_cache' => array(
