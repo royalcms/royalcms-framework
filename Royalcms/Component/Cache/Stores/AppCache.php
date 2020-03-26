@@ -2,6 +2,7 @@
 
 namespace Royalcms\Component\Cache\Stores;
 
+use RC_Config;
 
 class AppCache extends AbstractCache
 {

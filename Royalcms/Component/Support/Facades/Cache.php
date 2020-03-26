@@ -2,11 +2,7 @@
 
 namespace Royalcms\Component\Support\Facades;
 
-use Royalcms\Component\Cache\SpecialStores\AppCache;
-use Royalcms\Component\Cache\SpecialStores\UserDataCache;
-use Royalcms\Component\Cache\SpecialStores\TableCache;
-use Royalcms\Component\Cache\SpecialStores\QueryCache;
-use Royalcms\Component\Cache\SpecialStores\MemoryCache;
+use Royalcms\Component\Cache\Traits\CustomCacheScreenTrait;
 
 /**
  * @see \Royalcms\Component\Cache\CacheManager
@@ -14,7 +10,7 @@ use Royalcms\Component\Cache\SpecialStores\MemoryCache;
  */
 class Cache extends Facade
 {
-    use AppCache, UserDataCache, TableCache, QueryCache, MemoryCache;
+    use CustomCacheScreenTrait;
 
     /**
      * Get the registered name of the component.

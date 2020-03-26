@@ -1,6 +1,6 @@
 <?php
 
-namespace Royalcms\Component\Cache\SpecialStores;
+namespace Royalcms\Component\Cache\MemoryStore;
 
 use Royalcms\Component\Cache\Memory;
 

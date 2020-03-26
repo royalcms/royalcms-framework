@@ -1,6 +1,6 @@
 <?php
 
-namespace Royalcms\Component\Cache;
+namespace Royalcms\Component\Cache\MemoryStore;
 
 /**
  * Royalcms Object Cache
