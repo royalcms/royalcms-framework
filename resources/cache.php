@@ -77,42 +77,6 @@ return array(
             'connection' => 'default',
         ],
         
-        /**
-         * 应用缓存
-         */
-        'app_cache' => [
-            'driver' => 'file',
-            'path'   => storage_path().'/cache',
-            'expire'   => 60, //分钟
-        ],
-
-        /**
-         * 数据表缓存
-         */
-        'table_cache' => array(
-            'driver'    => 'file',
-            'path'      => storage_path().'/temp/table_caches',
-            'expire'    => 1200, //分钟
-        ),
-        
-        /**
-         * 用户数据缓存
-         */
-        'userdata_cache' => array(
-            'driver'    => 'file',
-            'path'      => storage_path().'/userdata',
-            'expire'    => 60, //分钟
-        ),
-        
-        /**
-         * 查询缓存
-         */
-        'query_cache' => array(
-            'driver'    => 'file',
-            'path'      => storage_path().'/temp/query_caches',
-            'expire'    => 60, //分钟
-        ),
-        
     ],
     
 );

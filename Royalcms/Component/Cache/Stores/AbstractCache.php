@@ -14,7 +14,11 @@ class AbstractCache implements SpecialStoreInterface
 
     public function __construct()
     {
-        $this->config = RC_Config::get('cache.stores.'.$name);
+        if (empty($this->name)) {
+            $this->name = 'file';
+        }
+
+        $this->config = RC_Config::get('cache.stores.'.$this->name);
     }
 
     protected function buildCacheKey($name)
