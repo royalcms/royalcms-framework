@@ -9,18 +9,21 @@ class TableCache extends AbstractCache
 
     protected $name = 'table_cache';
 
-    public function __construct()
+    /**
+     * 获取默认config
+     * @return array
+     */
+    protected function getDefaultConfig()
     {
-        parent::__construct();
+        $config = [
+            'driver' => 'file',
+            'path'   => storage_path().'/temp/table_caches',
+            'expire' => 1200 //分钟
+        ];
 
-        if (empty($this->config)) {
-            $this->config = [
-                'driver' => 'file',
-                'path'   => storage_path().'/temp/table_caches',
-                'expire' => 1200, //分钟
-            ];
-            RC_Config::set('cache.stores.'.$name, $this->config);
-        }
+        RC_Config::set('cache.stores.'.$name, $config);
+
+        return $config;
     }
 
     protected function buildCacheKey($name)

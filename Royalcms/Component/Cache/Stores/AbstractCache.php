@@ -5,7 +5,7 @@ namespace Royalcms\Component\Cache\Stores;
 use RC_Config;
 use RC_Cache;
 
-class AbstractCache implements SpecialStoreInterface
+abstract class AbstractCache implements SpecialStoreInterface
 {
 
     protected $name;
@@ -19,12 +19,22 @@ class AbstractCache implements SpecialStoreInterface
         }
 
         $this->config = RC_Config::get('cache.stores.'.$this->name);
+
+        if (empty($this->config)) {
+            $this->config = $this->getDefaultConfig();
+        }
     }
 
     protected function buildCacheKey($name)
     {
         return $name;
     }
+
+    /**
+     * 获取默认config
+     * @return array
+     */
+    abstract protected function getDefaultConfig();
 
     /**
      * 快速设置APP缓存数据
@@ -81,5 +91,24 @@ class AbstractCache implements SpecialStoreInterface
         $key = $this->buildCacheKey($name);
         return RC_Cache::store($this->name)->forget($key);
     }
-    
+
+    /**
+     * @return mixed
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * @param mixed $config
+     * @return AbstractCache
+     */
+    public function setConfig($config)
+    {
+        $this->config = $config;
+        return $this;
+    }
+
+
 }

@@ -13,18 +13,21 @@ class UserdataCache extends AbstractCache
     protected $user_id;
     protected $user_type;
 
-    public function __construct()
+    /**
+     * 获取默认config
+     * @return array
+     */
+    protected function getDefaultConfig()
     {
-        parent::__construct();
+        $config = [
+            'driver' => 'file',
+            'path'   => storage_path().'/temp/userdata',
+            'expire' => 60 //分钟
+        ];
 
-        if (empty($this->config)) {
-            $this->config = [
-                'driver' => 'file',
-                'path'   => storage_path().'/userdata',
-                'expire' => 60, //分钟
-            ];
-            RC_Config::set('cache.stores.'.$name, $this->config);
-        }
+        RC_Config::set('cache.stores.'.$name, $config);
+
+        return $config;
     }
 
     protected function buildCacheKey($name)

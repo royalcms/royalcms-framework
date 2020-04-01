@@ -27,11 +27,11 @@ trait CustomCacheScreenTrait
      *
      * @since 3.4
      *
-     * @param string $name
+     * @param string $key
      * @param string|array $data
      * @param string $app
      */
-    public static function app_cache_set($name, $data, $app, $expire = null)
+    public static function app_cache_set($key, $data, $app, $expire = null)
     {
         return static::app()->setApp($app)->set($key, $data, $expire);
     }
@@ -41,11 +41,11 @@ trait CustomCacheScreenTrait
      *
      * @since 3.4
      *
-     * @param string $name
+     * @param string $key
      * @param string|array $data
      * @param string $app
      */
-    public static function app_cache_add($name, $data, $app, $expire = null)
+    public static function app_cache_add($key, $data, $app, $expire = null)
     {
         return static::app()->setApp($app)->add($key, $data, $expire);
     }
@@ -55,10 +55,10 @@ trait CustomCacheScreenTrait
      *
      * @since 3.4
      *
-     * @param string $name
+     * @param string $key
      * @param string $app
      */
-    public static function app_cache_get($name, $app)
+    public static function app_cache_get($key, $app)
     {
         return static::app()->setApp($app)->get($key);
     }
@@ -71,7 +71,7 @@ trait CustomCacheScreenTrait
      * @param string $name
      * @param string $app
      */
-    public static function app_cache_delete($name, $app)
+    public static function app_cache_delete($key, $app)
     {
         return static::app()->setApp($app)->forget($key);
     }
@@ -99,12 +99,12 @@ trait CustomCacheScreenTrait
      *
      * @since 3.10
      *
-     * @param string $name
+     * @param string $key
      * @param string $value
      * @param string $expire
      * @return boolean
      */
-    public static function query_cache_set($name, $data, $expire = null)
+    public static function query_cache_set($key, $data, $expire = null)
     {
         return static::query()->set($key, $data, $expire);
     }
@@ -114,12 +114,10 @@ trait CustomCacheScreenTrait
      *
      * @since 3.10
      *
-     * @param string $name
-     * @param string $value
-     * @param string $expire
-     * @return boolean
+     * @param string $key
+     * @return mixed
      */
-    public static function query_cache_get($name)
+    public static function query_cache_get($key)
     {
         return static::query()->get($key);
     }
@@ -129,12 +127,10 @@ trait CustomCacheScreenTrait
      *
      * @since 3.10
      *
-     * @param string $name
-     * @param string $value
-     * @param string $expire
+     * @param string $key
      * @return boolean
      */
-    public static function query_cache_delete($name)
+    public static function query_cache_delete($key)
     {
         return static::query()->forget($key);
     }
@@ -162,12 +158,12 @@ trait CustomCacheScreenTrait
      *
      * @since 3.10
      *
-     * @param string $name
+     * @param string $key
      * @param string $value
      * @param string $expire
      * @return boolean
      */
-    public static function table_cache_set($name, $data, $expire = null)
+    public static function table_cache_set($key, $data, $expire = null)
     {
         return static::table()->set($key, $data, $expire);
     }
@@ -177,12 +173,10 @@ trait CustomCacheScreenTrait
      *
      * @since 3.10
      *
-     * @param string $name
-     * @param string $value
-     * @param string $expire
-     * @return boolean
+     * @param string $key
+     * @return mixed
      */
-    public static function table_cache_get($name)
+    public static function table_cache_get($key)
     {
         return static::table()->get($key);
     }
@@ -192,12 +186,10 @@ trait CustomCacheScreenTrait
      *
      * @since 3.10
      *
-     * @param string $name
-     * @param string $value
-     * @param string $expire
+     * @param string $key
      * @return boolean
      */
-    public static function table_cache_delete($name)
+    public static function table_cache_delete($key)
     {
         return static::table()->forget($key);
     }
@@ -225,14 +217,14 @@ trait CustomCacheScreenTrait
      *
      * @since 3.4
      *
-     * @param string $name
+     * @param string $key
      * @param string $data
-     * @param string $userid
-     * @param boolean $isadmin
+     * @param string $user_id
+     * @param boolean $user_type
      */
-    public static function userdata_cache_set($name, $data, $userid, $isadmin = false, $expire = null)
+    public static function userdata_cache_set($key, $data, $user_id, $user_type = 'user', $expire = null)
     {
-        return static::userdata()->setUserId($userid)->setUserType($isadmin)->set($key, $data, $expire);
+        return static::userdata()->setUserId($user_id)->setUserType($user_type)->set($key, $data, $expire);
     }
 
     /**
@@ -240,13 +232,13 @@ trait CustomCacheScreenTrait
      *
      * @since 3.4
      *
-     * @param string $name
-     * @param string $userid
-     * @param boolean $isadmin
+     * @param string $key
+     * @param string $user_id
+     * @param boolean $user_type
      */
-    public static function userdata_cache_get($name, $userid, $isadmin = false, $expire = null)
+    public static function userdata_cache_get($key, $userid, $user_type = 'user', $expire = null)
     {
-        return static::userdata()->setUserId($userid)->setUserType($isadmin)->get($key);
+        return static::userdata()->setUserId($user_id)->setUserType($user_type)->get($key);
     }
 
     /**
@@ -254,13 +246,13 @@ trait CustomCacheScreenTrait
      *
      * @since 3.4
      *
-     * @param string $name
-     * @param string $userid
-     * @param boolean $isadmin
+     * @param string $key
+     * @param string $user_id
+     * @param boolean $user_type
      */
-    public static function userdata_cache_delete($name, $userid, $isadmin = false, $expire = null)
+    public static function userdata_cache_delete($key, $userid, $user_type = 'user', $expire = null)
     {
-        return static::userdata()->setUserId($userid)->setUserType($isadmin)->forget($key);
+        return static::userdata()->setUserId($user_id)->setUserType($user_type)->forget($key);
     }
 
 }
