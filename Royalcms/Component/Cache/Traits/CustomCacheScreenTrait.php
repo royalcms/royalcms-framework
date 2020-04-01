@@ -73,7 +73,7 @@ trait CustomCacheScreenTrait
      */
     public static function app_cache_delete($key, $app)
     {
-        return static::app()->setApp($app)->forget($key);
+        return static::app()->setApp($app)->delete($key);
     }
 
     //===============================================================
@@ -132,7 +132,7 @@ trait CustomCacheScreenTrait
      */
     public static function query_cache_delete($key)
     {
-        return static::query()->forget($key);
+        return static::query()->delete($key);
     }
 
     //===============================================================
@@ -191,7 +191,7 @@ trait CustomCacheScreenTrait
      */
     public static function table_cache_delete($key)
     {
-        return static::table()->forget($key);
+        return static::table()->delete($key);
     }
 
     //===============================================================
@@ -252,7 +252,7 @@ trait CustomCacheScreenTrait
      */
     public static function userdata_cache_delete($key, $userid, $user_type = 'user', $expire = null)
     {
-        return static::userdata()->setUserId($user_id)->setUserType($user_type)->forget($key);
+        return static::userdata()->setUserId($user_id)->setUserType($user_type)->delete($key);
     }
 
 }
