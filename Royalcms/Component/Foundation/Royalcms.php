@@ -832,7 +832,7 @@ class Royalcms extends Application implements RoyalcmsContract, ContainerContrac
      */
     public function fatal(Closure $callback)
     {
-        $this->error(function(\Symfony\Component\Debug\Exception\FatalErrorException $e) use ($callback)
+        $this->error(function(\Symfony\Component\Debug\Exception\FatalThrowableError $e) use ($callback)
         {
             return call_user_func($callback, $e);
         });
