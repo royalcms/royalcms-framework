@@ -3,6 +3,9 @@
 namespace Royalcms\Component\Support\Facades;
 
 /**
+ * @method static string sendResetLink(array $credentials)
+ * @method static mixed reset(array $credentials, \Closure $callback)
+ * 
  * @see \Royalcms\Component\Auth\Passwords\PasswordBroker
  */
 class Password extends Facade

@@ -3,6 +3,10 @@
 namespace Royalcms\Component\Support\Facades;
 
 /**
+ * @method static void queue(...$parameters)
+ * @method static unqueue($name)
+ * @method static array getQueuedCookies()
+ * 
  * @see \Royalcms\Component\Cookie\CookieJar
  */
 class Cookie extends Facade
