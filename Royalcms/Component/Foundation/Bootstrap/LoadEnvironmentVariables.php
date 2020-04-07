@@ -80,7 +80,7 @@ class LoadEnvironmentVariables
         }
 
         $this->setEnvironmentFilePath(
-            $app, $app->environmentFile().'.'.$environment
+            $royalcms, $royalcms->environmentFile().'.'.$environment
         );
     }
 
