@@ -42,16 +42,20 @@
             "tests/laravel/Database/stubs/MigrationCreatorFakeMigration.php"
         ],
         "psr-4": {
-            "Illuminate\\Tests\\": "tests/laravel",
-            "Royalcms\\Tests\\": "tests/royalcms"
+            "Illuminate\\Tests\\": "tests/laravel/",
+            "Royalcms\\Tests\\": "tests/royalcms/"
         }
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "6.0-dev"
+            "dev-master": "7.x-dev"
         }
     },
+    "config": {
+        "sort-packages": true
+    },
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "repositories": [
         {
             "type": "composer",
