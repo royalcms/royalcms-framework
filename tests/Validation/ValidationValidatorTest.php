@@ -5,14 +5,18 @@ namespace Illuminate\Tests\Validation;
 use DateTime;
 use DateTimeImmutable;
 use Illuminate\Container\Container;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Contracts\Translation\Translator as TranslatorContract;
 use Illuminate\Contracts\Validation\ImplicitRule;
 use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Translation\ArrayLoader;
 use Illuminate\Translation\Translator;
-use Illuminate\Validation\PresenceVerifierInterface;
+use Illuminate\Validation\DatabasePresenceVerifierInterface;
 use Illuminate\Validation\Rules\Exists;
 use Illuminate\Validation\Rules\Unique;
 use Illuminate\Validation\ValidationData;
@@ -21,6 +25,7 @@ use Illuminate\Validation\Validator;
 use InvalidArgumentException;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -262,7 +267,7 @@ class ValidationValidatorTest extends TestCase
     public function testNestedAttributesAreReplacedInDimensions()
     {
         // Knowing that demo image.png has width = 3 and height = 2
-        $uploadedFile = new UploadedFile(__DIR__.'/fixtures/image.png', '', null, null, null, true);
+        $uploadedFile = new UploadedFile(__DIR__.'/fixtures/image.png', '', null, null, true);
 
         $trans = $this->getIlluminateArrayTranslator();
         $trans->addLines(['validation.dimensions' => ':min_width :max_height :ratio'], 'en');
@@ -295,7 +300,7 @@ class ValidationValidatorTest extends TestCase
         $v->messages()->setFormat(':message');
         $this->assertSame('Name is required!', $v->messages()->first('name'));
 
-        //set customAttributes by setter
+        // set customAttributes by setter
         $trans = $this->getIlluminateArrayTranslator();
         $trans->addLines(['validation.required' => ':attribute is required!'], 'en');
         $customAttributes = ['name' => 'Name'];
@@ -400,9 +405,30 @@ class ValidationValidatorTest extends TestCase
         $this->assertSame(' is not a valid email', $v->messages()->first('email'));
     }
 
+    public function testInputIsReplacedByItsDisplayableValue()
+    {
+        $frameworks = [
+            1 => 'Laravel',
+            2 => 'Symfony',
+            3 => 'Rails',
+        ];
+
+        $trans = $this->getIlluminateArrayTranslator();
+        $trans->addLines(['validation.framework_php' => ':input is not a valid PHP Framework'], 'en');
+
+        $v = new Validator($trans, ['framework' => 3], ['framework' => 'framework_php']);
+        $v->addExtension('framework_php', function ($attribute, $value, $parameters, $validator) {
+            return in_array($value, [1, 2]);
+        });
+        $v->addCustomValues(['framework' => $frameworks]);
+
+        $this->assertFalse($v->passes());
+        $this->assertSame('Rails is not a valid PHP Framework', $v->messages()->first('framework'));
+    }
+
     public function testDisplayableValuesAreReplaced()
     {
-        //required_if:foo,bar
+        // required_if:foo,bar
         $trans = $this->getIlluminateArrayTranslator();
         $trans->addLines(['validation.required_if' => 'The :attribute field is required when :other is :value.'], 'en');
         $trans->addLines(['validation.values.color.1' => 'red'], 'en');
@@ -411,7 +437,7 @@ class ValidationValidatorTest extends TestCase
         $v->messages()->setFormat(':message');
         $this->assertSame('The bar field is required when color is red.', $v->messages()->first('bar'));
 
-        //required_if:foo,boolean
+        // required_if:foo,boolean
         $trans = $this->getIlluminateArrayTranslator();
         $trans->addLines(['validation.required_if' => 'The :attribute field is required when :other is :value.'], 'en');
         $trans->addLines(['validation.values.subscribe.false' => 'false'], 'en');
@@ -428,7 +454,7 @@ class ValidationValidatorTest extends TestCase
         $v->messages()->setFormat(':message');
         $this->assertSame('The bar field is required when subscribe is true.', $v->messages()->first('bar'));
 
-        //required_unless:foo,bar
+        // required_unless:foo,bar
         $trans = $this->getIlluminateArrayTranslator();
         $trans->addLines(['validation.required_unless' => 'The :attribute field is required unless :other is in :values.'], 'en');
         $trans->addLines(['validation.values.color.1' => 'red'], 'en');
@@ -437,7 +463,7 @@ class ValidationValidatorTest extends TestCase
         $v->messages()->setFormat(':message');
         $this->assertSame('The bar field is required unless color is in red.', $v->messages()->first('bar'));
 
-        //in:foo,bar,...
+        // in:foo,bar,...
         $trans = $this->getIlluminateArrayTranslator();
         $trans->addLines(['validation.in' => ':attribute must be included in :values.'], 'en');
         $trans->addLines(['validation.values.type.5' => 'Short'], 'en');
@@ -447,7 +473,7 @@ class ValidationValidatorTest extends TestCase
         $v->messages()->setFormat(':message');
         $this->assertSame('type must be included in Short, Long.', $v->messages()->first('type'));
 
-        //date_equals:tomorrow
+        // date_equals:tomorrow
         $trans = $this->getIlluminateArrayTranslator();
         $trans->addLines(['validation.date_equals' => 'The :attribute must be a date equal to :date.'], 'en');
         $trans->addLines(['validation.values.date.tomorrow' => 'the day after today'], 'en');
@@ -684,6 +710,100 @@ class ValidationValidatorTest extends TestCase
         $v = new Validator($trans, [], ['name' => 'present|string']);
         $v->passes();
         $this->assertEquals(['validation.present'], $v->errors()->get('name'));
+    }
+
+    public function testValidatePassword()
+    {
+        // Fails when user is not logged in.
+        $auth = m::mock(Guard::class);
+        $auth->shouldReceive('guard')->andReturn($auth);
+        $auth->shouldReceive('guest')->andReturn(true);
+
+        $hasher = m::mock(Hasher::class);
+
+        $container = m::mock(Container::class);
+        $container->shouldReceive('make')->with('auth')->andReturn($auth);
+        $container->shouldReceive('make')->with('hash')->andReturn($hasher);
+
+        $trans = $this->getTranslator();
+        $trans->shouldReceive('get');
+
+        $v = new Validator($trans, ['password' => 'foo'], ['password' => 'password']);
+        $v->setContainer($container);
+
+        $this->assertFalse($v->passes());
+
+        // Fails when password is incorrect.
+        $user = m::mock(Authenticatable::class);
+        $user->shouldReceive('getAuthPassword');
+
+        $auth = m::mock(Guard::class);
+        $auth->shouldReceive('guard')->andReturn($auth);
+        $auth->shouldReceive('guest')->andReturn(false);
+        $auth->shouldReceive('user')->andReturn($user);
+
+        $hasher = m::mock(Hasher::class);
+        $hasher->shouldReceive('check')->andReturn(false);
+
+        $container = m::mock(Container::class);
+        $container->shouldReceive('make')->with('auth')->andReturn($auth);
+        $container->shouldReceive('make')->with('hash')->andReturn($hasher);
+
+        $trans = $this->getTranslator();
+        $trans->shouldReceive('get');
+
+        $v = new Validator($trans, ['password' => 'foo'], ['password' => 'password']);
+        $v->setContainer($container);
+
+        $this->assertFalse($v->passes());
+
+        // Succeeds when password is correct.
+        $user = m::mock(Authenticatable::class);
+        $user->shouldReceive('getAuthPassword');
+
+        $auth = m::mock(Guard::class);
+        $auth->shouldReceive('guard')->andReturn($auth);
+        $auth->shouldReceive('guest')->andReturn(false);
+        $auth->shouldReceive('user')->andReturn($user);
+
+        $hasher = m::mock(Hasher::class);
+        $hasher->shouldReceive('check')->andReturn(true);
+
+        $container = m::mock(Container::class);
+        $container->shouldReceive('make')->with('auth')->andReturn($auth);
+        $container->shouldReceive('make')->with('hash')->andReturn($hasher);
+
+        $trans = $this->getTranslator();
+        $trans->shouldReceive('get');
+
+        $v = new Validator($trans, ['password' => 'foo'], ['password' => 'password']);
+        $v->setContainer($container);
+
+        $this->assertTrue($v->passes());
+
+        // We can use a specific guard.
+        $user = m::mock(Authenticatable::class);
+        $user->shouldReceive('getAuthPassword');
+
+        $auth = m::mock(Guard::class);
+        $auth->shouldReceive('guard')->with('custom')->andReturn($auth);
+        $auth->shouldReceive('guest')->andReturn(false);
+        $auth->shouldReceive('user')->andReturn($user);
+
+        $hasher = m::mock(Hasher::class);
+        $hasher->shouldReceive('check')->andReturn(true);
+
+        $container = m::mock(Container::class);
+        $container->shouldReceive('make')->with('auth')->andReturn($auth);
+        $container->shouldReceive('make')->with('hash')->andReturn($hasher);
+
+        $trans = $this->getTranslator();
+        $trans->shouldReceive('get');
+
+        $v = new Validator($trans, ['password' => 'foo'], ['password' => 'password:custom']);
+        $v->setContainer($container);
+
+        $this->assertTrue($v->passes());
     }
 
     public function testValidatePresent()
@@ -1078,7 +1198,7 @@ class ValidationValidatorTest extends TestCase
         $this->assertTrue($v->passes());
 
         $v = new Validator($trans, ['foo' => 'bar'], ['foo' => 'Different:baz']);
-        $this->assertFalse($v->passes());
+        $this->assertTrue($v->passes());
 
         $v = new Validator($trans, ['foo' => 'bar', 'baz' => 'bar'], ['foo' => 'Different:baz']);
         $this->assertFalse($v->passes());
@@ -1090,7 +1210,7 @@ class ValidationValidatorTest extends TestCase
         $this->assertTrue($v->passes());
 
         $v = new Validator($trans, ['foo' => 'bar', 'baz' => 'boom'], ['foo' => 'Different:fuu,baz']);
-        $this->assertFalse($v->passes());
+        $this->assertTrue($v->passes());
 
         $v = new Validator($trans, ['foo' => 'bar', 'fuu' => 'bar', 'baz' => 'boom'], ['foo' => 'Different:fuu,baz']);
         $this->assertFalse($v->passes());
@@ -2011,42 +2131,42 @@ class ValidationValidatorTest extends TestCase
     {
         $trans = $this->getIlluminateArrayTranslator();
         $v = new Validator($trans, ['email' => 'foo'], ['email' => 'Unique:users']);
-        $mock = m::mock(PresenceVerifierInterface::class);
+        $mock = m::mock(DatabasePresenceVerifierInterface::class);
         $mock->shouldReceive('setConnection')->once()->with(null);
         $mock->shouldReceive('getCount')->once()->with('users', 'email', 'foo', null, null, [])->andReturn(0);
         $v->setPresenceVerifier($mock);
         $this->assertTrue($v->passes());
 
         $v = new Validator($trans, ['email' => 'foo'], ['email' => 'Unique:connection.users']);
-        $mock = m::mock(PresenceVerifierInterface::class);
+        $mock = m::mock(DatabasePresenceVerifierInterface::class);
         $mock->shouldReceive('setConnection')->once()->with('connection');
         $mock->shouldReceive('getCount')->once()->with('users', 'email', 'foo', null, null, [])->andReturn(0);
         $v->setPresenceVerifier($mock);
         $this->assertTrue($v->passes());
 
         $v = new Validator($trans, ['email' => 'foo'], ['email' => 'Unique:users,email_addr,1']);
-        $mock = m::mock(PresenceVerifierInterface::class);
+        $mock = m::mock(DatabasePresenceVerifierInterface::class);
         $mock->shouldReceive('setConnection')->once()->with(null);
         $mock->shouldReceive('getCount')->once()->with('users', 'email_addr', 'foo', '1', 'id', [])->andReturn(1);
         $v->setPresenceVerifier($mock);
         $this->assertFalse($v->passes());
 
         $v = new Validator($trans, ['email' => 'foo'], ['email' => 'Unique:users,email_addr,1,id_col']);
-        $mock = m::mock(PresenceVerifierInterface::class);
+        $mock = m::mock(DatabasePresenceVerifierInterface::class);
         $mock->shouldReceive('setConnection')->once()->with(null);
         $mock->shouldReceive('getCount')->once()->with('users', 'email_addr', 'foo', '1', 'id_col', [])->andReturn(2);
         $v->setPresenceVerifier($mock);
         $this->assertFalse($v->passes());
 
         $v = new Validator($trans, ['users' => [['id' => 1, 'email' => 'foo']]], ['users.*.email' => 'Unique:users,email,[users.*.id]']);
-        $mock = m::mock(PresenceVerifierInterface::class);
+        $mock = m::mock(DatabasePresenceVerifierInterface::class);
         $mock->shouldReceive('setConnection')->once()->with(null);
         $mock->shouldReceive('getCount')->once()->with('users', 'email', 'foo', '1', 'id', [])->andReturn(1);
         $v->setPresenceVerifier($mock);
         $this->assertFalse($v->passes());
 
         $v = new Validator($trans, ['email' => 'foo'], ['email' => 'Unique:users,email_addr,NULL,id_col,foo,bar']);
-        $mock = m::mock(PresenceVerifierInterface::class);
+        $mock = m::mock(DatabasePresenceVerifierInterface::class);
         $mock->shouldReceive('setConnection')->once()->with(null);
         $mock->shouldReceive('getCount')->once()->withArgs(function () {
             return func_get_args() === ['users', 'email_addr', 'foo', null, 'id_col', ['foo' => 'bar']];
@@ -2061,7 +2181,7 @@ class ValidationValidatorTest extends TestCase
         $v = new Validator($trans, [['email' => 'foo', 'type' => 'bar']], [
             '*.email' => 'unique:users', '*.type' => 'exists:user_types',
         ]);
-        $mock = m::mock(PresenceVerifierInterface::class);
+        $mock = m::mock(DatabasePresenceVerifierInterface::class);
         $mock->shouldReceive('setConnection')->twice()->with(null);
         $mock->shouldReceive('getCount')->with('users', 'email', 'foo', null, null, [])->andReturn(0);
         $mock->shouldReceive('getCount')->with('user_types', 'type', 'bar', null, null, [])->andReturn(1);
@@ -2076,7 +2196,7 @@ class ValidationValidatorTest extends TestCase
             '*.email' => (new Unique('users'))->where($closure),
             '*.type' => (new Exists('user_types'))->where($closure),
         ]);
-        $mock = m::mock(PresenceVerifierInterface::class);
+        $mock = m::mock(DatabasePresenceVerifierInterface::class);
         $mock->shouldReceive('setConnection')->twice()->with(null);
         $mock->shouldReceive('getCount')->with('users', 'email', 'foo', null, 'id', [$closure])->andReturn(0);
         $mock->shouldReceive('getCount')->with('user_types', 'type', 'bar', null, null, [$closure])->andReturn(1);
@@ -2088,7 +2208,7 @@ class ValidationValidatorTest extends TestCase
     {
         $trans = $this->getIlluminateArrayTranslator();
         $v = new Validator($trans, ['email' => 'foo'], ['email' => 'Exists:users']);
-        $mock = m::mock(PresenceVerifierInterface::class);
+        $mock = m::mock(DatabasePresenceVerifierInterface::class);
         $mock->shouldReceive('setConnection')->once()->with(null);
         $mock->shouldReceive('getCount')->once()->with('users', 'email', 'foo', null, null, [])->andReturn(1);
         $v->setPresenceVerifier($mock);
@@ -2096,35 +2216,35 @@ class ValidationValidatorTest extends TestCase
 
         $trans = $this->getIlluminateArrayTranslator();
         $v = new Validator($trans, ['email' => 'foo'], ['email' => 'Exists:users,email,account_id,1,name,taylor']);
-        $mock = m::mock(PresenceVerifierInterface::class);
+        $mock = m::mock(DatabasePresenceVerifierInterface::class);
         $mock->shouldReceive('setConnection')->once()->with(null);
         $mock->shouldReceive('getCount')->once()->with('users', 'email', 'foo', null, null, ['account_id' => 1, 'name' => 'taylor'])->andReturn(1);
         $v->setPresenceVerifier($mock);
         $this->assertTrue($v->passes());
 
         $v = new Validator($trans, ['email' => 'foo'], ['email' => 'Exists:users,email_addr']);
-        $mock = m::mock(PresenceVerifierInterface::class);
+        $mock = m::mock(DatabasePresenceVerifierInterface::class);
         $mock->shouldReceive('setConnection')->once()->with(null);
         $mock->shouldReceive('getCount')->once()->with('users', 'email_addr', 'foo', null, null, [])->andReturn(0);
         $v->setPresenceVerifier($mock);
         $this->assertFalse($v->passes());
 
         $v = new Validator($trans, ['email' => ['foo']], ['email' => 'Exists:users,email_addr']);
-        $mock = m::mock(PresenceVerifierInterface::class);
+        $mock = m::mock(DatabasePresenceVerifierInterface::class);
         $mock->shouldReceive('setConnection')->once()->with(null);
         $mock->shouldReceive('getMultiCount')->once()->with('users', 'email_addr', ['foo'], [])->andReturn(0);
         $v->setPresenceVerifier($mock);
         $this->assertFalse($v->passes());
 
         $v = new Validator($trans, ['email' => 'foo'], ['email' => 'Exists:connection.users']);
-        $mock = m::mock(PresenceVerifierInterface::class);
+        $mock = m::mock(DatabasePresenceVerifierInterface::class);
         $mock->shouldReceive('setConnection')->once()->with('connection');
         $mock->shouldReceive('getCount')->once()->with('users', 'email', 'foo', null, null, [])->andReturn(1);
         $v->setPresenceVerifier($mock);
         $this->assertTrue($v->passes());
 
         $v = new Validator($trans, ['email' => ['foo', 'foo']], ['email' => 'exists:users,email_addr']);
-        $mock = m::mock(PresenceVerifierInterface::class);
+        $mock = m::mock(DatabasePresenceVerifierInterface::class);
         $mock->shouldReceive('setConnection')->once()->with(null);
         $mock->shouldReceive('getMultiCount')->once()->with('users', 'email_addr', ['foo', 'foo'], [])->andReturn(1);
         $v->setPresenceVerifier($mock);
@@ -2135,14 +2255,14 @@ class ValidationValidatorTest extends TestCase
     {
         $trans = $this->getIlluminateArrayTranslator();
         $v = new Validator($trans, ['id' => 'foo'], ['id' => 'Integer|Exists:users,id']);
-        $mock = m::mock(PresenceVerifierInterface::class);
+        $mock = m::mock(DatabasePresenceVerifierInterface::class);
         $mock->shouldReceive('getCount')->never();
         $v->setPresenceVerifier($mock);
         $this->assertFalse($v->passes());
 
         $trans = $this->getIlluminateArrayTranslator();
         $v = new Validator($trans, ['id' => '1'], ['id' => 'Integer|Exists:users,id']);
-        $mock = m::mock(PresenceVerifierInterface::class);
+        $mock = m::mock(DatabasePresenceVerifierInterface::class);
         $mock->shouldReceive('setConnection')->once()->with(null);
         $mock->shouldReceive('getCount')->once()->with('users', 'id', '1', null, null, [])->andReturn(1);
         $v->setPresenceVerifier($mock);
@@ -2463,6 +2583,7 @@ class ValidationValidatorTest extends TestCase
             ['http://local.dev'],
             ['http://google.com'],
             ['http://www.google.com'],
+            ['http://goog_le.com'],
             ['https://google.com'],
             ['http://illuminate.dev'],
             ['http://localhost'],
@@ -2476,6 +2597,10 @@ class ValidationValidatorTest extends TestCase
             ['https://laravel.com#'],
             ['https://laravel.com#fragment'],
             ['https://laravel.com/#fragment'],
+            ['https://domain1'],
+            ['https://domain12/'],
+            ['https://domain12#fragment'],
+            ['https://domain1/path'],
         ];
     }
 
@@ -2487,7 +2612,6 @@ class ValidationValidatorTest extends TestCase
             ['://google.com'],
             ['http ://google.com'],
             ['http:/google.com'],
-            ['http://goog_le.com'],
             ['http://google.com::aa'],
             ['http://google.com:aa'],
             ['http://127.0.0.1:aa'],
@@ -2519,7 +2643,7 @@ class ValidationValidatorTest extends TestCase
     public function testValidateImage()
     {
         $trans = $this->getIlluminateArrayTranslator();
-        $uploadedFile = [__FILE__, '', null, null, null, true];
+        $uploadedFile = [__FILE__, '', null, null, true];
 
         $file = $this->getMockBuilder(UploadedFile::class)->setMethods(['guessExtension', 'getClientOriginalExtension'])->setConstructorArgs($uploadedFile)->getMock();
         $file->expects($this->any())->method('guessExtension')->willReturn('php');
@@ -2567,7 +2691,7 @@ class ValidationValidatorTest extends TestCase
     public function testValidateImageDoesNotAllowPhpExtensionsOnImageMime()
     {
         $trans = $this->getIlluminateArrayTranslator();
-        $uploadedFile = [__FILE__, '', null, null, null, true];
+        $uploadedFile = [__FILE__, '', null, null, true];
 
         $file = $this->getMockBuilder(UploadedFile::class)->setMethods(['guessExtension', 'getClientOriginalExtension'])->setConstructorArgs($uploadedFile)->getMock();
         $file->expects($this->any())->method('guessExtension')->willReturn('jpeg');
@@ -2579,7 +2703,7 @@ class ValidationValidatorTest extends TestCase
     public function testValidateImageDimensions()
     {
         // Knowing that demo image.png has width = 3 and height = 2
-        $uploadedFile = new UploadedFile(__DIR__.'/fixtures/image.png', '', null, null, null, true);
+        $uploadedFile = new UploadedFile(__DIR__.'/fixtures/image.png', '', null, null, true);
         $trans = $this->getIlluminateArrayTranslator();
 
         $v = new Validator($trans, ['x' => 'file'], ['x' => 'dimensions']);
@@ -2628,7 +2752,7 @@ class ValidationValidatorTest extends TestCase
         $this->assertTrue($v->fails());
 
         // Knowing that demo image2.png has width = 4 and height = 2
-        $uploadedFile = new UploadedFile(__DIR__.'/fixtures/image2.png', '', null, null, null, true);
+        $uploadedFile = new UploadedFile(__DIR__.'/fixtures/image2.png', '', null, null, true);
         $trans = $this->getIlluminateArrayTranslator();
 
         // Ensure validation doesn't erroneously fail when ratio has no fractional part
@@ -2636,31 +2760,44 @@ class ValidationValidatorTest extends TestCase
         $this->assertTrue($v->passes());
 
         // This test fails without suppressing warnings on getimagesize() due to a read error.
-        $emptyUploadedFile = new UploadedFile(__DIR__.'/fixtures/empty.png', '', null, null, null, true);
+        $emptyUploadedFile = new UploadedFile(__DIR__.'/fixtures/empty.png', '', null, null, true);
         $trans = $this->getIlluminateArrayTranslator();
 
         $v = new Validator($trans, ['x' => $emptyUploadedFile], ['x' => 'dimensions:min_width=1']);
         $this->assertTrue($v->fails());
 
         // Knowing that demo image3.png has width = 7 and height = 10
-        $uploadedFile = new UploadedFile(__DIR__.'/fixtures/image3.png', '', null, null, null, true);
+        $uploadedFile = new UploadedFile(__DIR__.'/fixtures/image3.png', '', null, null, true);
         $trans = $this->getIlluminateArrayTranslator();
 
         // Ensure validation doesn't erroneously fail when ratio has no fractional part
         $v = new Validator($trans, ['x' => $uploadedFile], ['x' => 'dimensions:ratio=2/3']);
         $this->assertTrue($v->passes());
 
-        // Ensure svg images always pass as size is irreleveant
-        $uploadedFile = new UploadedFile(__DIR__.'/fixtures/image.svg', '', 'image/svg+xml', null, null, true);
+        // Ensure svg images always pass as size is irreleveant (image/svg+xml)
+        $svgXmlUploadedFile = new UploadedFile(__DIR__.'/fixtures/image.svg', '', 'image/svg+xml', null, true);
         $trans = $this->getIlluminateArrayTranslator();
 
-        $v = new Validator($trans, ['x' => $uploadedFile], ['x' => 'dimensions:max_width=1,max_height=1']);
+        $v = new Validator($trans, ['x' => $svgXmlUploadedFile], ['x' => 'dimensions:max_width=1,max_height=1']);
         $this->assertTrue($v->passes());
 
-        $file = new File(__DIR__.'/fixtures/image.svg', '', 'image/svg+xml', null, null, true);
+        $svgXmlFile = new File(__DIR__.'/fixtures/image.svg', '', 'image/svg+xml', null, true);
         $trans = $this->getIlluminateArrayTranslator();
 
-        $v = new Validator($trans, ['x' => $file], ['x' => 'dimensions:max_width=1,max_height=1']);
+        $v = new Validator($trans, ['x' => $svgXmlFile], ['x' => 'dimensions:max_width=1,max_height=1']);
+        $this->assertTrue($v->passes());
+
+        // Ensure svg images always pass as size is irreleveant (image/svg)
+        $svgUploadedFile = new UploadedFile(__DIR__.'/fixtures/image2.svg', '', 'image/svg', null, true);
+        $trans = $this->getIlluminateArrayTranslator();
+
+        $v = new Validator($trans, ['x' => $svgUploadedFile], ['x' => 'dimensions:max_width=1,max_height=1']);
+        $this->assertTrue($v->passes());
+
+        $svgFile = new File(__DIR__.'/fixtures/image2.svg', '', 'image/svg', null, true);
+        $trans = $this->getIlluminateArrayTranslator();
+
+        $v = new Validator($trans, ['x' => $svgFile], ['x' => 'dimensions:max_width=1,max_height=1']);
         $this->assertTrue($v->passes());
     }
 
@@ -2670,7 +2807,7 @@ class ValidationValidatorTest extends TestCase
     public function testValidatePhpMimetypes()
     {
         $trans = $this->getIlluminateArrayTranslator();
-        $uploadedFile = [__DIR__.'/ValidationRuleTest.php', '', null, null, null, true];
+        $uploadedFile = [__DIR__.'/ValidationRuleTest.php', '', null, null, true];
 
         $file = $this->getMockBuilder(UploadedFile::class)->setMethods(['guessExtension', 'getClientOriginalExtension'])->setConstructorArgs($uploadedFile)->getMock();
         $file->expects($this->any())->method('guessExtension')->willReturn('rtf');
@@ -2683,7 +2820,7 @@ class ValidationValidatorTest extends TestCase
     public function testValidateMime()
     {
         $trans = $this->getIlluminateArrayTranslator();
-        $uploadedFile = [__FILE__, '', null, null, null, true];
+        $uploadedFile = [__FILE__, '', null, null, true];
 
         $file = $this->getMockBuilder(UploadedFile::class)->setMethods(['guessExtension', 'getClientOriginalExtension'])->setConstructorArgs($uploadedFile)->getMock();
         $file->expects($this->any())->method('guessExtension')->willReturn('pdf');
@@ -2701,7 +2838,7 @@ class ValidationValidatorTest extends TestCase
     public function testValidateMimeEnforcesPhpCheck()
     {
         $trans = $this->getIlluminateArrayTranslator();
-        $uploadedFile = [__FILE__, '', null, null, null, true];
+        $uploadedFile = [__FILE__, '', null, null, true];
 
         $file = $this->getMockBuilder(UploadedFile::class)->setMethods(['guessExtension', 'getClientOriginalExtension'])->setConstructorArgs($uploadedFile)->getMock();
         $file->expects($this->any())->method('guessExtension')->willReturn('pdf');
@@ -2722,7 +2859,7 @@ class ValidationValidatorTest extends TestCase
     public function testValidateFile()
     {
         $trans = $this->getIlluminateArrayTranslator();
-        $file = new UploadedFile(__FILE__, '', null, null, null, true);
+        $file = new UploadedFile(__FILE__, '', null, null, true);
 
         $v = new Validator($trans, ['x' => '1'], ['x' => 'file']);
         $this->assertTrue($v->fails());
@@ -2844,8 +2981,14 @@ class ValidationValidatorTest extends TestCase
         $v = new Validator($trans, ['foo' => 'Africa/Windhoek'], ['foo' => 'Timezone']);
         $this->assertTrue($v->passes());
 
+        $v = new Validator($trans, ['foo' => 'africa/windhoek'], ['foo' => 'Timezone']);
+        $this->assertFalse($v->passes());
+
         $v = new Validator($trans, ['foo' => 'GMT'], ['foo' => 'Timezone']);
-        $this->assertTrue($v->passes());
+        $this->assertFalse($v->passes());
+
+        $v = new Validator($trans, ['foo' => 'GB'], ['foo' => 'Timezone']);
+        $this->assertFalse($v->passes());
 
         $v = new Validator($trans, ['foo' => ['this_is_not_a_timezone']], ['foo' => 'Timezone']);
         $this->assertFalse($v->passes());
@@ -4183,6 +4326,48 @@ class ValidationValidatorTest extends TestCase
         $this->assertEquals(['cat' => ['cat1' => ['name' => '1']]], ValidationData::extractDataFromPath('cat.cat1.name', $data));
     }
 
+    public function testParsingTablesFromModels()
+    {
+        $trans = $this->getIlluminateArrayTranslator();
+        $v = new Validator($trans, [], []);
+
+        $implicit_no_connection = $v->parseTable(ImplicitTableModel::class);
+        $this->assertEquals(null, $implicit_no_connection[0]);
+        $this->assertSame('implicit_table_models', $implicit_no_connection[1]);
+
+        $explicit_no_connection = $v->parseTable(ExplicitTableModel::class);
+        $this->assertEquals(null, $explicit_no_connection[0]);
+        $this->assertSame('explicits', $explicit_no_connection[1]);
+
+        $noneloquent_no_connection = $v->parseTable(NonEloquentModel::class);
+        $this->assertEquals(null, $noneloquent_no_connection[0]);
+        $this->assertEquals(NonEloquentModel::class, $noneloquent_no_connection[1]);
+
+        $raw_no_connection = $v->parseTable('table');
+        $this->assertEquals(null, $raw_no_connection[0]);
+        $this->assertSame('table', $raw_no_connection[1]);
+
+        $implicit_connection = $v->parseTable('connection.'.ImplicitTableModel::class);
+        $this->assertSame('connection', $implicit_connection[0]);
+        $this->assertSame('implicit_table_models', $implicit_connection[1]);
+
+        $explicit_connection = $v->parseTable('connection.'.ExplicitTableModel::class);
+        $this->assertSame('connection', $explicit_connection[0]);
+        $this->assertSame('explicits', $explicit_connection[1]);
+
+        $explicit_model_implicit_connection = $v->parseTable(ExplicitTableAndConnectionModel::class);
+        $this->assertSame('connection', $explicit_model_implicit_connection[0]);
+        $this->assertSame('explicits', $explicit_model_implicit_connection[1]);
+
+        $noneloquent_connection = $v->parseTable('connection.'.NonEloquentModel::class);
+        $this->assertSame('connection', $noneloquent_connection[0]);
+        $this->assertEquals(NonEloquentModel::class, $noneloquent_connection[1]);
+
+        $raw_connection = $v->parseTable('connection.table');
+        $this->assertSame('connection', $raw_connection[0]);
+        $this->assertSame('table', $raw_connection[1]);
+    }
+
     public function testUsingSettersWithImplicitRules()
     {
         $trans = $this->getIlluminateArrayTranslator();
@@ -4633,6 +4818,408 @@ class ValidationValidatorTest extends TestCase
         ];
     }
 
+    public function providesPassingExcludeIfData()
+    {
+        return [
+            [
+                [
+                    'has_appointment' => ['required', 'bool'],
+                    'appointment_date' => ['exclude_if:has_appointment,false', 'required', 'date'],
+                ], [
+                    'has_appointment' => false,
+                    'appointment_date' => 'should be excluded',
+                ], [
+                    'has_appointment' => false,
+                ],
+            ],
+            [
+                [
+                    'cat' => ['required', 'string'],
+                    'mouse' => ['exclude_if:cat,Tom', 'required', 'file'],
+                ], [
+                    'cat' => 'Tom',
+                    'mouse' => 'should be excluded',
+                ], [
+                    'cat' => 'Tom',
+                ],
+            ],
+            [
+                [
+                    'has_appointment' => ['required', 'bool'],
+                    'appointment_date' => ['exclude_if:has_appointment,false', 'required', 'date'],
+                ], [
+                    'has_appointment' => false,
+                ], [
+                    'has_appointment' => false,
+                ],
+            ],
+            [
+                [
+                    'has_appointment' => ['required', 'bool'],
+                    'appointment_date' => ['exclude_if:has_appointment,false', 'required', 'date'],
+                ], [
+                    'has_appointment' => true,
+                    'appointment_date' => '2019-12-13',
+                ], [
+                    'has_appointment' => true,
+                    'appointment_date' => '2019-12-13',
+                ],
+            ],
+            [
+                [
+                    'has_no_appointments' => ['required', 'bool'],
+                    'has_doctor_appointment' => ['exclude_if:has_no_appointments,true', 'required', 'bool'],
+                    'doctor_appointment_date' => ['exclude_if:has_no_appointments,true', 'exclude_if:has_doctor_appointment,false', 'required', 'date'],
+                ], [
+                    'has_no_appointments' => true,
+                    'has_doctor_appointment' => true,
+                    'doctor_appointment_date' => '2019-12-13',
+                ], [
+                    'has_no_appointments' => true,
+                ],
+            ],
+            [
+                [
+                    'has_no_appointments' => ['required', 'bool'],
+                    'has_doctor_appointment' => ['exclude_if:has_no_appointments,true', 'required', 'bool'],
+                    'doctor_appointment_date' => ['exclude_if:has_no_appointments,true', 'exclude_if:has_doctor_appointment,false', 'required', 'date'],
+                ], [
+                    'has_no_appointments' => false,
+                    'has_doctor_appointment' => false,
+                    'doctor_appointment_date' => 'should be excluded',
+                ], [
+                    'has_no_appointments' => false,
+                    'has_doctor_appointment' => false,
+                ],
+            ],
+            'nested-01' => [
+                [
+                    'has_appointments' => ['required', 'bool'],
+                    'appointments.*' => ['exclude_if:has_appointments,false', 'required', 'date'],
+                ], [
+                    'has_appointments' => false,
+                    'appointments' => ['2019-05-15', '2020-05-15'],
+                ], [
+                    'has_appointments' => false,
+                ],
+            ],
+            'nested-02' => [
+                [
+                    'has_appointments' => ['required', 'bool'],
+                    'appointments.*.date' => ['exclude_if:has_appointments,false', 'required', 'date'],
+                    'appointments.*.name' => ['exclude_if:has_appointments,false', 'required', 'string'],
+                ], [
+                    'has_appointments' => false,
+                    'appointments' => [
+                        ['date' => 'should be excluded', 'name' => 'should be excluded'],
+                    ],
+                ], [
+                    'has_appointments' => false,
+                ],
+            ],
+            'nested-03' => [
+                [
+                    'has_appointments' => ['required', 'bool'],
+                    'appointments' => ['exclude_if:has_appointments,false', 'required', 'array'],
+                    'appointments.*.date' => ['required', 'date'],
+                    'appointments.*.name' => ['required', 'string'],
+                ], [
+                    'has_appointments' => false,
+                    'appointments' => [
+                        ['date' => 'should be excluded', 'name' => 'should be excluded'],
+                    ],
+                ], [
+                    'has_appointments' => false,
+                ],
+            ],
+            'nested-04' => [
+                [
+                    'has_appointments' => ['required', 'bool'],
+                    'appointments.*.date' => ['required', 'date'],
+                    'appointments' => ['exclude_if:has_appointments,false', 'required', 'array'],
+                ], [
+                    'has_appointments' => false,
+                    'appointments' => [
+                        ['date' => 'should be excluded', 'name' => 'should be excluded'],
+                    ],
+                ], [
+                    'has_appointments' => false,
+                ],
+            ],
+            'nested-05' => [
+                [
+                    'vehicles.*.type' => 'required|in:car,boat',
+                    'vehicles.*.wheels' => 'exclude_if:vehicles.*.type,boat|required|numeric',
+                ], [
+                    'vehicles' => [
+                        ['type' => 'car', 'wheels' => 4],
+                        ['type' => 'boat', 'wheels' => 'should be excluded'],
+                    ],
+                ], [
+                    'vehicles' => [
+                        ['type' => 'car', 'wheels' => 4],
+                        ['type' => 'boat'],
+                    ],
+                ],
+            ],
+            'nested-06' => [
+                [
+                    'vehicles.*.type' => 'required|in:car,boat',
+                    'vehicles.*.wheels' => 'exclude_if:vehicles.*.type,boat|required|numeric',
+                ], [
+                    'vehicles' => [
+                        ['type' => 'car', 'wheels' => 4],
+                        ['type' => 'boat'],
+                    ],
+                ], [
+                    'vehicles' => [
+                        ['type' => 'car', 'wheels' => 4],
+                        ['type' => 'boat'],
+                    ],
+                ],
+            ],
+            'nested-07' => [
+                [
+                    'vehicles.*.type' => 'required|in:car,boat',
+                    'vehicles.*.wheels' => 'exclude_if:vehicles.*.type,boat|required|array',
+                    'vehicles.*.wheels.*.color' => 'required|in:red,blue',
+                    // In this bizzaro world example you can choose a custom shape for your wheels if they are red
+                    'vehicles.*.wheels.*.shape' => 'exclude_unless:vehicles.*.wheels.*.color,red|required|in:square,round',
+                ], [
+                    'vehicles' => [
+                        ['type' => 'car', 'wheels' => [
+                            ['color' => 'red', 'shape' => 'square'],
+                            ['color' => 'blue', 'shape' => 'hexagon'],
+                            ['color' => 'red', 'shape' => 'round', 'junk' => 'no rule, still present'],
+                            ['color' => 'blue', 'shape' => 'triangle'],
+                        ]],
+                        ['type' => 'boat'],
+                    ],
+                ], [
+                    'vehicles' => [
+                        ['type' => 'car', 'wheels' => [
+                            // The shape field for these blue wheels were correctly excluded (if they weren't, they would
+                            // fail the validation). They still appear in the validated data. This behaviour is unrelated
+                            // to the "exclude" type rules.
+                            ['color' => 'red', 'shape' => 'square'],
+                            ['color' => 'blue', 'shape' => 'hexagon'],
+                            ['color' => 'red', 'shape' => 'round', 'junk' => 'no rule, still present'],
+                            ['color' => 'blue', 'shape' => 'triangle'],
+                        ]],
+                        ['type' => 'boat'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider providesPassingExcludeIfData
+     */
+    public function testExcludeIf($rules, $data, $expectedValidatedData)
+    {
+        $validator = new Validator(
+            $this->getIlluminateArrayTranslator(),
+            $data,
+            $rules
+        );
+
+        $passes = $validator->passes();
+
+        if (! $passes) {
+            $message = sprintf("Validation unexpectedly failed:\nRules: %s\nData: %s\nValidation error: %s",
+                json_encode($rules, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES),
+                json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES),
+                json_encode($validator->messages()->toArray(), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
+            );
+        }
+
+        $this->assertTrue($passes, $message ?? '');
+
+        $this->assertSame($expectedValidatedData, $validator->validated());
+    }
+
+    public function providesFailingExcludeIfData()
+    {
+        return [
+            [
+                [
+                    'has_appointment' => ['required', 'bool'],
+                    'appointment_date' => ['exclude_if:has_appointment,false', 'required', 'date'],
+                ], [
+                    'has_appointment' => true,
+                ], [
+                    'appointment_date' => ['validation.required'],
+                ],
+            ],
+            [
+                [
+                    'cat' => ['required', 'string'],
+                    'mouse' => ['exclude_if:cat,Tom', 'required', 'file'],
+                ], [
+                    'cat' => 'Bob',
+                    'mouse' => 'not a file',
+                ], [
+                    'mouse' => ['validation.file'],
+                ],
+            ],
+            [
+                [
+                    'has_appointments' => ['required', 'bool'],
+                    'appointments' => ['exclude_if:has_appointments,false', 'required', 'array'],
+                    'appointments.*.date' => ['required', 'date'],
+                    'appointments.*.name' => ['required', 'string'],
+                ], [
+                    'has_appointments' => true,
+                    'appointments' => [
+                        ['date' => 'invalid', 'name' => 'Bob'],
+                        ['date' => '2019-05-15'],
+                    ],
+                ], [
+                    'appointments.0.date' => ['validation.date'],
+                    'appointments.1.name' => ['validation.required'],
+                ],
+            ],
+            [
+                [
+                    'vehicles.*.price' => 'required|numeric',
+                    'vehicles.*.type' => 'required|in:car,boat',
+                    'vehicles.*.wheels' => 'exclude_if:vehicles.*.type,boat|required|numeric',
+                ], [
+                    'vehicles' => [
+                        [
+                            'price' => 100,
+                            'type' => 'car',
+                        ],
+                        [
+                            'price' => 500,
+                            'type' => 'boat',
+                        ],
+                    ],
+                ], [
+                    'vehicles.0.wheels' => ['validation.required'],
+                    // vehicles.1.wheels is not required, because type is not "car"
+                ],
+            ],
+            'exclude-validation-error-01' => [
+                [
+                    'vehicles.*.type' => 'required|in:car,boat',
+                    'vehicles.*.wheels' => 'exclude_if:vehicles.*.type,boat|required|array',
+                    'vehicles.*.wheels.*.color' => 'required|in:red,blue',
+                    // In this bizzaro world example you can choose a custom shape for your wheels if they are red
+                    'vehicles.*.wheels.*.shape' => 'exclude_unless:vehicles.*.wheels.*.color,red|required|in:square,round',
+                ], [
+                    'vehicles' => [
+                        ['type' => 'car', 'wheels' => [
+                            ['color' => 'red', 'shape' => 'square'],
+                            ['color' => 'blue', 'shape' => 'hexagon'],
+                            ['color' => 'red', 'shape' => 'hexagon'],
+                            ['color' => 'blue', 'shape' => 'triangle'],
+                        ]],
+                        ['type' => 'boat', 'wheels' => 'should be excluded'],
+                    ],
+                ], [
+                    // The blue wheels are excluded and are therefor not validated against the "in:square,round" rule
+                    'vehicles.0.wheels.2.shape' => ['validation.in'],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider providesFailingExcludeIfData
+     */
+    public function testExcludeIfWhenValidationFails($rules, $data, $expectedMessages)
+    {
+        $validator = new Validator(
+            $this->getIlluminateArrayTranslator(),
+            $data,
+            $rules
+        );
+
+        $fails = $validator->fails();
+
+        if (! $fails) {
+            $message = sprintf("Validation unexpectedly passed:\nRules: %s\nData: %s",
+                json_encode($rules, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES),
+                json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
+            );
+        }
+
+        $this->assertTrue($fails, $message ?? '');
+
+        $this->assertSame($expectedMessages, $validator->messages()->toArray());
+    }
+
+    public function testExcludeUnless()
+    {
+        $validator = new Validator(
+            $this->getIlluminateArrayTranslator(),
+            ['cat' => 'Felix', 'mouse' => 'Jerry'],
+            ['cat' => 'required|string', 'mouse' => 'exclude_unless:cat,Tom|required|string']
+        );
+        $this->assertTrue($validator->passes());
+        $this->assertSame(['cat' => 'Felix'], $validator->validated());
+
+        $validator = new Validator(
+            $this->getIlluminateArrayTranslator(),
+            ['cat' => 'Felix'],
+            ['cat' => 'required|string', 'mouse' => 'exclude_unless:cat,Tom|required|string']
+        );
+        $this->assertTrue($validator->passes());
+        $this->assertSame(['cat' => 'Felix'], $validator->validated());
+
+        $validator = new Validator(
+            $this->getIlluminateArrayTranslator(),
+            ['cat' => 'Tom', 'mouse' => 'Jerry'],
+            ['cat' => 'required|string', 'mouse' => 'exclude_unless:cat,Tom|required|string']
+        );
+        $this->assertTrue($validator->passes());
+        $this->assertSame(['cat' => 'Tom', 'mouse' => 'Jerry'], $validator->validated());
+
+        $validator = new Validator(
+            $this->getIlluminateArrayTranslator(),
+            ['cat' => 'Tom'],
+            ['cat' => 'required|string', 'mouse' => 'exclude_unless:cat,Tom|required|string']
+        );
+        $this->assertTrue($validator->fails());
+        $this->assertSame(['mouse' => ['validation.required']], $validator->messages()->toArray());
+    }
+
+    public function testExcludeValuesAreReallyRemoved()
+    {
+        $validator = new Validator(
+            $this->getIlluminateArrayTranslator(),
+            ['cat' => 'Tom', 'mouse' => 'Jerry'],
+            ['cat' => 'required|string', 'mouse' => 'exclude_if:cat,Tom|required|string']
+        );
+        $this->assertTrue($validator->passes());
+        $this->assertSame(['cat' => 'Tom'], $validator->validated());
+        $this->assertSame(['cat' => 'Tom'], $validator->valid());
+        $this->assertSame([], $validator->invalid());
+
+        $validator = new Validator(
+            $this->getIlluminateArrayTranslator(),
+            ['cat' => 'Tom', 'mouse' => null],
+            ['cat' => 'required|string', 'mouse' => 'exclude_if:cat,Felix|required|string']
+        );
+        $this->assertTrue($validator->fails());
+        $this->assertSame(['cat' => 'Tom'], $validator->valid());
+        $this->assertSame(['mouse' => null], $validator->invalid());
+    }
+
+    public function testValidateFailsWithAsterisksAsDataKeys()
+    {
+        $post = ['data' => [0 => ['date' => '2019-01-24'], 1 => ['date' => 'blah'], '*' => ['date' => 'blah']]];
+
+        $rules = ['data.*.date' => 'required|date'];
+
+        $validator = new Validator($this->getIlluminateArrayTranslator(), $post, $rules);
+
+        $this->assertTrue($validator->fails());
+        $this->assertSame(['data.1.date' => ['validation.date'], 'data.*.date' => ['validation.date']], $validator->messages()->toArray());
+    }
+
     protected function getTranslator()
     {
         return m::mock(TranslatorContract::class);
@@ -4644,4 +5231,29 @@ class ValidationValidatorTest extends TestCase
             new ArrayLoader, 'en'
         );
     }
+}
+
+class ImplicitTableModel extends Model
+{
+    protected $guarded = [];
+    public $timestamps = false;
+}
+
+class ExplicitTableModel extends Model
+{
+    protected $table = 'explicits';
+    protected $guarded = [];
+    public $timestamps = false;
+}
+
+class ExplicitTableAndConnectionModel extends Model
+{
+    protected $table = 'explicits';
+    protected $connection = 'connection';
+    protected $guarded = [];
+    public $timestamps = false;
+}
+
+class NonEloquentModel
+{
 }

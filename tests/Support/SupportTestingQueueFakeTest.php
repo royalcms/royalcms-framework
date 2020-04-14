@@ -13,12 +13,12 @@ use PHPUnit\Framework\TestCase;
 class SupportTestingQueueFakeTest extends TestCase
 {
     /**
-     * @var QueueFake
+     * @var \Illuminate\Support\Testing\Fakes\QueueFake
      */
     private $fake;
 
     /**
-     * @var JobStub
+     * @var \Illuminate\Tests\Support\JobStub
      */
     private $job;
 
@@ -136,6 +136,13 @@ class SupportTestingQueueFakeTest extends TestCase
         $this->fake->assertPushedWithChain(JobWithChainStub::class, [
             new JobStub,
         ]);
+    }
+
+    public function testAssertPushedWithoutChain()
+    {
+        $this->fake->push(new JobWithChainStub([]));
+
+        $this->fake->assertPushedWithoutChain(JobWithChainStub::class);
     }
 
     public function testAssertPushedWithChainSameJobDifferentChains()

@@ -2,6 +2,7 @@
 
 namespace Illuminate\Tests\Queue;
 
+use Exception;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -249,7 +250,7 @@ class QueueWorkerTest extends TestCase
     public function testJobBasedFailedDelay()
     {
         $job = new WorkerFakeJob(function ($job) {
-            throw new \Exception('Something went wrong.');
+            throw new Exception('Something went wrong.');
         });
 
         $job->attempts = 1;
@@ -421,6 +422,8 @@ class WorkerFakeJob implements QueueJobContract
     public $releaseAfter;
     public $released = false;
     public $maxTries;
+    public $maxExceptions;
+    public $uuid;
     public $delaySeconds;
     public $timeoutAt;
     public $attempts = 0;
@@ -456,6 +459,16 @@ class WorkerFakeJob implements QueueJobContract
     public function maxTries()
     {
         return $this->maxTries;
+    }
+
+    public function maxExceptions()
+    {
+        return $this->maxExceptions;
+    }
+
+    public function uuid()
+    {
+        return $this->uuid;
     }
 
     public function delaySeconds()

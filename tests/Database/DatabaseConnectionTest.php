@@ -22,6 +22,7 @@ use PDOException;
 use PDOStatement;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use stdClass;
 
 class DatabaseConnectionTest extends TestCase
 {
@@ -158,6 +159,18 @@ class DatabaseConnectionTest extends TestCase
         $this->assertEquals(1, $connection->transactionLevel());
     }
 
+    public function testBeginTransactionMethodReconnectsMissingConnection()
+    {
+        $connection = $this->getMockConnection();
+        $connection->setReconnector(function ($connection) {
+            $pdo = $this->createMock(DatabaseConnectionTestMockPDO::class);
+            $connection->setPdo($pdo);
+        });
+        $connection->disconnect();
+        $connection->beginTransaction();
+        $this->assertEquals(1, $connection->transactionLevel());
+    }
+
     public function testBeginTransactionMethodNeverRetriesIfWithinTransaction()
     {
         $pdo = $this->createMock(DatabaseConnectionTestMockPDO::class);
@@ -247,10 +260,9 @@ class DatabaseConnectionTest extends TestCase
 
         $pdo = $this->getMockBuilder(DatabaseConnectionTestMockPDO::class)->setMethods(['beginTransaction', 'commit', 'rollBack'])->getMock();
         $mock = $this->getMockConnection([], $pdo);
-        $pdo->method('commit')->will($this->throwException(new DatabaseConnectionTestMockPDOException('Serialization failure', '40001')));
+        $pdo->expects($this->exactly(3))->method('commit')->will($this->throwException(new DatabaseConnectionTestMockPDOException('Serialization failure', '40001')));
         $pdo->expects($this->exactly(3))->method('beginTransaction');
         $pdo->expects($this->never())->method('rollBack');
-        $pdo->expects($this->exactly(3))->method('commit');
         $mock->transaction(function () {
         }, 3);
     }

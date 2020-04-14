@@ -8,6 +8,7 @@ use Illuminate\Support\Collection as BaseCollection;
 use LogicException;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 class DatabaseEloquentCollectionTest extends TestCase
 {
@@ -267,6 +268,22 @@ class DatabaseEloquentCollectionTest extends TestCase
         $this->assertSame([1 => $two, 2 => $three], $duplicates);
     }
 
+    public function testCollectionIntersectWithNull()
+    {
+        $one = m::mock(Model::class);
+        $one->shouldReceive('getKey')->andReturn(1);
+
+        $two = m::mock(Model::class);
+        $two->shouldReceive('getKey')->andReturn(2);
+
+        $three = m::mock(Model::class);
+        $three->shouldReceive('getKey')->andReturn(3);
+
+        $c1 = new Collection([$one, $two, $three]);
+
+        $this->assertEquals([], $c1->intersect(null)->all());
+    }
+
     public function testCollectionIntersectsWithGivenCollection()
     {
         $one = m::mock(Model::class);
@@ -370,6 +387,15 @@ class DatabaseEloquentCollectionTest extends TestCase
         $this->assertEquals([], $c[0]->getHidden());
     }
 
+    public function testAppendsAddsTestOnEntireCollection()
+    {
+        $c = new Collection([new TestEloquentCollectionModel]);
+        $c = $c->makeVisible('test');
+        $c = $c->append('test');
+
+        $this->assertEquals(['test' => 'test'], $c[0]->toArray());
+    }
+
     public function testNonModelRelatedMethods()
     {
         $a = new Collection([['foo' => 'bar'], ['foo' => 'baz']]);
@@ -417,4 +443,9 @@ class TestEloquentCollectionModel extends Model
 {
     protected $visible = ['visible'];
     protected $hidden = ['hidden'];
+
+    public function getTestAttribute()
+    {
+        return 'test';
+    }
 }

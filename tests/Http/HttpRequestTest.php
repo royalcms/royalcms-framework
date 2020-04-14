@@ -300,6 +300,31 @@ class HttpRequestTest extends TestCase
         $this->assertTrue($request->has('foo.baz'));
     }
 
+    public function testMissingMethod()
+    {
+        $request = Request::create('/', 'GET', ['name' => 'Taylor', 'age' => '', 'city' => null]);
+        $this->assertFalse($request->missing('name'));
+        $this->assertFalse($request->missing('age'));
+        $this->assertFalse($request->missing('city'));
+        $this->assertTrue($request->missing('foo'));
+        $this->assertTrue($request->missing('name', 'email'));
+
+        $request = Request::create('/', 'GET', ['name' => 'Taylor', 'email' => 'foo']);
+        $this->assertFalse($request->missing('name'));
+        $this->assertFalse($request->missing('name', 'email'));
+
+        $request = Request::create('/', 'GET', ['foo' => ['bar', 'bar']]);
+        $this->assertFalse($request->missing('foo'));
+
+        $request = Request::create('/', 'GET', ['foo' => '', 'bar' => null]);
+        $this->assertFalse($request->missing('foo'));
+        $this->assertFalse($request->missing('bar'));
+
+        $request = Request::create('/', 'GET', ['foo' => ['bar' => null, 'baz' => '']]);
+        $this->assertFalse($request->missing('foo.bar'));
+        $this->assertFalse($request->missing('foo.baz'));
+    }
+
     public function testHasAnyMethod()
     {
         $request = Request::create('/', 'GET', ['name' => 'Taylor', 'age' => '', 'city' => null]);
@@ -335,7 +360,7 @@ class HttpRequestTest extends TestCase
         $this->assertTrue($request->filled('name'));
         $this->assertTrue($request->filled('name', 'email'));
 
-        //test arrays within query string
+        // test arrays within query string
         $request = Request::create('/', 'GET', ['foo' => ['bar', 'baz']]);
         $this->assertTrue($request->filled('foo'));
 
@@ -378,6 +403,16 @@ class HttpRequestTest extends TestCase
 
         $request = Request::create('/', 'GET', [], [], ['file' => new SymfonyUploadedFile(__FILE__, 'foo.php')]);
         $this->assertInstanceOf(SymfonyUploadedFile::class, $request['file']);
+    }
+
+    public function testBooleanMethod()
+    {
+        $request = Request::create('/', 'GET', ['with_trashed' => 'false', 'download' => true, 'checked' => 1, 'unchecked' => '0']);
+        $this->assertTrue($request->boolean('checked'));
+        $this->assertTrue($request->boolean('download'));
+        $this->assertFalse($request->boolean('unchecked'));
+        $this->assertFalse($request->boolean('with_trashed'));
+        $this->assertFalse($request->boolean('some_undefined_key'));
     }
 
     public function testArrayAccess()

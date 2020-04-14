@@ -2,9 +2,11 @@
 
 namespace Illuminate\Tests\Support;
 
+use Exception;
 use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Testing\Fakes\NotificationFake;
 use PHPUnit\Framework\Constraint\ExceptionMessage;
 use PHPUnit\Framework\ExpectationFailedException;
@@ -13,17 +15,17 @@ use PHPUnit\Framework\TestCase;
 class SupportTestingNotificationFakeTest extends TestCase
 {
     /**
-     * @var NotificationFake
+     * @var \Illuminate\Support\Testing\Fakes\NotificationFake
      */
     private $fake;
 
     /**
-     * @var NotificationStub
+     * @var \Illuminate\Tests\Support\NotificationStub
      */
     private $notification;
 
     /**
-     * @var UserStub
+     * @var \Illuminate\Tests\Support\UserStub
      */
     private $user;
 
@@ -61,6 +63,20 @@ class SupportTestingNotificationFakeTest extends TestCase
         } catch (ExpectationFailedException $e) {
             $this->assertThat($e, new ExceptionMessage('The unexpected [Illuminate\Tests\Support\NotificationStub] notification was sent.'));
         }
+    }
+
+    public function testAssertSentToFailsForEmptyArray()
+    {
+        $this->expectException(Exception::class);
+
+        $this->fake->assertSentTo([], NotificationStub::class);
+    }
+
+    public function testAssertSentToFailsForEmptyCollection()
+    {
+        $this->expectException(Exception::class);
+
+        $this->fake->assertSentTo(new Collection, NotificationStub::class);
     }
 
     public function testResettingNotificationId()

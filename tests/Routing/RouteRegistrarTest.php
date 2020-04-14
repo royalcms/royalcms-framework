@@ -60,6 +60,17 @@ class RouteRegistrarTest extends TestCase
         $this->assertEquals(['seven'], $this->getRoute()->middleware());
     }
 
+    public function testWithoutMiddlewareRegistration()
+    {
+        $this->router->middleware(['one', 'two'])->get('users', function () {
+            return 'all-users';
+        })->withoutMiddleware('one');
+
+        $this->seeResponse('all-users', Request::create('users', 'GET'));
+
+        $this->assertEquals(['one'], $this->getRoute()->excludedMiddleware());
+    }
+
     public function testCanRegisterGetRouteWithClosureAction()
     {
         $this->router->middleware('get-middleware')->get('users', function () {
@@ -333,6 +344,17 @@ class RouteRegistrarTest extends TestCase
 
         $this->assertTrue($this->router->getRoutes()->hasNamedRoute('users.update'));
         $this->assertTrue($this->router->getRoutes()->hasNamedRoute('users.destroy'));
+    }
+
+    public function testCanSetShallowOptionOnRegisteredResource()
+    {
+        $this->router->resource('users.tasks', RouteRegistrarControllerStub::class)->shallow();
+
+        $this->assertCount(7, $this->router->getRoutes());
+
+        $this->assertTrue($this->router->getRoutes()->hasNamedRoute('users.tasks.index'));
+        $this->assertTrue($this->router->getRoutes()->hasNamedRoute('tasks.show'));
+        $this->assertFalse($this->router->getRoutes()->hasNamedRoute('users.tasks.show'));
     }
 
     public function testCanExcludeMethodsOnRegisteredApiResource()
