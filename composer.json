@@ -42,7 +42,8 @@
             "tests/Database/stubs/MigrationCreatorFakeMigration.php"
         ],
         "psr-4": {
-            "Illuminate\\Tests\\": "tests/"
+            "Illuminate\\Tests\\": "tests/laravel",
+            "Royalcms\\Tests\\": "tests/royalcms"
         }
     },
     "extra": {
