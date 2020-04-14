@@ -1,7 +1,5 @@
 <?php
 
-namespace Illuminate\Tests\Support\Fixtures;
-
 class CustomDateClass
 {
     protected $original;

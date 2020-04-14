@@ -387,15 +387,6 @@ class DatabaseEloquentCollectionTest extends TestCase
         $this->assertEquals([], $c[0]->getHidden());
     }
 
-    public function testAppendsAddsTestOnEntireCollection()
-    {
-        $c = new Collection([new TestEloquentCollectionModel]);
-        $c = $c->makeVisible('test');
-        $c = $c->append('test');
-
-        $this->assertEquals(['test' => 'test'], $c[0]->toArray());
-    }
-
     public function testNonModelRelatedMethods()
     {
         $a = new Collection([['foo' => 'bar'], ['foo' => 'baz']]);
@@ -443,9 +434,4 @@ class TestEloquentCollectionModel extends Model
 {
     protected $visible = ['visible'];
     protected $hidden = ['hidden'];
-
-    public function getTestAttribute()
-    {
-        return 'test';
-    }
 }
