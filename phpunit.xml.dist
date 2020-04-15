@@ -14,7 +14,10 @@
 >
     <testsuites>
         <testsuite name="Laravel Test Suite">
-            <directory suffix="Test.php">./tests</directory>
+            <directory suffix="Test.php">./tests/laravel</directory>
+        </testsuite>
+        <testsuite name="Royalcms Test Suite">
+            <directory suffix="Test.php">./tests/royalcms</directory>
         </testsuite>
     </testsuites>
     <filter>
