@@ -2,7 +2,9 @@
 
 namespace Royalcms\Tests\Config;
 
+use Royalcms\Component\Config\FileLoader;
 use Royalcms\Component\Config\Repository;
+use Royalcms\Component\Filesystem\Filesystem;
 use PHPUnit\Framework\TestCase;
 
 class RepositoryTest extends TestCase
@@ -19,7 +21,9 @@ class RepositoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->repository = new Repository($this->config = [
+        $files = new Filesystem();
+        $loader = new FileLoader($files, null);
+        $this->repository = new Repository($loader, 'test', $this->config = [
             'foo' => 'bar',
             'bar' => 'baz',
             'baz' => 'bat',
@@ -40,10 +44,10 @@ class RepositoryTest extends TestCase
         parent::setUp();
     }
 
-    public function testConstruct()
-    {
-        $this->assertInstanceOf(Repository::class, $this->repository);
-    }
+//    public function testConstruct()
+//    {
+//        $this->assertInstanceOf(Repository::class, $this->repository);
+//    }
 
     public function testHasIsTrue()
     {
@@ -52,6 +56,8 @@ class RepositoryTest extends TestCase
 
     public function testHasIsFalse()
     {
+        dd($this->repository->getItems());
+        dd($this->repository->has('not-exist'));
         $this->assertFalse($this->repository->has('not-exist'));
     }
 
