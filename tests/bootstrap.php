@@ -34,3 +34,8 @@ Carbon::setTestNow(Carbon::now());
 setlocale(LC_ALL, 'C.UTF-8');
 
 ini_set('memory_limit', -1);
+
+// Loading class aliases.
+if (file_exists($aliasPath = __DIR__ . '/aliases.php')) {
+    \Royalcms\Component\Foundation\AliasLoader::getInstance(require $aliasPath)->register();
+}
