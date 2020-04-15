@@ -24,21 +24,23 @@ class RepositoryTest extends TestCase
         $files = new Filesystem();
         $loader = new FileLoader($files, null);
         $this->repository = new Repository($loader, 'test', $this->config = [
-            'foo' => 'bar',
-            'bar' => 'baz',
-            'baz' => 'bat',
-            'null' => null,
-            'associate' => [
-                'x' => 'xxx',
-                'y' => 'yyy',
-            ],
-            'array' => [
-                'aaa',
-                'zzz',
-            ],
-            'x' => [
-                'z' => 'zoo',
-            ],
+            '*::test' => [
+                'foo' => 'bar',
+                'bar' => 'baz',
+                'baz' => 'bat',
+                'null' => null,
+                'associate' => [
+                    'x' => 'xxx',
+                    'y' => 'yyy',
+                ],
+                'array' => [
+                    'aaa',
+                    'zzz',
+                ],
+                'x' => [
+                    'z' => 'zoo',
+                ],
+            ]
         ]);
 
         parent::setUp();
@@ -51,19 +53,17 @@ class RepositoryTest extends TestCase
 
     public function testHasIsTrue()
     {
-        $this->assertTrue($this->repository->has('foo'));
+        $this->assertTrue($this->repository->has('test.foo'));
     }
 
     public function testHasIsFalse()
     {
-        dd($this->repository->getItems());
-        dd($this->repository->has('not-exist'));
-        $this->assertFalse($this->repository->has('not-exist'));
+        $this->assertFalse($this->repository->has('test.not-exist'));
     }
 
     public function testGet()
     {
-        $this->assertSame('bar', $this->repository->get('foo'));
+        $this->assertSame('bar', $this->repository->get('test.foo'));
     }
 
     public function testGetWithArrayOfKeys()
@@ -118,13 +118,13 @@ class RepositoryTest extends TestCase
 
     public function testGetWithDefault()
     {
-        $this->assertSame('default', $this->repository->get('not-exist', 'default'));
+        $this->assertSame('default', $this->repository->get('test.not-exist', 'default'));
     }
 
     public function testSet()
     {
         $this->repository->set('key', 'value');
-        $this->assertSame('value', $this->repository->get('key'));
+        $this->assertSame('value', $this->repository->get('test.key'));
     }
 
     public function testSetArray()
@@ -133,8 +133,8 @@ class RepositoryTest extends TestCase
             'key1' => 'value1',
             'key2' => 'value2',
         ]);
-        $this->assertSame('value1', $this->repository->get('key1'));
-        $this->assertSame('value2', $this->repository->get('key2'));
+        $this->assertSame('value1', $this->repository->get('test.key1'));
+        $this->assertSame('value2', $this->repository->get('test.key2'));
     }
 
     public function testPrepend()
