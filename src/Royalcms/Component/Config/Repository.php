@@ -4,7 +4,7 @@ namespace Royalcms\Component\Config;
 
 use Closure;
 use ArrayAccess;
-use Royalcms\Component\Support\NamespacedItemResolver;
+use Illuminate\Support\NamespacedItemResolver;
 use Royalcms\Component\Contracts\Config\Repository as ConfigContract;
 
 class Repository extends NamespacedItemResolver implements ArrayAccess, ConfigContract
