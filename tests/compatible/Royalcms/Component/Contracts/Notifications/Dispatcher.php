@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Royalcms\Tests\Component\Contracts\Notifications;
+namespace Royalcms\Component\Contracts\Notifications;
 
 
 interface Dispatcher extends \Illuminate\Contracts\Notifications\Dispatcher

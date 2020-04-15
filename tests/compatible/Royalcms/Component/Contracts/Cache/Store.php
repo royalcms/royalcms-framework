@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Royalcms\Tests\Component\Contracts\Cache;
+namespace Royalcms\Component\Contracts\Cache;
 
 
 interface Store extends \Illuminate\Contracts\Cache\Store

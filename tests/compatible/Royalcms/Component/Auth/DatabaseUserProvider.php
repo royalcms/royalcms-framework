@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Royalcms\Tests\Component\Auth;
+namespace Royalcms\Component\Auth;
 
 
 class DatabaseUserProvider extends \Illuminate\Auth\DatabaseUserProvider

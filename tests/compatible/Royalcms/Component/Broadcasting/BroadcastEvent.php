@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Royalcms\Tests\Component\Broadcasting;
+namespace Royalcms\Component\Broadcasting;
 
 
 class BroadcastEvent extends \Illuminate\Broadcasting\BroadcastEvent

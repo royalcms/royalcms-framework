@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Royalcms\Tests\Component\Bus;
+namespace Royalcms\Component\Bus;
 
 
 class Dispatcher extends \Illuminate\Bus\Dispatcher

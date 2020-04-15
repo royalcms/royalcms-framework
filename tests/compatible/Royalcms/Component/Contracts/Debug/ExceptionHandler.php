@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Royalcms\Tests\Component\Contracts\Debug;
+namespace Royalcms\Component\Contracts\Debug;
 
 
 interface ExceptionHandler extends \Illuminate\Contracts\Debug\ExceptionHandler

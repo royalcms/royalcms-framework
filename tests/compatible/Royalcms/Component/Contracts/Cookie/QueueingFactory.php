@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Royalcms\Tests\Component\Contracts\Cookie;
+namespace Royalcms\Component\Contracts\Cookie;
 
 
 interface QueueingFactory extends \Illuminate\Contracts\Cookie\QueueingFactory

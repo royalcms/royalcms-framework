@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Royalcms\Tests\Component\Cache;
+namespace Royalcms\Component\Cache;
 
 
 class WinCacheStore extends \Illuminate\Cache\WinCacheStore

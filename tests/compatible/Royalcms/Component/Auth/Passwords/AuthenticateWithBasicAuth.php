@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Royalcms\Tests\Component\Auth\Passwords;
+namespace Royalcms\Component\Auth\Passwords;
 
 
 class AuthenticateWithBasicAuth extends \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth

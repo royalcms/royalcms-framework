@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Royalcms\Tests\Component\Contracts\Validation;
+namespace Royalcms\Component\Contracts\Validation;
 
 
 interface ValidatesWhenResolved extends \Illuminate\Contracts\Validation\ValidatesWhenResolved

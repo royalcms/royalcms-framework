@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Royalcms\Tests\Component\Container;
+namespace Royalcms\Component\Container;
 
 
 class ContextualBindingBuilder extends \Illuminate\Container\ContextualBindingBuilder

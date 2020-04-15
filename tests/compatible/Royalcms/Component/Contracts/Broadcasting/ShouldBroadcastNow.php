@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Royalcms\Tests\Component\Contracts\Broadcasting;
+namespace Royalcms\Component\Contracts\Broadcasting;
 
 
 interface ShouldBroadcastNow extends \Illuminate\Contracts\Broadcasting\ShouldBroadcastNow

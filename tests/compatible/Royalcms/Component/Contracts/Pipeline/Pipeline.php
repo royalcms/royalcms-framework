@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Royalcms\Tests\Component\Contracts\Pipeline;
+namespace Royalcms\Component\Contracts\Pipeline;
 
 
 interface Pipeline extends \Illuminate\Contracts\Pipeline\Pipeline

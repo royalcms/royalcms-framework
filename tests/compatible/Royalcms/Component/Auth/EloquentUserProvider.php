@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Royalcms\Tests\Component\Auth;
+namespace Royalcms\Component\Auth;
 
 
 class EloquentUserProvider extends \Illuminate\Auth\EloquentUserProvider

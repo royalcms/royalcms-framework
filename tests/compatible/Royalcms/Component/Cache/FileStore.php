@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Royalcms\Tests\Component\Cache;
+namespace Royalcms\Component\Cache;
 
 
 class FileStore extends \Illuminate\Cache\FileStore

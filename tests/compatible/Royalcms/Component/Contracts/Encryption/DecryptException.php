@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Royalcms\Tests\Component\Contracts\Encryption;
+namespace Royalcms\Component\Contracts\Encryption;
 
 
 class DecryptException extends \Illuminate\Contracts\Encryption\DecryptException

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Royalcms\Tests\Component\Contracts\Auth;
+namespace Royalcms\Component\Contracts\Auth;
 
 
 interface PasswordBroker extends \Illuminate\Contracts\Auth\PasswordBroker

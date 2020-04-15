@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Royalcms\Tests\Component\Auth\Access;
+namespace Royalcms\Component\Auth\Access;
 
 
 trait HandlesAuthorization

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Royalcms\Tests\Component\Contracts\Queue;
+namespace Royalcms\Component\Contracts\Queue;
 
 
 interface Monitor extends \Illuminate\Contracts\Queue\Monitor

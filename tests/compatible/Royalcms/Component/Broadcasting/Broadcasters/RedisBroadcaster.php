@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Royalcms\Tests\Component\Broadcasting\Broadcasters;
+namespace Royalcms\Component\Broadcasting\Broadcasters;
 
 
 class RedisBroadcaster extends \Illuminate\Broadcasting\Broadcasters\RedisBroadcaster

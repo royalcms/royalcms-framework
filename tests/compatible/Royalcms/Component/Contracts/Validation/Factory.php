@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Royalcms\Tests\Component\Contracts\Validation;
+namespace Royalcms\Component\Contracts\Validation;
 
 
 interface Factory extends \Illuminate\Contracts\Validation\Factory

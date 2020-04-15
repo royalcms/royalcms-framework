@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Royalcms\Tests\Component\Contracts\Support;
+namespace Royalcms\Component\Contracts\Support;
 
 
 interface Htmlable extends \Illuminate\Contracts\Support\Htmlable

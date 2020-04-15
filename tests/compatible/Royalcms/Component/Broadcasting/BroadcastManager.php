@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Royalcms\Tests\Component\Broadcasting;
+namespace Royalcms\Component\Broadcasting;
 
 
 class BroadcastManager extends \Illuminate\Broadcasting\PrivateChannel

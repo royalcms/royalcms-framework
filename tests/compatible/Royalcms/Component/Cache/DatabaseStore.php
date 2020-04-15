@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Royalcms\Tests\Component\Cache;
+namespace Royalcms\Component\Cache;
 
 
 class DatabaseStore extends \Illuminate\Cache\DatabaseStore

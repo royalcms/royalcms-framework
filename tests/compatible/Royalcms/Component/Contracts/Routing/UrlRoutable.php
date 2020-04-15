@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Royalcms\Tests\Component\Contracts\Routing;
+namespace Royalcms\Component\Contracts\Routing;
 
 
 interface UrlRoutable extends \Illuminate\Contracts\Routing\UrlRoutable

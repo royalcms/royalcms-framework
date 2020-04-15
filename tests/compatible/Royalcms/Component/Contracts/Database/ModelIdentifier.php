@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Royalcms\Tests\Component\Contracts\Database;
+namespace Royalcms\Component\Contracts\Database;
 
 
 class ModelIdentifier extends \Illuminate\Contracts\Database\ModelIdentifier

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Royalcms\Tests\Component\Contracts\Config;
+namespace Royalcms\Component\Contracts\Config;
 
 
 interface Repository extends \Illuminate\Contracts\Config\Repository
