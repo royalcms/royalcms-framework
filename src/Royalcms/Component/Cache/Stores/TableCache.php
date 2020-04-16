@@ -21,7 +21,7 @@ class TableCache extends AbstractCache
             'expire' => 1200 //分钟
         ];
 
-        RC_Config::set('cache.stores.'.$name, $config);
+        RC_Config::set('cache.stores.'.$this->name, $config);
 
         return $config;
     }

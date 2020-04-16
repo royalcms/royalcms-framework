@@ -21,7 +21,7 @@ class QueryCache extends AbstractCache
             'expire' => 60, //分钟
         ];
 
-        RC_Config::set('cache.stores.'.$name, $config);
+        RC_Config::set('cache.stores.'.$this->name, $config);
 
         return $config;
     }
