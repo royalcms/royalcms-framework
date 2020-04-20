@@ -37,7 +37,6 @@
         "files": [
             "src/Royalcms/Component/Foundation/Helpers/royalcms-hooks.php",
             "src/Royalcms/Component/Foundation/Helpers/foundation-helpers.php",
-            "src/Royalcms/Component/Support/helpers.php"
         ],
         "psr-4": {
             "Royalcms\\Component\\": "src/Royalcms/Component"
