@@ -16,7 +16,8 @@
     ],
     "require": {
         "php": ">=7.2.5",
-        "laravel/framework": "^7.0"
+        "laravel/framework": "^7.0",
+        "laravel/helpers": "^1.0"
     },
     "require-dev": {
         "aws/aws-sdk-php": "^3.0",
