@@ -373,34 +373,34 @@ if ( ! function_exists('array_head'))
     }
 }
 
-if (! function_exists('blank')) {
-    /**
-     * Determine if the given value is "blank".
-     *
-     * @param  mixed  $value
-     * @return bool
-     */
-    function blank($value)
-    {
-        if (is_null($value)) {
-            return true;
-        }
-
-        if (is_string($value)) {
-            return trim($value) === '';
-        }
-
-        if (is_numeric($value) || is_bool($value)) {
-            return false;
-        }
-
-        if ($value instanceof Countable) {
-            return count($value) === 0;
-        }
-
-        return empty($value);
-    }
-}
+//if (! function_exists('blank')) {
+//    /**
+//     * Determine if the given value is "blank".
+//     *
+//     * @param  mixed  $value
+//     * @return bool
+//     */
+//    function blank($value)
+//    {
+//        if (is_null($value)) {
+//            return true;
+//        }
+//
+//        if (is_string($value)) {
+//            return trim($value) === '';
+//        }
+//
+//        if (is_numeric($value) || is_bool($value)) {
+//            return false;
+//        }
+//
+//        if ($value instanceof Countable) {
+//            return count($value) === 0;
+//        }
+//
+//        return empty($value);
+//    }
+//}
 
 //if (! function_exists('camel_case')) {
 //    /**
@@ -449,18 +449,18 @@ if (! function_exists('blank')) {
 //    }
 //}
 
-if (! function_exists('collect')) {
-    /**
-     * Create a collection from the given value.
-     *
-     * @param  mixed  $value
-     * @return \Royalcms\Component\Support\Collection
-     */
-    function collect($value = null)
-    {
-        return new Collection($value);
-    }
-}
+//if (! function_exists('collect')) {
+//    /**
+//     * Create a collection from the given value.
+//     *
+//     * @param  mixed  $value
+//     * @return \Royalcms\Component\Support\Collection
+//     */
+//    function collect($value = null)
+//    {
+//        return new Collection($value);
+//    }
+//}
 
 //if (! function_exists('data_fill')) {
 //    /**
