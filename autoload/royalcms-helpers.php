@@ -1370,4 +1370,51 @@ if (! function_exists('call_user_func_instance_args')) {
     }
 }
 
+if ( ! function_exists('array_head'))
+{
+    /**
+     * Get the first element of an array. Useful for method chaining.
+     *
+     * @param  array  $array
+     * @return mixed
+     */
+    function array_head($array)
+    {
+        return reset($array);
+    }
+}
+
+if ( ! function_exists('array_last'))
+{
+    /**
+     * Get the last element from an array.
+     *
+     * @param  array  $array
+     * @return mixed
+     */
+    function array_last($array)
+    {
+        return end($array);
+    }
+}
+
+if (! function_exists('preg_replace_sub')) {
+    /**
+     * Replace a given pattern with each value in the array in sequentially.
+     *
+     * @param  string  $pattern
+     * @param  array   $replacements
+     * @param  string  $subject
+     * @return string
+     */
+    function preg_replace_sub($pattern, & $replacements, $subject)
+    {
+        return preg_replace_callback($pattern, function ($match) use (& $replacements) {
+            foreach ($replacements as $key => $value) {
+                return array_shift($replacements);
+            }
+        }, $subject);
+    }
+}
+
 // end

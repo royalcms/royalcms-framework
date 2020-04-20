@@ -1,16 +1,10 @@
 <?php
 
+use Illuminate\Support\Arr;
 use Royalcms\Component\Support\Str;
 use Royalcms\Component\View\Expression;
 use Royalcms\Component\Container\Container;
-use Royalcms\Component\Contracts\Auth\Guard;
-use Royalcms\Component\Contracts\Bus\Dispatcher;
-use Royalcms\Component\Contracts\Auth\Access\Gate;
-use Royalcms\Component\Contracts\Routing\UrlGenerator;
-use Royalcms\Component\Contracts\Routing\ResponseFactory;
-use Royalcms\Component\Contracts\View\Factory as ViewFactory;
-use Royalcms\Component\Contracts\Cookie\Factory as CookieFactory;
-use Royalcms\Component\Database\Eloquent\Factory as EloquentFactory;
+use Symfony\Component\Console\Helper\Dumper;
 
 //if (! function_exists('abort')) {
 //    /**
@@ -1374,3 +1368,49 @@ if ( ! function_exists('rc_extension_exists'))
     }
 }
 
+if (! function_exists('dd')) {
+    /**
+     * Dump the passed variables and end the script.
+     *
+     * @param  mixed
+     * @return void
+     */
+    function dd($args)
+    {
+        array_map(function ($x) {
+            (new Dumper)->dump($x);
+        }, func_get_args());
+
+        die(1);
+    }
+}
+
+if (! function_exists('array_fetch')) {
+    /**
+     * Fetch a flattened array of a nested array element.
+     *
+     * @param  array   $array
+     * @param  string  $key
+     * @return array
+     *
+     * @deprecated since version 5.1. Use array_pluck instead.
+     */
+    function array_fetch($array, $key)
+    {
+        return Arr::fetch($array, $key);
+    }
+}
+
+if (! function_exists('array_build')) {
+    /**
+     * Build a new array using a callback.
+     *
+     * @param  array  $array
+     * @param  callable  $callback
+     * @return array
+     */
+    function array_build($array, callable $callback)
+    {
+        return Arr::build($array, $callback);
+    }
+}
