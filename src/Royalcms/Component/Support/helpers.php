@@ -366,7 +366,7 @@ if ( ! function_exists('array_head'))
      * @param  array  $array
      * @return mixed
      */
-    function array_head(& $array)
+    function array_head($array)
     {
         return reset($array);
     }
