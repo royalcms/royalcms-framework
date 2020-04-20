@@ -372,6 +372,20 @@ if ( ! function_exists('array_head'))
     }
 }
 
+if ( ! function_exists('array_last'))
+{
+    /**
+     * Get the last element from an array.
+     *
+     * @param  array  $array
+     * @return mixed
+     */
+    function array_last($array)
+    {
+        return end($array);
+    }
+}
+
 //if (! function_exists('blank')) {
 //    /**
 //     * Determine if the given value is "blank".
