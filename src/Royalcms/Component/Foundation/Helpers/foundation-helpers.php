@@ -4,7 +4,6 @@ use Illuminate\Support\Arr;
 use Royalcms\Component\Support\Str;
 use Royalcms\Component\View\Expression;
 use Royalcms\Component\Container\Container;
-use Symfony\Component\Console\Helper\Dumper;
 
 //if (! function_exists('abort')) {
 //    /**
@@ -1357,23 +1356,6 @@ if ( ! function_exists('rc_extension_exists'))
         $ext = strtolower($ext);
         $loaded_extensions = get_loaded_extensions();
         return in_array($ext, RC_Array::transform_value_case($loaded_extensions));
-    }
-}
-
-if (! function_exists('dd')) {
-    /**
-     * Dump the passed variables and end the script.
-     *
-     * @param  mixed
-     * @return void
-     */
-    function dd($args)
-    {
-        array_map(function ($x) {
-            (new Dumper)->dump($x);
-        }, func_get_args());
-
-        die(1);
     }
 }
 
