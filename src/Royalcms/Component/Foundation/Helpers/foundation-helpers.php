@@ -760,13 +760,9 @@ if ( ! function_exists('_404'))
      * @param string $msg 提示信息
      * @param string $url 跳转url
      */
-    function _404($msg = null)
+    function _404($msg = null, $url = null)
     {
-        if (RC_Hook::has_action('handle_404_error')) {
-            RC_Hook::do_action('handle_404_error', $msg);
-        } else {
-            Royalcms\Component\Error\ErrorDisplay::http_error(404, $msg);
-        }
+        RC_Hook::do_action('handle_404_error', $msg, $url);
     }
 }
 
@@ -778,13 +774,9 @@ if ( ! function_exists('_500'))
      * @param string $msg 提示信息
      * @param string $url 跳转url
      */
-    function _500($msg = null)
+    function _500($msg = null, $url = null)
     {
-        if (RC_Hook::has_action('handle_500_error')) {
-            RC_Hook::do_action('handle_500_error', $msg);
-        } else {
-            Royalcms\Component\Error\ErrorDisplay::http_error(500, $msg);
-        }
+        RC_Hook::do_action('handle_500_error', $msg, $url);
     }
 }
 
