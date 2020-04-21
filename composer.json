@@ -17,7 +17,9 @@
     "require": {
         "php": ">=7.2.5",
         "laravel/framework": "^7.0",
-        "laravel/helpers": "^1.0"
+        "laravel/helpers": "^1.0",
+        "royalcms/error": "^5.0",
+        "royalcms/error-display": "^5.0"
     },
     "require-dev": {
         "aws/aws-sdk-php": "^3.0",
@@ -36,7 +38,7 @@
     "autoload": {
         "files": [
             "src/Royalcms/Component/Foundation/Helpers/royalcms-hooks.php",
-            "src/Royalcms/Component/Foundation/Helpers/foundation-helpers.php",
+            "src/Royalcms/Component/Foundation/Helpers/foundation-helpers.php"
         ],
         "psr-4": {
             "Royalcms\\Component\\": "src/Royalcms/Component"
