@@ -15,7 +15,16 @@
         }
     ],
     "require": {
-        "php": ">=5.5.9"
+        "php": "^7.2.5",
+        "illuminate/notifications": "^7.0",
+        "royalcms/broadcasting": "^7.0",
+        "royalcms/bus": "^7.0",
+        "royalcms/container": "^7.0",
+        "royalcms/contracts": "^7.0",
+        "royalcms/filesystem": "^7.0",
+        "royalcms/mail": "^7.0",
+        "royalcms/queue": "^7.0",
+        "royalcms/support": "^7.0"
     },
     "autoload": {
         "psr-4": {
