@@ -16,7 +16,7 @@
     "require": {
         "php": "^7.2.5",
         "ext-json": "*",
-        "illuminate/queque": "^7.0",
+        "illuminate/queue": "^7.0",
         "royalcms/console": "^7.0",
         "royalcms/container": "^7.0",
         "royalcms/contracts": "^7.0",
