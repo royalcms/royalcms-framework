@@ -68,7 +68,7 @@ split 'src/Royalcms/Component/Cookie' cookie
 split 'src/Royalcms/Component/Database' database
 split 'src/Royalcms/Component/Encryption' encryption
 split 'src/Royalcms/Component/Events' events
-split 'src/Royalcms/Component/exception' exception
+split 'src/Royalcms/Component/Exception' exception
 split 'src/Royalcms/Component/Filesystem' filesystem
 split 'src/Royalcms/Component/Hashing' hashing
 split 'src/Royalcms/Component/Http' http
