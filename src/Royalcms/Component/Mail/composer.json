@@ -2,7 +2,7 @@
     "name": "royalcms/mail",
     "description": "The Royalcms Mail package.",
     "license": "MIT",
-    "homepage": "https://royalcms.cn",
+    "homepage": "http://royalcms.cn",
     "support": {
         "issues": "https://github.com/royalcms/framework/issues",
         "source": "https://github.com/royalcms/framework"
@@ -15,13 +15,9 @@
     ],
     "require": {
         "php": ">=5.5.9",
-        "erusev/parsedown": "~1.6",
-        "royalcms/container": "5.0.*",
-        "royalcms/contracts": "5.0.*",
-        "royalcms/support": "5.0.*",
-        "psr/log": "~1.0",
-        "swiftmailer/swiftmailer": "~5.4",
-        "tijsverkoyen/css-to-inline-styles": "~2.2"
+        "royalcms/container": "^5.0",
+        "royalcms/contracts": "^5.0",
+        "royalcms/support": "^5.0"
     },
     "autoload": {
         "psr-4": {
@@ -35,10 +31,8 @@
     },
     "suggest": {
         "aws/aws-sdk-php": "Required to use the SES mail driver (~3.0).",
-        "guzzlehttp/guzzle": "Required to use the Mailgun and Mandrill mail drivers (~6.0)."
-    },
-    "config": {
-        "sort-packages": true
+        "guzzlehttp/guzzle": "Required to use the Mailgun and Mandrill mail drivers (~5.3|~6.0).",
+        "jeremeamia/superclosure": "Required to be able to serialize closures (~2.0)."
     },
     "minimum-stability": "dev"
 }
