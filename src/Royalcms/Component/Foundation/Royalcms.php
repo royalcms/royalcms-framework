@@ -83,7 +83,7 @@ class Royalcms extends Application implements RoyalcmsContract, ContainerContrac
      */
     public function version()
     {
-        return static::VERSION;
+        return $this->laravelVersion();
     }
 
     /**
@@ -94,6 +94,16 @@ class Royalcms extends Application implements RoyalcmsContract, ContainerContrac
     public function laravelVersion()
     {
         return Application::VERSION;
+    }
+
+    /**
+     * Get the version number of the laravel.
+     *
+     * @return string
+     */
+    public function royalcmsVersion()
+    {
+        return static::VERSION;
     }
 
     /**
