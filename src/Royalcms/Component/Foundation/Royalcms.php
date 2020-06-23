@@ -28,14 +28,14 @@ class Royalcms extends Application implements RoyalcmsContract, ContainerContrac
      *
      * @var string
      */
-    const VERSION = '7.1.2';
+    const VERSION = '7.2.0';
 
     /**
      * The Royalcms framework release.
      *
      * @var string
      */
-    const RELEASE = '2020-04-22';
+    const RELEASE = '2020-06-23';
 
     /**
      * A custom callback used to configure Monolog.
