@@ -29,6 +29,8 @@ class ClearCompiledCommand extends Command
     {
         $compiledPath = $this->royalcms->getCachedCompilePath();
         $servicesPath = $this->royalcms->getCachedServicesPath();
+        $packagePath = $this->royalcms->getCachedPackagesPath();
+        $appPackagePath = $this->royalcms->getCachedAppPackagesPath();
 
         if (file_exists($compiledPath)) {
             @unlink($compiledPath);
@@ -36,6 +38,14 @@ class ClearCompiledCommand extends Command
 
         if (file_exists($servicesPath)) {
             @unlink($servicesPath);
+        }
+
+        if (file_exists($packagePath)) {
+            @unlink($packagePath);
+        }
+
+        if (file_exists($appPackagePath)) {
+            @unlink($appPackagePath);
         }
     }
 }
