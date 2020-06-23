@@ -132,8 +132,6 @@ return array(
     'providers' => array(
         'Royalcms\Component\Bus\BusServiceProvider',
         'Royalcms\Component\Database\DatabaseServiceProvider',
-        'Royalcms\Component\Database\SeedServiceProvider',
-        'Royalcms\Component\Database\MigrationServiceProvider',
         'Royalcms\Component\Cache\CacheServiceProvider',
         'Royalcms\Component\Log\LogServiceProvider',
         'Royalcms\Component\Encryption\EncryptionServiceProvider',
