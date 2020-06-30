@@ -73,6 +73,8 @@ class Royalcms extends Application implements RoyalcmsContract, ContainerContrac
      */
     public function __construct($basePath = null)
     {
+        $basePath = realpath($basePath);
+
         parent::__construct($basePath);
     }
 
