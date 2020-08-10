@@ -87,7 +87,6 @@ return array(
         // Foundation
         'RC_Object'                    => 'Royalcms\Component\Foundation\RoyalcmsObject',
         'RC_Kses'                      => 'Royalcms\Component\Foundation\Kses',
-        'RC_Loader'                    => 'Royalcms\Component\Foundation\Loader',
         'RC_Token'                     => 'Royalcms\Component\Foundation\Token',
         'RC_Validate'                  => 'Royalcms\Component\Foundation\Validate',
         'RC_Xml'                       => 'Royalcms\Component\Foundation\Xml',
