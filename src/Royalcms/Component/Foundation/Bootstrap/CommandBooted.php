@@ -3,7 +3,6 @@
 namespace Royalcms\Component\Foundation\Bootstrap;
 
 use Royalcms\Component\Contracts\Foundation\Royalcms;
-use RC_Loader;
 use RC_Hook;
 
 class CommandBooted
@@ -18,10 +17,6 @@ class CommandBooted
     {
         $royalcms->booted(function() use ($royalcms) {
 
-            // 加载扩展函数库
-            RC_Loader::auto_load_func();
-
-
             /*
             |--------------------------------------------------------------------------
             | Load The Royalcms Start Script
@@ -33,7 +28,7 @@ class CommandBooted
             |
             */
 
-            $path = $royalcms['path.system'].'/start/global.php';
+            $path = $royalcms->contentPath() . '/routes/global.php';
 
             if (file_exists($path)) require $path;
 

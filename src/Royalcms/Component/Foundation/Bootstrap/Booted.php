@@ -3,7 +3,6 @@
 namespace Royalcms\Component\Foundation\Bootstrap;
 
 use Royalcms\Component\Contracts\Foundation\Royalcms;
-use RC_Loader;
 use RC_Hook;
 
 class Booted
@@ -17,9 +16,6 @@ class Booted
     public function bootstrap(Royalcms $royalcms)
     {
         $royalcms->booted(function() use ($royalcms) {
-
-            // 加载扩展函数库
-            RC_Loader::auto_load_func();
 
             /*
             |--------------------------------------------------------------------------
