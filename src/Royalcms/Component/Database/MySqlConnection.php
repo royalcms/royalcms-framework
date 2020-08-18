@@ -5,7 +5,7 @@ namespace Royalcms\Component\Database;
 
 use Illuminate\Database\MySqlConnection as LaravelMySqlConnection;
 use Royalcms\Component\Database\Schema\Grammars\MySqlGrammar;
-use Royalcms\Component\Database\Schema\MysqlBuilder as SchemaBuilder;
+use Royalcms\Component\Database\Schema\MySqlBuilder as SchemaBuilder;
 use Royalcms\Component\Database\Query\Grammars\MySqlGrammar as QueryGrammar;
 use PDO;
 use Royalcms\Component\Database\Query\Builder as QueryBuilder;
