@@ -5,7 +5,7 @@ namespace Royalcms\Component\Database;
 
 use Illuminate\Database\MySqlConnection as LaravelMySqlConnection;
 use Royalcms\Component\Database\Schema\Grammars\MySqlGrammar;
-use Royalcms\Component\Database\Schema\MySqlBuilder as SchemaBuilder;
+use Royalcms\Component\Database\Schema\MysqlBuilder as SchemaBuilder;
 use Royalcms\Component\Database\Query\Grammars\MySqlGrammar as QueryGrammar;
 use PDO;
 use Royalcms\Component\Database\Query\Builder as QueryBuilder;
@@ -85,6 +85,17 @@ class MySqlConnection extends LaravelMySqlConnection
         }
 
         return new SchemaBuilder($this);
+    }
+
+    /**
+     * Get the table with prefix full table name for the connection.
+     *
+     * @todo royalcms
+     * @return string
+     */
+    public function getTableFullName($table)
+    {
+        return $this->tablePrefix . $table;
     }
 
 }
