@@ -7,6 +7,7 @@ use Closure;
 use Exception;
 use Throwable;
 use ReflectionFunction;
+use ReflectionMethod;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class CustomHandlers
@@ -102,9 +103,14 @@ class CustomHandlers
      * @param  \Throwable  $exception
      * @return bool
      */
-    protected function handlesException(Closure $handler, Throwable $exception)
+    protected function handlesException($handler, Throwable $exception)
     {
-        $reflection = new ReflectionFunction($handler);
+        if ($handler instanceof Closure) {
+            $reflection = new ReflectionFunction($handler);
+        }
+        elseif ($handler instanceof ExceptionRenderInterface) {
+            $reflection = new ReflectionMethod($handler, '__invoke');
+        }
 
         return $reflection->getNumberOfParameters() == 0 || $this->hints($reflection, $exception);
     }
@@ -116,9 +122,14 @@ class CustomHandlers
      * @param  \Throwable  $exception
      * @return bool
      */
-    protected function hints(ReflectionFunction $reflection, Throwable $exception)
+    protected function hints($reflection, Throwable $exception)
     {
-        $parameters = $reflection->getParameters();
+        if ($reflection instanceof ReflectionFunction) {
+            $parameters = $reflection->getParameters();
+        }
+        elseif ($reflection instanceof ReflectionMethod) {
+            $parameters = $reflection->getParameters();
+        }
 
         $expected = $parameters[0];
 
@@ -163,6 +174,18 @@ class CustomHandlers
      * @return void
      */
     public function error(Closure $callback)
+    {
+        array_unshift($this->handlers, $callback);
+    }
+
+    /**
+     * Register an application error handler.
+     *
+     * @todo royalcms
+     * @param  Closure  $callback
+     * @return void
+     */
+    public function errorRender(ExceptionRenderInterface $callback)
     {
         array_unshift($this->handlers, $callback);
     }
