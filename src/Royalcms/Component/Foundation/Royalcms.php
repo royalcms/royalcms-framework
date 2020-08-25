@@ -7,6 +7,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Env;
 use Illuminate\Support\Str;
+use Royalcms\Component\Exception\ExceptionRenderInterface;
 use Royalcms\Component\Foundation\PackageManifest;
 use Royalcms\Component\Container\ContainerServiceProvider;
 use Royalcms\Component\Contracts\ContractsServiceProvider;
@@ -821,6 +822,18 @@ class Royalcms extends Application implements RoyalcmsContract, ContainerContrac
     public function error(Closure $callback)
     {
         $this['exception.handler']->error($callback);
+    }
+
+    /**
+     * Register an application error handler.
+     *
+     * @royalcms royalcms
+     * @param  \Closure  $callback
+     * @return void
+     */
+    public function errorRender(ExceptionRenderInterface $callback)
+    {
+        $this['exception.handler']->errorRender($callback);
     }
 
     /**
