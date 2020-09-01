@@ -4,6 +4,7 @@ use Illuminate\Support\Arr;
 use Royalcms\Component\Support\Str;
 use Royalcms\Component\View\Expression;
 use Royalcms\Component\Container\Container;
+use Royalcms\Component\Support\Collection;
 
 //if (! function_exists('abort')) {
 //    /**
@@ -1386,5 +1387,18 @@ if (! function_exists('array_build')) {
     function array_build($array, callable $callback)
     {
         return Arr::build($array, $callback);
+    }
+}
+
+if (! function_exists('collect')) {
+    /**
+     * Create a collection from the given value.
+     *
+     * @param  mixed  $value
+     * @return \Royalcms\Component\Support\Collection
+     */
+    function collect($value = null)
+    {
+        return new Collection($value);
     }
 }
