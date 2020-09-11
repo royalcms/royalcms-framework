@@ -15,8 +15,8 @@
         }
     ],
     "require": {
-        "php": ">=7.2.5",
-        "laravel/framework": "^7.0",
+        "php": "^7.3",
+        "laravel/framework": "^8.0",
         "laravel/helpers": "^1.0",
         "royalcms/error": "^5.0",
         "royalcms/error-display": "^5.0",
@@ -98,10 +98,10 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "repositories": [
-        {
+    "repositories": {
+        "aliyun": {
             "type": "composer",
             "url": "https://mirrors.aliyun.com/composer/"
         }
-    ]
+    }
 }
