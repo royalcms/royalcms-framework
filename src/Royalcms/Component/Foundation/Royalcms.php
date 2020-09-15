@@ -29,7 +29,7 @@ class Royalcms extends Application implements RoyalcmsContract, ContainerContrac
      *
      * @var string
      */
-    const VERSION = '8.0';
+    const VERSION = '8.0.0';
 
     /**
      * The Royalcms framework release.
