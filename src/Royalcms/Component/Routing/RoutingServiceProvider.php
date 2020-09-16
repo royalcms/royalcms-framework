@@ -142,7 +142,7 @@ class RoutingServiceProvider extends ServiceProvider
             return new ResponseFactory($royalcms['Illuminate\Contracts\View\Factory'], $royalcms['redirect']);
         });
 
-        //$this->royalcms->alias('response' => 'Royalcms\Component\Contracts\Routing\ResponseFactory');
+        $this->royalcms->alias('Royalcms\Component\Contracts\Routing\ResponseFactory', 'Illuminate\Contracts\Routing\ResponseFactory');
     }
 
     /**
