@@ -21,7 +21,10 @@ abstract class RoyalcmsObject
         self::$registered_instance[$key][] = $instance;
         return $instance;
     }
-    
+
+    /**
+     * @return static
+     */
     public static function singleton()
     {
         $key = get_called_class();
@@ -30,17 +33,29 @@ abstract class RoyalcmsObject
         }
         return self::$registered_instance[$key]['singleton'];
     }
-    
+
+    /**
+     * @return array[static]
+     */
     public static function allInstance()
     {
         return self::$registered_instance;
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         echo get_class($this);
     }
-    
+
+    /**
+     * @param $name
+     * @param $value
+     * @throws BadMethodCallException
+     * @throws UnknownPropertyException
+     */
     public function __set($name, $value)
     {
         $setter = 'set' . ucfirst($name);
@@ -52,7 +67,13 @@ abstract class RoyalcmsObject
             throw new UnknownPropertyException('Setting unknown property: ' . get_class($this) . '::' . $name);
         }
     }
-    
+
+    /**
+     * @param $name
+     * @return mixed
+     * @throws BadMethodCallException
+     * @throws UnknownPropertyException
+     */
     public function __get($name)
     {
         $getter = 'get' . ucfirst($name);
@@ -64,7 +85,11 @@ abstract class RoyalcmsObject
             throw new UnknownPropertyException('Getting unknown property: ' . get_class($this) . '::' . $name);
         }
     }
-    
+
+    /**
+     * @param $name
+     * @return bool
+     */
     public function __isset($name)
     {
         $getter = 'get' . ucfirst($name);
@@ -74,7 +99,11 @@ abstract class RoyalcmsObject
             return false;
         }
     }
-    
+
+    /**
+     * @param $name
+     * @throw BadMethodCallException
+     */
     public function __unset($name)
     {
         $setter = 'set' . ucfirst($name);
@@ -84,12 +113,22 @@ abstract class RoyalcmsObject
             throw new BadMethodCallException('Unsetting read-only property: ' . get_class($this) . '::' . $name);
         }
     }
-    
+
+    /**
+     * @param $name
+     * @param $params
+     * @throw BadMethodCallException
+     */
     public function __call($name, $params)
     {
         throw new BadMethodCallException('Calling unknown method: ' . get_class($this) . "::{$name}()");
     }
-    
+
+    /**
+     * @param $name
+     * @param $params
+     * @throw BadMethodCallException
+     */
     public static function __callstatic($name, $params)
     {
         throw new BadMethodCallException('Calling unknown method: ' . __CLASS__ . "::{$name}()");
