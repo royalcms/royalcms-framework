@@ -50,8 +50,8 @@ class FileLoader implements LoaderInterface {
 	 * Create a new file configuration loader.
 	 *
 	 * @param  \Royalcms\Component\Filesystem\Filesystem  $files
+     * @param  string  $sitePath
 	 * @param  string  $defaultPath
-	 * @param  string  $sitePath
 	 * @return void
 	 */
 	public function __construct(Filesystem $files, $sitePath, $defaultPath = null, $basePath = null)
@@ -274,7 +274,7 @@ class FileLoader implements LoaderInterface {
 		// options so that we will easily "cascade" a package's configurations.
 		$file = "packages/{$package}/{$group}.php";
 
-		if ($this->files->exists($path = $this->sitePath.'/'.$file))
+		if ($this->files->exists($path = $this->defaultPath.'/'.$file))
 		{
 			$items = array_merge($items, $this->getRequire($path));
 		}
@@ -302,9 +302,14 @@ class FileLoader implements LoaderInterface {
 	 */
 	protected function getPackagePath($env, $package, $group)
 	{
-		$file = "{$env}/packages/{$package}/{$group}.php";
+	    if (! empty($env)) {
+            $file = "{$env}/packages/{$package}/{$group}.php";
+        }
+		else {
+            $file = "packages/{$package}/{$group}.php";
+        }
 
-		return $this->sitePath.'/'.$file;
+		return $this->defaultPath.'/'.$file;
 	}
 
 	/**
