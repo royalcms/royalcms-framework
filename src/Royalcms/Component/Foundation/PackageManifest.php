@@ -94,7 +94,7 @@ class PackageManifest extends \Illuminate\Foundation\PackageManifest
     {
         $royalcms_packages = collect($packages)->mapWithKeys(function ($package) {
             return [$this->format($package['name']) => $package['extra']['royalcms'] ?? []];
-        })->dump()->filter()->all();
+        })->filter()->all();
 
         return $royalcms_packages;
     }
