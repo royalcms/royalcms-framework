@@ -63,25 +63,53 @@ class PackageManifest extends \Illuminate\Foundation\PackageManifest
         $packages = [];
 
         if ($this->files->exists($path = $this->vendorPath.'/composer/installed.json')) {
-            $packages = json_decode($this->files->get($path), true);
+            $installed = json_decode($this->files->get($path), true);
+            if (isset($installed['packages'])) {
+                $packages = $installed['packages'];
+            }
+            else {
+                $packages = $installed;
+            }
         }
 
         $ignoreAll = in_array('*', $ignore = $this->packagesToIgnore());
 
-        $royalcms_packages = collect($packages)->mapWithKeys(function ($package) {
-            return [$this->format($package['name']) => $package['extra']['royalcms'] ?? []];
-        })->filter()->all();
-        $laravel_packages = collect($packages)->mapWithKeys(function ($package) {
-            return [$this->format($package['name']) => $package['extra']['laravel'] ?? []];
-        })->filter()->all();
+        $royalcms_packages = $this->findRoyalcmsPackages($packages);
+        $laravel_packages = $this->findLaravelPackages($packages);
 
         $packages = array_merge($royalcms_packages, $laravel_packages);
-   
+
         $this->write(collect($packages)->each(function ($configuration) use (&$ignore) {
             $ignore = array_merge($ignore, $configuration['dont-discover'] ?? []);
         })->reject(function ($configuration, $package) use ($ignore, $ignoreAll) {
             return $ignoreAll || in_array($package, $ignore);
         })->filter()->all());
+    }
+
+    /**
+     * @param $packages
+     * @return array
+     */
+    protected function findRoyalcmsPackages($packages)
+    {
+        $royalcms_packages = collect($packages)->mapWithKeys(function ($package) {
+            return [$this->format($package['name']) => $package['extra']['royalcms'] ?? []];
+        })->dump()->filter()->all();
+
+        return $royalcms_packages;
+    }
+
+    /**
+     * @param $packages
+     * @return array
+     */
+    protected function findLaravelPackages($packages)
+    {
+        $laravel_packages = collect($packages)->mapWithKeys(function ($package) {
+            return [$this->format($package['name']) => $package['extra']['laravel'] ?? []];
+        })->filter()->all();
+
+        return $laravel_packages;
     }
 
     /**
