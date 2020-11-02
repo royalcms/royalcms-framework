@@ -78,7 +78,9 @@ class ProviderRepository
         // application so their services can be registered with the application as
         // a provided service. Then we will set the deferred service list on it.
         foreach ($manifest['eager'] as $provider) {
-            $this->royalcms->register($this->createProvider($provider));
+            if (class_exists($provider)) {
+                $this->royalcms->register($this->createProvider($provider));
+            }
         }
 
         $this->royalcms->addDeferredServices($manifest['deferred']);
@@ -118,6 +120,10 @@ class ProviderRepository
         $manifest = $this->freshManifest($providers);
 
         foreach ($providers as $provider) {
+            if (! class_exists($provider)) {
+                continue;
+            }
+            
             $instance = $this->createProvider($provider);
 
             // When recompiling the service manifest, we will spin through each of the
