@@ -1,4 +1,6 @@
-<?php namespace Royalcms\Component\Config;
+<?php
+
+namespace Royalcms\Component\Config;
 
 /**
  * Dotenv.
@@ -28,11 +30,11 @@ class Dotenv
             $file = '.env';
         }
 
-        $filePath = rtrim($path, '/').'/'.$file;
+        $filePath = rtrim($path, '/') . '/' . $file;
         if (!is_readable($filePath) || !is_file($filePath)) {
             throw new \InvalidArgumentException(
                 sprintf(
-                    'Dotenv: Environment file %s not found or not readable. '.
+                    'Dotenv: Environment file %s not found or not readable. ' .
                     'Create file with your environment settings at %s',
                     $file,
                     $filePath
@@ -68,7 +70,7 @@ class Dotenv
      *
      * The environment variable value is stripped of single and double quotes.
      *
-     * @param string      $name
+     * @param string $name
      * @param string|null $value
      *
      * @return void
@@ -84,7 +86,7 @@ class Dotenv
         }
 
         putenv("$name=$value");
-        $_ENV[$name] = $value;
+        $_ENV[$name]    = $value;
         $_SERVER[$name] = $value;
     }
 
@@ -93,16 +95,16 @@ class Dotenv
      *
      * You can also pass through an set of allowed values for the environment variable.
      *
-     * @param mixed    $environmentVariables
+     * @param mixed $environmentVariables
      * @param string[] $allowedValues
      *
+     * @return true
      * @throws \RuntimeException
      *
-     * @return true
      */
     public static function required($environmentVariables, array $allowedValues = array())
     {
-        $environmentVariables = (array) $environmentVariables;
+        $environmentVariables        = (array)$environmentVariables;
         $missingEnvironmentVariables = array();
 
         foreach ($environmentVariables as $environmentVariable) {
@@ -146,7 +148,7 @@ class Dotenv
     protected static function normaliseEnvironmentVariable($name, $value)
     {
         list($name, $value) = static::splitCompoundStringIntoParts($name, $value);
-        $name = static::sanitiseVariableName($name);
+        $name  = static::sanitiseVariableName($name);
         $value = static::sanitiseVariableValue($value);
         $value = static::resolveNestedVariables($value);
 
@@ -184,7 +186,7 @@ class Dotenv
             return '';
         }
         if (strpbrk($value[0], '"\'') !== false) { // value starts with a quote
-            $quote = $value[0];
+            $quote        = $value[0];
             $regexPattern = sprintf('/^
                 %1$s          # match a quote at the start of the value
                 (             # capturing sub-pattern used
@@ -197,9 +199,9 @@ class Dotenv
                 %1$s          # and the closing quote
                 .*$           # and discard any string after the closing quote
                 /mx', $quote);
-            $value = preg_replace($regexPattern, '$1', $value);
-            $value = str_replace("\\$quote", $quote, $value);
-            $value = str_replace('\\\\', '\\', $value);
+            $value        = preg_replace($regexPattern, '$1', $value);
+            $value        = str_replace("\\$quote", $quote, $value);
+            $value        = str_replace('\\\\', '\\', $value);
         } else {
             $parts = explode(' #', $value, 2);
             $value = $parts[0];
@@ -239,7 +241,7 @@ class Dotenv
                     if (is_null($nestedVariable)) {
                         return $matchedPatterns[0];
                     } else {
-                        return  $nestedVariable;
+                        return $nestedVariable;
                     }
                 },
                 $value

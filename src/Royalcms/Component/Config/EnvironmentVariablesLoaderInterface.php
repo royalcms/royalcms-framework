@@ -1,13 +1,16 @@
-<?php namespace Royalcms\Component\Config;
+<?php
 
-interface EnvironmentVariablesLoaderInterface {
+namespace Royalcms\Component\Config;
 
-	/**
-	 * Load the environment variables for the given environment.
-	 *
-	 * @param  string  $environment
-	 * @return array
-	 */
-	public function load($environment = null);
+interface EnvironmentVariablesLoaderInterface
+{
+
+    /**
+     * Load the environment variables for the given environment.
+     *
+     * @param string $environment
+     * @return array
+     */
+    public function load($environment = null);
 
 }
