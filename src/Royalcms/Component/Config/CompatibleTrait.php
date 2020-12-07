@@ -65,7 +65,7 @@ trait CompatibleTrait
 
     public function cookie($name)
     {
-        return $this->get('session.'.strtolower($name));
+        return $this->get('cookie.'.strtolower($name));
     }
 
 }
