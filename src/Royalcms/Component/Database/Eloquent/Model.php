@@ -9,6 +9,18 @@ use Illuminate\Database\Eloquent\Model as LaravelModel;
 class Model extends LaravelModel
 {
 
+    public function __construct(array $attributes = [])
+    {
+        /**
+         * 该模型是否被自动维护时间戳
+         *
+         * @var bool
+         */
+        $this->timestamps = false;
+
+        parent::__construct($attributes);
+    }
+
     /**
      * Create a new Eloquent query builder for the model.
      *
