@@ -6,15 +6,8 @@ namespace Royalcms\Component\Database\Eloquent;
 
 use Illuminate\Database\Eloquent\Model as LaravelModel;
 
-class Model extends LaravelModel
+abstract class Model extends LaravelModel
 {
-
-    /**
-     * 该模型是否被自动维护时间戳
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * Create a new Eloquent query builder for the model.
