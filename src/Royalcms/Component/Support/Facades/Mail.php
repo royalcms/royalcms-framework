@@ -20,7 +20,10 @@ namespace Royalcms\Component\Support\Facades;
  * @method static bool hasSent(string $mailable)
  * @method static \Illuminate\Support\Collection queued(string $mailable, \Closure|string $callback = null)
  * @method static bool hasQueued(string $mailable)
- * 
+ * @method static void resetDriver(string $driver)
+ * @method static \Illuminate\Mail\Mailer custom(array $config)
+ * @method static void mixin($mixin, $replace = true)
+ *
  * @see \Royalcms\Component\Mail\Mailer
  */
 class Mail extends Facade
