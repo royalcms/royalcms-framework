@@ -28,6 +28,25 @@ class MailManager extends \Illuminate\Mail\MailManager
     }
 
     /**
+     * Custom config with new mailer instances.
+     *
+     * @royalcms 8.1.0
+     * @param array $config
+     * @return \Illuminate\Mail\Mailer
+     */
+    public function custom(array $config)
+    {
+        $mailer = new \Illuminate\Mail\Mailer(
+            'smtp',
+            royalcms('view'),
+            $this->createSwiftMailer($config),
+            royalcms('events')
+        );
+
+        return $mailer;
+    }
+
+    /**
      * Mix another object into the class.
      *
      * @royalcms 6.0.0
