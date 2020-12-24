@@ -10,16 +10,16 @@ use Royalcms\Component\Support\Arr;
 class Builder extends QueryBuilder
 {
 
-    /**
-     * Execute the query as a "select" statement.
-     *
-     * @param  array|string  $columns
-     * @return array
-     */
-    public function get($columns = ['*'])
-    {
-        return parent::get($columns)->all();
-    }
+//    /**
+//     * Execute the query as a "select" statement.
+//     *
+//     * @param  array|string  $columns
+//     * @return array
+//     */
+//    public function get($columns = ['*'])
+//    {
+//        return parent::get($columns)->all();
+//    }
 
     /**
      * Execute an aggregate function on the database.

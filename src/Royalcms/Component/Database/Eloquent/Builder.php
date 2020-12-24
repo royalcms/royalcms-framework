@@ -9,29 +9,29 @@ use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 class Builder extends QueryBuilder
 {
 
-    /**
-     * Get the hydrated models without eager loading.
-     *
-     * @param  array  $columns
-     * @return \Illuminate\Database\Eloquent\Model[]|\Illuminate\Database\Eloquent\Builder[]
-     */
-    public function getModels($columns = ['*'])
-    {
-        return $this->model->hydrate(
-            $this->query->get($columns)
-        )->all();
-    }
+//    /**
+//     * Get the hydrated models without eager loading.
+//     *
+//     * @param  array  $columns
+//     * @return \Illuminate\Database\Eloquent\Model[]|\Illuminate\Database\Eloquent\Builder[]
+//     */
+//    public function getModels($columns = ['*'])
+//    {
+//        return $this->model->hydrate(
+//            $this->query->get($columns)->all()
+//        )->all();
+//    }
 
-    /**
-     * Execute the query and get the first result.
-     *
-     * @param  array  $columns
-     * @return \Royalcms\Component\Database\Eloquent\Model|static|null
-     */
-    public function first($columns = ['*'])
-    {
-        return $this->take(1)->get($columns)->first();
-    }
+//    /**
+//     * Execute the query and get the first result.
+//     *
+//     * @param  array  $columns
+//     * @return \Royalcms\Component\Database\Eloquent\Model|static|null
+//     */
+//    public function first($columns = ['*'])
+//    {
+//        return $this->take(1)->get($columns)->first();
+//    }
 
     /**
      * Get an array with the values of a given column.
