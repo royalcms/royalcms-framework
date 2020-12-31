@@ -6,7 +6,6 @@ namespace Royalcms\Component\Support\Facades;
  * @method static string getName()
  * @method static string getId()
  * @method static void setId(string $id)
- * @method static bool start()
  * @method static bool save()
  * @method static array all()
  * @method static bool exists(string|array $key)
