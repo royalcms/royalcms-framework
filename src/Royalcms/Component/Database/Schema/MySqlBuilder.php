@@ -8,6 +8,37 @@ class MySqlBuilder extends \Illuminate\Database\Schema\MySqlBuilder
 {
 
     /**
+     * Determine if the given table exists.
+     *
+     * @param  string  $table
+     * @return bool
+     */
+    public function hasTable($table)
+    {
+        if ($this->connection->pretending()) {
+            return true;
+        }
+
+        return parent::hasTable($table);
+    }
+
+    /**
+     * Determine if the given table has a given column.
+     *
+     * @param  string  $table
+     * @param  string  $column
+     * @return bool
+     */
+    public function hasColumn($table, $column)
+    {
+        if ($this->connection->pretending()) {
+            return true;
+        }
+
+        return parent::hasColumn($table, $column);
+    }
+
+    /**
      * Create a new command set with a Closure.
      *
      * @param  string  $table
