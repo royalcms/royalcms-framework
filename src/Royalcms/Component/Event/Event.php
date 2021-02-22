@@ -9,18 +9,21 @@ namespace Royalcms\Component\Event;
  */
 abstract class Event
 {
-    // 事件参数
-    protected $options = array();
-    
-    // 构造函数
+
+    /**
+     * 构造函数
+     */
     public function __construct()
     {
-        if (! empty($this->options)) {
 
-        }
     }
 
-    public abstract function run(& $param);
+    
+    public function run($param)
+    {
+
+    }
+
 }
 
 // end

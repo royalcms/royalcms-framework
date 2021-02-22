@@ -10,22 +10,12 @@ namespace Royalcms\Component\Event;
 
 abstract class Api extends Event
 {
-
-    /**
-     * API参数
-     *
-     * @var array $options
-     */
-    protected $options = array();
-
     /**
      * 构造函数
      */
     public function __construct()
     {
-        if (! empty($this->options)) {
-            // TODO:
-        }
+
     }
 
     /**
@@ -33,17 +23,14 @@ abstract class Api extends Event
      *
      * @param unknown $param            
      */
-    public function run(& $param)
+    public function run($param)
     {
-        return $this->call($param);
-    }
+        if (method_exists($this, 'call')) {
+            return call_user_func_array([$this, 'call'], $param);
+        }
 
-    /**
-     * API调用抽象方法
-     *
-     * @param array $param            
-     */
-    public abstract function call(& $param);
+        return parent::run($param);
+    }
     
 }
 
