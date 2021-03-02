@@ -131,6 +131,10 @@ class FileLoader implements LoaderInterface
     {
         $items = [];
 
+        if (empty($this->defaultPath)) {
+            return $items;
+        }
+
         if (defined('USE_AUTONOMY_CONFIG') && true === USE_AUTONOMY_CONFIG) {
             if (defined('USE_AUTONOMY_CONFIG_GROUP')) {
                 //多个值逗号分隔
@@ -266,11 +270,19 @@ class FileLoader implements LoaderInterface
             $items = array_merge($items, $this->getRequire($path));
         }
 
+        if ($this->files->exists($path = $this->sitePath . '/' . $file)) {
+            $items = array_merge($items, $this->getRequire($path));
+        }
+
         // Once we have merged the regular package configuration we need to look for
         // an environment specific configuration file. If one exists, we will get
         // the contents and merge them on top of this array of options we have.
-        $path = $this->getPackagePath($env, $package, $group);
+        $path = $this->getDefaultPackagePath($env, $package, $group);
+        if ($this->files->exists($path)) {
+            $items = array_merge($items, $this->getRequire($path));
+        }
 
+        $path = $this->getSitePackagePath($env, $package, $group);
         if ($this->files->exists($path)) {
             $items = array_merge($items, $this->getRequire($path));
         }
@@ -286,15 +298,36 @@ class FileLoader implements LoaderInterface
      * @param string $group
      * @return string
      */
-    protected function getPackagePath($env, $package, $group)
+    protected function getDefaultPackagePath($env, $package, $group)
     {
-        if (!empty($env)) {
-            $file = "{$env}/packages/{$package}/{$group}.php";
-        } else {
-            $file = "packages/{$package}/{$group}.php";
+        if (empty($this->defaultPath)) {
+            return null;
         }
 
+        if (empty($env)) {
+            return null;
+        }
+
+        $file = "{$env}/packages/{$package}/{$group}.php";
         return $this->defaultPath . '/' . $file;
+    }
+
+    /**
+     * Get the package path for an environment and group.
+     *
+     * @param string $env
+     * @param string $package
+     * @param string $group
+     * @return string
+     */
+    protected function getSitePackagePath($env, $package, $group)
+    {
+        if (empty($env)) {
+            return null;
+        }
+
+        $file = "{$env}/packages/{$package}/{$group}.php";
+        return $this->sitePath . '/' . $file;
     }
 
     /**
