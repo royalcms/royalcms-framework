@@ -13,7 +13,6 @@ RUN set -x \
     && pecl install xdebug-2.9.6 1>/dev/null \
     && apk del .build-deps \
     && mkdir /src ${COMPOSER_HOME} \
-    && composer global require 'hirak/prestissimo' --no-interaction --no-suggest --prefer-dist \
     && ln -s /usr/bin/composer /usr/bin/c \
     && chmod -R 777 ${COMPOSER_HOME} \
     && composer --version \
