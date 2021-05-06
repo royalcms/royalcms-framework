@@ -36,6 +36,7 @@ class AuthServiceProvider extends \Illuminate\Auth\AuthServiceProvider
 
     /**
      * Load the alias = One less install step for the user
+     * @return void
      */
     protected function loadAlias()
     {
@@ -48,6 +49,7 @@ class AuthServiceProvider extends \Illuminate\Auth\AuthServiceProvider
 
     /**
      * Load the alias = One less install step for the user
+     * @return array<String, String>
      */
     public static function aliases()
     {
