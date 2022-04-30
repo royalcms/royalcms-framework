@@ -245,3 +245,104 @@
 	├── phpunit.php               单元测试入口
 	├── phpunit.xml               单元测试配置文件
 
+
+
+**[Royalcms 5.x 版本文档看此](docs/5-x/index)**
+
+
+
+## ROYALCMS 核心组件
+
+Royalcms 核心组件最新版是对接的 `Laravel 7.x` 版本的，以下基于Laravel组件的包装是为了兼容Royalcms框架之前的所有资源。
+
+- royalcms/auth（[laravel/auth](https://learnku.com/docs/laravel/7.x/authentication/7474)）
+- royalcms/broadcasting（[laravel/broadcasting](https://learnku.com/docs/laravel/7.x/broadcasting/7481)）
+- royalcms/bus（laravel/bus）
+- royalcms/cache（[laravel/cache](https://learnku.com/docs/laravel/7.x/cache/7482)）
+- royalcms/class-loader
+- royalcms/config（[laravel/config](https://learnku.com/docs/laravel/7.x/configuration/7448)）
+- royalcms/console（[laravel/console](https://learnku.com/docs/laravel/7.x/artisan/7480)）
+- royalcms/contracts（[laravel/contracts](https://learnku.com/docs/laravel/7.x/contracts/7457)）
+- royalcms/cookie（laravel/cookie）
+- royalcms/database（[laravel/database](https://learnku.com/docs/laravel/7.x/database/7493)）
+- royalcms/encryption（[laravel/encryption](https://learnku.com/docs/laravel/7.x/encryption/7477)）
+- royalcms/events（[laravel/events](https://learnku.com/docs/laravel/7.x/events/7484)）
+- royalcms/exception
+- royalcms/filesystem（[laravel/filesystem](https://learnku.com/docs/laravel/7.x/filesystem/7485)）
+- royalcms/foundation（laravel/foundation）
+- royalcms/hashing（[laravel/hashing](https://learnku.com/docs/laravel/7.x/hashing/7478)）
+- royalcms/http（[laravel/http](https://learnku.com/docs/laravel/7.x/requests/7462)）
+- royalcms/log（[laravel/log](https://learnku.com/docs/laravel/7.x/logging/7469)）
+- royalcms/mail（[laravel/mail](https://learnku.com/docs/laravel/7.x/mail/7488)）
+- royalcms/notifications（[laravel/notifications](https://learnku.com/docs/laravel/7.x/notifications/7489)）
+- royalcms/pagination（[laravel/pagination](https://learnku.com/docs/laravel/7.x/pagination/7495)）
+- royalcms/pipeline（laravel/pipeline）
+- royalcms/preloader
+- royalcms/queue（[laravel/queue](https://learnku.com/docs/laravel/7.x/queues/7491)）
+- royalcms/redis（[laravel/redis](https://learnku.com/docs/laravel/7.x/redis/7498)）
+- royalcms/routing（[laravel/routing](https://learnku.com/docs/laravel/7.x/routing/7458)）
+- royalcms/session（[laravel/session](https://learnku.com/docs/laravel/7.x/session/7466)）
+- royalcms/support（[laravel/support](https://learnku.com/docs/laravel/7.x/providers/7455)）
+- royalcms/translation（[laravel/translation](https://learnku.com/docs/laravel/7.x/localization/7471)）
+- royalcms/validation（[laravel/validation](https://learnku.com/docs/laravel/7.x/validation/7467)）
+- royalcms/view（[laravel/view](https://learnku.com/docs/laravel/7.x/blade/7470)）
+
+## 相关组件
+- [royalcms/metable](/docs/metable/index)
+- [royalcms/enum](/docs/enum/index)
+- [royalcms/live](/docs/live/index)
+- royalcms/agent
+- royalcms/aliyun
+- royalcms/api
+- royalcms/app
+- royalcms/convert
+- royalcms/datetime
+- royalcms/default-route
+- royalcms/directory-hasher
+- royalcms/editor
+- [royalcms/elasticsearch](/docs/elasticsearch/index)
+- royalcms/enum
+- royalcms/environment
+- royalcms/error
+- royalcms/excel
+- royalcms/gettext
+- royalcms/hook
+- royalcms/http-request
+- royalcms/ide-helper
+- royalcms/image
+- royalcms/image-editor
+- royalcms/ip-address
+- royalcms/kses
+- royalcms/log-viewer
+- royalcms/memcache
+- royalcms/model
+- royalcms/native-session
+- royalcms/package
+- royalcms/page
+- [royalcms/pay](/docs/pay/index)
+- [royalcms/pinyin](/docs/pinyin/index)
+- royalcms/plugin
+- royalcms/purifier
+- royalcms/qrcode
+- royalcms/reflection
+- royalcms/rememberable
+- royalcms/repository
+- royalcms/requests
+- royalcms/rewrite
+- royalcms/script
+- royalcms/sentry
+- royalcms/service
+- royalcms/smarty-view
+- royalcms/sms
+- royalcms/storage
+- [royalcms/temporary-directory](/docs/temporary-directory/index)
+- royalcms/theme
+- royalcms/timer
+- royalcms/upload
+- [royalcms/uploader](/docs/uploader/index)
+- royalcms/url
+- royalcms/uuid
+- royalcms/variable
+- royalcms/widget
+- royalcms/xml-response
+
