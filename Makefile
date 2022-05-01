@@ -16,6 +16,12 @@ help: ## Show this help
 build: ## Build docker images, required for current package environment
 	docker-compose build
 
+docker-build: ## Build docker images
+	docker build -t royalcms/royalcms-framework-app:latest -f Dockerfile .
+
+docker-push: ## Push docker images
+	docker push royalcms/royalcms-framework-app:latest
+
 latest: clean ## Install latest php dependencies
 	docker-compose run $(RUN_APP_ARGS) app composer update -n --ansi --no-suggest --prefer-dist --prefer-stable
 
