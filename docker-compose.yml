@@ -21,9 +21,11 @@ services:
       - "6379:6379"
     restart: always
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+# Temporary build
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+    image: royalcms/royalcms-framework-app:latest
     environment:
       PS1: '\[\033[1;32m\]\[\033[1;36m\][\u@docker] \[\033[1;34m\]\w\[\033[0;35m\] \[\033[1;36m\]# \[\033[0m\]'
     volumes:
