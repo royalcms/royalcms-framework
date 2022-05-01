@@ -4,6 +4,7 @@
 
 SHELL = /bin/sh
 RUN_APP_ARGS = --rm --user "$(shell id -u):$(shell id -g)"
+RUN_TEST_ARGS =
 
 .PHONY : help build latest install lowest test test-cover shell clean
 .DEFAULT_GOAL : help
@@ -33,6 +34,9 @@ lowest: clean ## Install lowest php dependencies
 
 test: ## Execute php tests and linters
 	docker-compose run $(RUN_APP_ARGS) app composer test
+
+test-file: ## Execute php file tests. eg: make test-file RUN_TEST_ARGS=tests/royalcms-test/Config/RepositoryTest.php
+	docker-compose run $(RUN_APP_ARGS) app composer test $(RUN_TEST_ARGS)
 
 test-cover: ## Execute php tests with coverage
 	docker-compose run --rm --user "0:0" app sh -c 'docker-php-ext-enable xdebug && su $(shell whoami) -s /bin/sh -c "composer phpunit-cover"'
